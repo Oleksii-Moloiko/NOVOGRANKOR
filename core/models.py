@@ -81,3 +81,39 @@ class ContactRequest(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.phone}"
+    
+class SiteSettings(models.Model):
+
+    phone = models.CharField(
+        max_length=30,
+        verbose_name="Телефон"
+    )
+
+    telegram = models.URLField(
+        blank=True
+    )
+
+    whatsapp = models.URLField(
+        blank=True
+    )
+
+    logo = models.ImageField(
+    upload_to="logo/",
+    blank=True,
+    null=True,
+    )
+
+    hero_title = models.CharField(
+        max_length=255
+    )
+
+    hero_subtitle = models.CharField(
+        max_length=255
+    )
+
+    class Meta:
+        verbose_name = "Налаштування сайту"
+        verbose_name_plural = "Налаштування сайту"
+
+    def __str__(self):
+        return "Налаштування сайту"

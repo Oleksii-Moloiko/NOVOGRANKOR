@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import Category
+from .models import Category, SiteSettings
 
 
 def home(request):
@@ -8,10 +8,13 @@ def home(request):
         "monuments"
     )
 
+    site_settings = SiteSettings.objects.first()
+
     return render(
         request,
         "home.html",
         {
             "categories": categories,
+            "site_settings": site_settings,
         }
     )

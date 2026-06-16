@@ -2,6 +2,7 @@
 
 {% block content %}
 
+<!-- HERO -->
 <section class="py-5">
 
     <div class="container text-center">
@@ -10,77 +11,209 @@
             NOVOGRANKOR
         </h1>
 
-        <h2 class="hero-title">
-            Виготовлення та встановлення пам’ятників під ключ по всій Україні
-        </h2>
+        <div class="mx-auto" style="max-width: 900px;">
+            <h2 class="hero-title">
+                {{ site_settings.hero_title|default:"Виготовлення та встановлення пам’ятників під ключ по всій Україні" }}
+            </h2>
+        </div>
 
         <p class="hero-subtitle mt-4">
-            Збережіть пам'ять про найрідніших
+            {{ site_settings.hero_subtitle|default:"Збережіть пам'ять про найрідніших" }}
         </p>
 
-        <div class="row mt-5">
+        <div class="row mt-5 justify-content-center">
 
-            <div class="col-md-4 mb-3">
-                <a href="#about" class="btn btn-outline-dark rounded-pill px-4">
+            <div class="col-md-3 col-12 mb-3">
+                <a href="#about" class="btn btn-outline-dark rounded-pill px-4 w-100">
                     Про нас
                 </a>
             </div>
 
-            <div class="col-md-4 mb-3">
-                <a href="#catalog" class="btn btn-outline-dark rounded-pill px-4">
+            <div class="col-md-3 col-12 mb-3">
+                <a href="#catalog" class="btn btn-outline-dark rounded-pill px-4 w-100">
                     Каталог
                 </a>
             </div>
 
-            <div class="col-md-4 mb-3">
-                <a href="#services" class="btn btn-outline-dark rounded-pill px-4">
+            <div class="col-md-3 col-12 mb-3">
+                <a href="#services" class="btn btn-outline-dark rounded-pill px-4 w-100">
                     Послуги
                 </a>
             </div>
-            
+
         </div>
-        
+
         <div class="row mt-5">
 
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 ✓ 3D моделювання для візуалізації виробу
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 mb-3">
                 ✓ Доставка вантажу по Україні
             </div>
 
         </div>
 
-    
+        <div class="mt-5">
+
+            <h4>
+                <a href="tel:+380959197152" class="phone-link">
+                    {{ site_settings.phone|default:"+38 (095) 919-71-52" }}
+                </a>
+            </h4>
+
+                <div class="contact-actions mt-3">
+                    <a href="tel:+380959197152" class="contact-action">
+                        Подзвонити
+                    </a>
+
+                    <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
+                        Telegram
+                    </a>
+
+                    <a href="viber://chat?number=%2B380959197152" class="contact-action">
+                        Viber
+                    </a>
+
+                    <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
+                        WhatsApp
+                    </a>
+                </div>
+
+        </div>
 
     </div>
 
 </section>
 
-<section id="about" class="py-5">
+<!-- ABOUT -->
+<section id="about" class="py-5 about-section">
+
     <div class="container">
 
-        <h2 class="mb-4">
-            Про нас
-        </h2>
+        <div class="row align-items-center">
 
-        <p>
-            NOVOGRANKOR — українська компанія з виготовлення пам’ятників та виробів із натурального граніту.
-        </p>
+            <div class="col-lg-5 mb-4 mb-lg-0">
 
-        <p>
-            Ми працюємо з широким асортиментом українських та імпортних гранітів, створюючи якісні меморіальні комплекси.
-        </p>
+                <h2 class="section-title">
+                    Про нас
+                </h2>
 
-        <p>
-            Пропонуємо індивідуальний підхід, безкоштовну розробку 3D-моделі, власне виробництво та встановлення по всій Україні.
-        </p>
+                <p class="section-lead">
+                    NOVOGRANKOR — українська компанія з виготовлення пам’ятників та виробів із натурального граніту.
+                </p>
+
+            </div>
+
+            <div class="col-lg-7">
+
+                <div class="about-card">
+
+                    <p>
+                        Ми працюємо з широким асортиментом українських та імпортних гранітів, створюючи якісні меморіальні комплекси, пам’ятники, надгробні плити та елементи благоустрою.
+                    </p>
+
+                    <p>
+                        Пропонуємо індивідуальний підхід, безкоштовну розробку 3D-моделі, власне виробництво та встановлення по всій Україні.
+                    </p>
+
+                    <p class="mb-0">
+                        Наша мета — допомогти зберегти пам’ять про найрідніших у довговічному та гідному вигляді.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
+
 </section>
 
+<!-- CATALOG -->
+<section id="catalog" class="py-5">
+
+    <div class="container">
+
+        <h2 class="mb-5">
+            Каталог
+        </h2>
+
+        {% for category in categories %}
+
+            <div class="mb-5">
+
+                <h3 class="mb-4">
+                    {{ category.name }}
+                </h3>
+
+                <div class="row">
+
+                    {% for monument in category.monuments.all %}
+
+                        <div class="col-lg-4 col-md-6 mb-4">
+
+                            <div class="card h-100">
+
+                                {% if monument.image %}
+                                    <img
+                                        src="{{ monument.image.url }}"
+                                        class="card-img-top"
+                                        alt="{{ monument.title }}"
+                                    >
+                                {% endif %}
+
+                                <div class="card-body">
+
+                                    <h5 class="card-title">
+                                        {{ monument.title }}
+                                    </h5>
+
+                                    {% if monument.description %}
+                                        <p class="card-text">
+                                            {{ monument.description|truncatechars:100 }}
+                                        </p>
+                                    {% endif %}
+
+                                    <a href="tel:+380959197152" class="btn btn-outline-dark rounded-pill mt-3">
+                                        Дізнатись вартість
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    {% empty %}
+
+                        <p>
+                            У цій категорії поки немає пам'ятників.
+                        </p>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <p>
+                Каталог буде наповнений найближчим часом.
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<!-- SERVICES -->
 <section id="services" class="py-5">
+
     <div class="container">
 
         <h2 class="mb-4">
@@ -105,89 +238,68 @@
                 ✓ Встановлення
             </div>
 
+            <div class="col-md-6 mb-3">
+                ✓ Індивідуальний підбір матеріалів
+            </div>
+
+            <div class="col-md-6 mb-3">
+                ✓ Меморіальні комплекси
+            </div>
+
         </div>
 
     </div>
-</section>
-
-<section id="catalog" class="py-5">
-
-    <div class="container">
-
-        <h2 class="mb-4">
-            Каталог
-        </h2>
-
-        {% for category in categories %}
-
-            <h3 class="mb-3">
-                {{ category.name }}
-            </h3>
-
-            <div class="row">
-
-                {% for monument in category.monuments.all %}
-
-                    <div class="col-md-4 mb-4">
-
-                        <div class="card">
-
-                            <img
-                                src="{{ monument.image.url }}"
-                                class="card-img-top"
-                                alt="{{ monument.title }}"
-                            >
-
-                            <div class="card-body">
-
-                                <h5>
-                                    {{ monument.title }}
-                                </h5>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                {% empty %}
-
-                    <p>
-                        Поки немає пам'ятників у цій категорії
-                    </p>
-
-                {% endfor %}
-
-            </div>
-
-        {% endfor %}
-
-    </div>
 
 </section>
 
+<!-- CONTACTS -->
 <section id="contacts" class="py-5">
 
     <div class="container text-center">
 
-        <h2>Контакти</h2>
+        <h2>
+            Потрібна консультація?
+        </h2>
+
+        <p class="mt-3">
+            Зателефонуйте нам або напишіть у месенджер — допоможемо підібрати пам’ятник під ваші побажання та бюджет.
+        </p>
 
         <h4 class="mt-4">
-            +38 (095) 919-71-52
+            <a href="tel:+380959197152" class="phone-link">
+                {{ site_settings.phone|default:"+38 (095) 919-71-52" }}
+            </a>
         </h4>
 
-        <p>
-            Telegram • Viber • WhatsApp
-        </p>
+        <div class="messenger-links mt-3">
+            <a href="{{ site_settings.telegram|default:'#' }}" target="_blank">
+                Telegram
+            </a>
+
+            <span>•</span>
+
+            <a href="viber://chat?number=%2B380959197152">
+                Viber
+            </a>
+
+            <span>•</span>
+
+            <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" target="_blank">
+                WhatsApp
+            </a>
+        </div>
 
     </div>
 
 </section>
 
+<!-- CALL BUTTON -->
 <a
     href="tel:+380959197152"
     class="btn btn-success call-btn"
+    aria-label="Подзвонити"
 >
-📞
+    📞
 </a>
+
 {% endblock %}
