@@ -1,49 +1,84 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 
 <!-- HERO -->
-<section class="py-5">
+<section class="py-5 hero-section">
 
-    <div class="container text-center">
+    <img
+        src="{% static 'img/logo.png' %}"
+        alt=""
+        class="hero-watermark"
+    >
 
-        <h1 class="logo-title mb-4">
+    <div class="container text-center hero-content">
+
+        <h1 class="logo-title mb-1">
             NOVOGRANKOR
         </h1>
 
-        <div class="mx-auto" style="max-width: 900px;">
-            <h2 class="hero-title">
-                {{ site_settings.hero_title|default:"Виготовлення та встановлення пам’ятників під ключ по всій Україні" }}
-            </h2>
-        </div>
-
-        <p class="hero-subtitle mt-4">
+        <p class="hero-subtitle mb-5">
             {{ site_settings.hero_subtitle|default:"Збережіть пам'ять про найрідніших" }}
         </p>
 
-        <div class="row mt-5 justify-content-center">
+        <div class="row justify-content-center hero-nav">
 
             <div class="col-md-3 col-12 mb-3">
-                <a href="#about" class="btn btn-outline-dark rounded-pill px-4 w-100">
+                <a href="#about" class="nav-pill">
                     Про нас
                 </a>
             </div>
 
             <div class="col-md-3 col-12 mb-3">
-                <a href="#catalog" class="btn btn-outline-dark rounded-pill px-4 w-100">
+                <a href="#catalog" class="nav-pill">
                     Каталог
                 </a>
             </div>
 
             <div class="col-md-3 col-12 mb-3">
-                <a href="#services" class="btn btn-outline-dark rounded-pill px-4 w-100">
+                <a href="#services" class="nav-pill">
                     Послуги
                 </a>
             </div>
 
         </div>
 
-        <div class="row mt-5">
+        <div class="hero-contact mt-5">
+
+            <h4>
+                <a href="tel:+380959197152" class="phone-link">
+                    {{ site_settings.phone|default:"+38 (095) 919-71-52" }}
+                </a>
+            </h4>
+
+            <div class="contact-actions mt-3">
+                <a href="tel:+380959197152" class="contact-action">
+                    Подзвонити
+                </a>
+
+                <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
+                    Telegram
+                </a>
+
+                <a href="viber://chat?number=%2B380959197152" class="contact-action">
+                    Viber
+                </a>
+
+                <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
+                    WhatsApp
+                </a>
+            </div>
+
+        </div>
+
+        <div class="mx-auto mt-5" style="max-width: 900px;">
+            <h2 class="hero-title">
+                {{ site_settings.hero_title|default:"Виготовлення та встановлення пам’ятників під ключ по всій Україні" }}
+            </h2>
+        </div>
+
+        <div class="row mt-5 hero-benefits">
 
             <div class="col-md-6 mb-3">
                 ✓ 3D моделювання для візуалізації виробу
@@ -52,34 +87,6 @@
             <div class="col-md-6 mb-3">
                 ✓ Доставка вантажу по Україні
             </div>
-
-        </div>
-
-        <div class="mt-5">
-
-            <h4>
-                <a href="tel:+380959197152" class="phone-link">
-                    {{ site_settings.phone|default:"+38 (095) 919-71-52" }}
-                </a>
-            </h4>
-
-                <div class="contact-actions mt-3">
-                    <a href="tel:+380959197152" class="contact-action">
-                        Подзвонити
-                    </a>
-
-                    <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
-                        Telegram
-                    </a>
-
-                    <a href="viber://chat?number=%2B380959197152" class="contact-action">
-                        Viber
-                    </a>
-
-                    <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
-                        WhatsApp
-                    </a>
-                </div>
 
         </div>
 
@@ -133,19 +140,19 @@
 </section>
 
 <!-- CATALOG -->
-<section id="catalog" class="py-5">
+<section id="catalog" class="py-5 catalog-section">
 
     <div class="container">
 
-        <h2 class="mb-5">
+        <h2 class="section-title mb-5">
             Каталог
         </h2>
 
         {% for category in categories %}
 
-            <div class="mb-5">
+            <div class="catalog-category mb-5">
 
-                <h3 class="mb-4">
+                <h3 class="category-title mb-4">
                     {{ category.name }}
                 </h3>
 
@@ -153,9 +160,9 @@
 
                     {% for monument in category.monuments.all %}
 
-                        <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="col-lg-4 col-md-6 col-12 mb-4">
 
-                            <div class="card h-100">
+                            <div class="card work-card h-100">
 
                                 {% if monument.image %}
                                     <img
@@ -177,7 +184,7 @@
                                         </p>
                                     {% endif %}
 
-                                    <a href="tel:+380959197152" class="btn btn-outline-dark rounded-pill mt-3">
+                                    <a href="tel:+380959197152" class="work-cta">
                                         Дізнатись вартість
                                     </a>
 
@@ -207,16 +214,46 @@
 
         {% endfor %}
 
+        <div class="catalog-cta text-center mt-5">
+
+            <h3>
+                Не знайшли потрібний варіант?
+            </h3>
+
+            <p>
+                Зателефонуйте нам або напишіть у месенджер — підберемо пам’ятник під ваші побажання та бюджет.
+            </p>
+
+            <div class="contact-actions mt-3">
+                <a href="tel:+380959197152" class="contact-action">
+                    Подзвонити
+                </a>
+
+                <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
+                    Telegram
+                </a>
+
+                <a href="viber://chat?number=%2B380959197152" class="contact-action">
+                    Viber
+                </a>
+
+                <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
+                    WhatsApp
+                </a>
+            </div>
+
+        </div>
+
     </div>
 
 </section>
 
 <!-- SERVICES -->
-<section id="services" class="py-5">
+<section id="services" class="py-5 services-section">
 
     <div class="container">
 
-        <h2 class="mb-4">
+        <h2 class="section-title mb-4">
             Послуги
         </h2>
 
@@ -253,11 +290,11 @@
 </section>
 
 <!-- CONTACTS -->
-<section id="contacts" class="py-5">
+<section id="contacts" class="py-5 contacts-section">
 
     <div class="container text-center">
 
-        <h2>
+        <h2 class="section-title">
             Потрібна консультація?
         </h2>
 
@@ -271,20 +308,20 @@
             </a>
         </h4>
 
-        <div class="messenger-links mt-3">
-            <a href="{{ site_settings.telegram|default:'#' }}" target="_blank">
+        <div class="contact-actions mt-3">
+            <a href="tel:+380959197152" class="contact-action">
+                Подзвонити
+            </a>
+
+            <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
                 Telegram
             </a>
 
-            <span>•</span>
-
-            <a href="viber://chat?number=%2B380959197152">
+            <a href="viber://chat?number=%2B380959197152" class="contact-action">
                 Viber
             </a>
 
-            <span>•</span>
-
-            <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" target="_blank">
+            <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
                 WhatsApp
             </a>
         </div>
