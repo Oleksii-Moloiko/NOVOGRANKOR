@@ -7,10 +7,16 @@ class Category(models.Model):
         verbose_name="Назва"
     )
 
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
     class Meta:
         verbose_name = "Категорія"
         verbose_name_plural = "Категорії"
-    
+        ordering = ["order"]
+
     def __str__(self):
         return self.name
     
@@ -34,9 +40,15 @@ class Monument(models.Model):
         blank=True,
     )
 
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
     class Meta:
         verbose_name = "Пам'ятник"
         verbose_name_plural = "Пам'ятники"
+        ordering = ["order"]
 
     def __str__(self):
         return self.title

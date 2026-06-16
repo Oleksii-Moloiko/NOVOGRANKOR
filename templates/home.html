@@ -1,1 +1,193 @@
-<h1>NOVOGRANKOR</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="py-5">
+
+    <div class="container text-center">
+
+        <h1 class="logo-title mb-4">
+            NOVOGRANKOR
+        </h1>
+
+        <h2 class="hero-title">
+            Виготовлення та встановлення пам’ятників під ключ по всій Україні
+        </h2>
+
+        <p class="hero-subtitle mt-4">
+            Збережіть пам'ять про найрідніших
+        </p>
+
+        <div class="row mt-5">
+
+            <div class="col-md-4 mb-3">
+                <a href="#about" class="btn btn-outline-dark rounded-pill px-4">
+                    Про нас
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <a href="#catalog" class="btn btn-outline-dark rounded-pill px-4">
+                    Каталог
+                </a>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <a href="#services" class="btn btn-outline-dark rounded-pill px-4">
+                    Послуги
+                </a>
+            </div>
+            
+        </div>
+        
+        <div class="row mt-5">
+
+            <div class="col-md-6">
+                ✓ 3D моделювання для візуалізації виробу
+            </div>
+
+            <div class="col-md-6">
+                ✓ Доставка вантажу по Україні
+            </div>
+
+        </div>
+
+    
+
+    </div>
+
+</section>
+
+<section id="about" class="py-5">
+    <div class="container">
+
+        <h2 class="mb-4">
+            Про нас
+        </h2>
+
+        <p>
+            NOVOGRANKOR — українська компанія з виготовлення пам’ятників та виробів із натурального граніту.
+        </p>
+
+        <p>
+            Ми працюємо з широким асортиментом українських та імпортних гранітів, створюючи якісні меморіальні комплекси.
+        </p>
+
+        <p>
+            Пропонуємо індивідуальний підхід, безкоштовну розробку 3D-моделі, власне виробництво та встановлення по всій Україні.
+        </p>
+
+    </div>
+</section>
+
+<section id="services" class="py-5">
+    <div class="container">
+
+        <h2 class="mb-4">
+            Послуги
+        </h2>
+
+        <div class="row">
+
+            <div class="col-md-6 mb-3">
+                ✓ Виготовлення пам'ятників
+            </div>
+
+            <div class="col-md-6 mb-3">
+                ✓ 3D моделювання
+            </div>
+
+            <div class="col-md-6 mb-3">
+                ✓ Доставка по Україні
+            </div>
+
+            <div class="col-md-6 mb-3">
+                ✓ Встановлення
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<section id="catalog" class="py-5">
+
+    <div class="container">
+
+        <h2 class="mb-4">
+            Каталог
+        </h2>
+
+        {% for category in categories %}
+
+            <h3 class="mb-3">
+                {{ category.name }}
+            </h3>
+
+            <div class="row">
+
+                {% for monument in category.monuments.all %}
+
+                    <div class="col-md-4 mb-4">
+
+                        <div class="card">
+
+                            <img
+                                src="{{ monument.image.url }}"
+                                class="card-img-top"
+                                alt="{{ monument.title }}"
+                            >
+
+                            <div class="card-body">
+
+                                <h5>
+                                    {{ monument.title }}
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <p>
+                        Поки немає пам'ятників у цій категорії
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+<section id="contacts" class="py-5">
+
+    <div class="container text-center">
+
+        <h2>Контакти</h2>
+
+        <h4 class="mt-4">
+            +38 (095) 919-71-52
+        </h4>
+
+        <p>
+            Telegram • Viber • WhatsApp
+        </p>
+
+    </div>
+
+</section>
+
+<a
+    href="tel:+380959197152"
+    class="btn btn-success call-btn"
+>
+📞
+</a>
+{% endblock %}
