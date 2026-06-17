@@ -2,3 +2,7 @@ asgiref==3.11.1
 Django==5.2.15
 pillow==12.2.0
 sqlparse==0.5.5
+python-decouple==3.8
+dj-database-url==3.0.1
+gunicorn==23.0.0
+whitenoise==6.9.0

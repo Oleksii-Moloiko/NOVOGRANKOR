@@ -42,32 +42,50 @@
                 </a>
             </div>
 
+            <div class="col-md-3 col-12 mb-3">
+                <a href="#gallery" class="nav-pill">
+                    Відео
+                </a>
+            </div>
+
         </div>
 
         <div class="hero-contact mt-5">
 
-            <h4>
-                <a href="tel:+380959197152" class="phone-link">
-                    {{ site_settings.phone|default:"+38 (095) 919-71-52" }}
-                </a>
-            </h4>
+            {% if site_settings and site_settings.phone %}
+                <h4>
+                    <a href="tel:{{ site_settings.phone }}" class="phone-link">
+                        {{ site_settings.phone_display|default:site_settings.phone }}
+                    </a>
+                </h4>
+            {% endif %}
 
             <div class="contact-actions mt-3">
-                <a href="tel:+380959197152" class="contact-action">
-                    Подзвонити
-                </a>
 
-                <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
-                    Telegram
-                </a>
+                {% if site_settings and site_settings.phone %}
+                    <a href="tel:{{ site_settings.phone }}" class="contact-action">
+                        Подзвонити
+                    </a>
+                {% endif %}
 
-                <a href="viber://chat?number=%2B380959197152" class="contact-action">
-                    Viber
-                </a>
+                {% if site_settings and site_settings.telegram %}
+                    <a href="{{ site_settings.telegram }}" class="contact-action" target="_blank" rel="noopener">
+                        Telegram
+                    </a>
+                {% endif %}
 
-                <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
-                    WhatsApp
-                </a>
+                {% if site_settings and site_settings.viber %}
+                    <a href="{{ site_settings.viber }}" class="contact-action" target="_blank" rel="noopener">
+                        Viber
+                    </a>
+                {% endif %}
+
+                {% if site_settings and site_settings.whatsapp %}
+                    <a href="{{ site_settings.whatsapp }}" class="contact-action" target="_blank" rel="noopener">
+                        WhatsApp
+                    </a>
+                {% endif %}
+
             </div>
 
         </div>
@@ -165,11 +183,19 @@
                             <div class="card work-card h-100">
 
                                 {% if monument.image %}
-                                    <img
-                                        src="{{ monument.image.url }}"
-                                        class="card-img-top"
-                                        alt="{{ monument.title }}"
-                                    >
+                                    {% if site_settings and site_settings.logo %}
+                                        <img
+                                            src="{{ site_settings.logo.url }}"
+                                            alt="Логотип NOVOGRANKOR"
+                                            class="hero-watermark"
+                                        >
+                                    {% else %}
+                                        <img
+                                            src="{% static 'img/logo.png' %}"
+                                            alt="Логотип NOVOGRANKOR"
+                                            class="hero-watermark"
+                                        >
+                                    {% endif %}
                                 {% endif %}
 
                                 <div class="card-body">
@@ -184,9 +210,11 @@
                                         </p>
                                     {% endif %}
 
-                                    <a href="tel:+380959197152" class="work-cta">
-                                        Дізнатись вартість
-                                    </a>
+                                    {% if site_settings and site_settings.phone %}
+                                        <a href="tel:{{ site_settings.phone }}" class="work-cta">
+                                            Дізнатись вартість
+                                        </a>
+                                    {% endif %}
 
                                 </div>
 
@@ -217,29 +245,39 @@
         <div class="catalog-cta text-center mt-5">
 
             <h3>
-                Не знайшли потрібний варіант?
+                {{ site_settings.cta_title|default:"Не знайшли потрібний варіант?" }}
             </h3>
 
             <p>
-                Зателефонуйте нам або напишіть у месенджер — підберемо пам’ятник під ваші побажання та бюджет.
+                {{ site_settings.cta_subtitle|default:"Зателефонуйте нам — підберемо пам’ятник під ваші побажання та бюджет." }}
             </p>
 
             <div class="contact-actions mt-3">
-                <a href="tel:+380959197152" class="contact-action">
-                    Подзвонити
-                </a>
 
-                <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
-                    Telegram
-                </a>
+                {% if site_settings and site_settings.phone %}
+                    <a href="tel:{{ site_settings.phone }}" class="contact-action">
+                        Подзвонити
+                    </a>
+                {% endif %}
 
-                <a href="viber://chat?number=%2B380959197152" class="contact-action">
-                    Viber
-                </a>
+                {% if site_settings and site_settings.telegram %}
+                    <a href="{{ site_settings.telegram }}" class="contact-action" target="_blank" rel="noopener">
+                        Telegram
+                    </a>
+                {% endif %}
 
-                <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
-                    WhatsApp
-                </a>
+                {% if site_settings and site_settings.viber %}
+                    <a href="{{ site_settings.viber }}" class="contact-action" target="_blank" rel="noopener">
+                        Viber
+                    </a>
+                {% endif %}
+
+                {% if site_settings and site_settings.whatsapp %}
+                    <a href="{{ site_settings.whatsapp }}" class="contact-action" target="_blank" rel="noopener">
+                        WhatsApp
+                    </a>
+                {% endif %}
+
             </div>
 
         </div>
@@ -247,6 +285,65 @@
     </div>
 
 </section>
+
+
+{% if gallery %}
+<section class="py-5 gallery-section">
+
+    <div class="container">
+
+        <h2 class="section-title mb-5">
+            Відео робочого процесу
+        </h2>
+
+        <div class="row">
+
+            {% for item in gallery %}
+                <div class="col-lg-4 col-md-6 col-12 mb-4">
+
+                    <div class="card work-card h-100">
+
+                        {% if item.video %}
+                            <video
+                                class="card-img-top"
+                                controls
+                                {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
+                            >
+                                <source src="{{ item.video.url }}" type="video/mp4">
+                                Ваш браузер не підтримує відео.
+                            </video>
+                        {% endif %}
+
+                        {% if item.title or item.description %}
+                            <div class="card-body">
+
+                                {% if item.title %}
+                                    <h5 class="card-title">
+                                        {{ item.title }}
+                                    </h5>
+                                {% endif %}
+
+                                {% if item.description %}
+                                    <p class="card-text">
+                                        {{ item.description }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+{% endif %}
+
 
 <!-- SERVICES -->
 <section id="services" class="py-5 services-section">
@@ -295,35 +392,47 @@
     <div class="container text-center">
 
         <h2 class="section-title">
-            Потрібна консультація?
+            {{ site_settings.cta_title|default:"Потрібна консультація?" }}
         </h2>
 
         <p class="mt-3">
-            Зателефонуйте нам або напишіть у месенджер — допоможемо підібрати пам’ятник під ваші побажання та бюджет.
+            {{ site_settings.cta_subtitle|default:"Зателефонуйте нам — допоможемо підібрати пам’ятник під ваші побажання та бюджет." }}
         </p>
 
-        <h4 class="mt-4">
-            <a href="tel:+380959197152" class="phone-link">
-                {{ site_settings.phone|default:"+38 (095) 919-71-52" }}
-            </a>
-        </h4>
+        {% if site_settings and site_settings.phone %}
+            <h4 class="mt-4">
+                <a href="tel:{{ site_settings.phone }}" class="phone-link">
+                    {{ site_settings.phone_display|default:site_settings.phone }}
+                </a>
+            </h4>
+        {% endif %}
 
         <div class="contact-actions mt-3">
-            <a href="tel:+380959197152" class="contact-action">
-                Подзвонити
-            </a>
 
-            <a href="{{ site_settings.telegram|default:'#' }}" class="contact-action" target="_blank">
-                Telegram
-            </a>
+            {% if site_settings and site_settings.phone %}
+                <a href="tel:{{ site_settings.phone }}" class="contact-action">
+                    Подзвонити
+                </a>
+            {% endif %}
 
-            <a href="viber://chat?number=%2B380959197152" class="contact-action">
-                Viber
-            </a>
+            {% if site_settings and site_settings.telegram %}
+                <a href="{{ site_settings.telegram }}" class="contact-action" target="_blank" rel="noopener">
+                    Telegram
+                </a>
+            {% endif %}
 
-            <a href="{{ site_settings.whatsapp|default:'https://wa.me/380959197152' }}" class="contact-action" target="_blank">
-                WhatsApp
-            </a>
+            {% if site_settings and site_settings.viber %}
+                <a href="{{ site_settings.viber }}" class="contact-action" target="_blank" rel="noopener">
+                    Viber
+                </a>
+            {% endif %}
+
+            {% if site_settings and site_settings.whatsapp %}
+                <a href="{{ site_settings.whatsapp }}" class="contact-action" target="_blank" rel="noopener">
+                    WhatsApp
+                </a>
+            {% endif %}
+
         </div>
 
     </div>
@@ -331,12 +440,14 @@
 </section>
 
 <!-- CALL BUTTON -->
-<a
-    href="tel:+380959197152"
-    class="btn btn-success call-btn"
-    aria-label="Подзвонити"
->
-    📞
-</a>
+{% if site_settings and site_settings.phone %}
+    <a
+        href="tel:{{ site_settings.phone }}"
+        class="btn btn-success call-btn"
+        aria-label="Подзвонити"
+    >
+        📞
+    </a>
+{% endif %}
 
 {% endblock %}

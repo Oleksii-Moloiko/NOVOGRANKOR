@@ -5,9 +5,24 @@ from .models import (
     Category,
     Monument,
     Gallery,
-    ContactRequest,
     SiteSettings,
 )
+
+
+class MonumentInline(admin.TabularInline):
+    model = Monument
+    extra = 0
+    fields = (
+        "title",
+        "image",
+        "order",
+        "is_active",
+    )
+
+    ordering = (
+        "order",
+        "id",
+    )
 
 
 @admin.register(Category)
@@ -16,33 +31,107 @@ class CategoryAdmin(admin.ModelAdmin):
         "id",
         "name",
         "order",
+        "is_active",
+        "updated_at",
     )
 
-    ordering = ("order",)
+    list_filter = (
+        "is_active",
+    )
+
+    search_fields = (
+        "name",
+    )
+
+    ordering = (
+        "order",
+        "id",
+    )
+
+    inlines = (
+        MonumentInline,
+    )
 
 
 @admin.register(Monument)
 class MonumentAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
         "preview",
         "title",
         "category",
         "order",
+        "is_active",
+        "updated_at",
     )
 
     list_filter = (
         "category",
+        "is_active",
     )
 
     search_fields = (
         "title",
+        "description",
+        "alt_text",
+    )
+
+    list_editable = (
+        "order",
+        "is_active",
     )
 
     ordering = (
         "category",
         "order",
+        "id",
+    )
+
+    readonly_fields = (
+        "preview",
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        (
+            "Основна інформація",
+            {
+                "fields": (
+                    "category",
+                    "title",
+                    "description",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Зображення",
+            {
+                "fields": (
+                    "image",
+                    "preview",
+                    "alt_text",
+                )
+            },
+        ),
+        (
+            "Сортування",
+            {
+                "fields": (
+                    "order",
+                )
+            },
+        ),
+        (
+            "Системна інформація",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
     )
 
     def preview(self, obj):
@@ -58,54 +147,128 @@ class MonumentAdmin(admin.ModelAdmin):
 
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
-
     list_display = (
         "id",
-        "preview",
+        "title",
+        "video_preview",
+        "order",
+        "is_active",
+        "updated_at",
     )
 
-    def preview(self, obj):
-        if obj.image:
-            return format_html(
-                '<img src="{}" width="80" height="80" style="object-fit:cover;border-radius:8px;" />',
-                obj.image.url,
-            )
-        return "-"
-
-    preview.short_description = "Фото"
-
-
-@admin.register(ContactRequest)
-class ContactRequestAdmin(admin.ModelAdmin):
-
-    list_display = (
-        "id",
-        "name",
-        "phone",
-        "created_at",
+    list_filter = (
+        "is_active",
     )
 
     search_fields = (
-        "name",
-        "phone",
+        "title",
+        "description",
     )
 
-    readonly_fields = (
-        "name",
-        "phone",
-        "comment",
-        "created_at",
+    list_editable = (
+        "order",
+        "is_active",
     )
 
     ordering = (
-        "-created_at",
+        "order",
+        "id",
     )
 
+    readonly_fields = (
+        "video_preview",
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        (
+            "Відео",
+            {
+                "fields": (
+                    "title",
+                    "video",
+                    "poster",
+                    "video_preview",
+                    "description",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Сортування",
+            {
+                "fields": (
+                    "order",
+                )
+            },
+        ),
+        (
+            "Системна інформація",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
+
+    def video_preview(self, obj):
+        if obj.video:
+            return format_html(
+                '<video width="220" controls style="border-radius:8px;">'
+                '<source src="{}" type="video/mp4">'
+                "Ваш браузер не підтримує відео."
+                "</video>",
+                obj.video.url,
+            )
+        return "-"
+
+    video_preview.short_description = "Превʼю відео"
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
-
     list_display = (
-        "phone",
+        "phone_display",
         "hero_title",
     )
+
+    fieldsets = (
+        (
+            "Контакти",
+            {
+                "fields": (
+                    "phone",
+                    "phone_display",
+                    "telegram",
+                    "viber",
+                    "whatsapp",
+                )
+            },
+        ),
+        (
+            "Перший екран",
+            {
+                "fields": (
+                    "logo",
+                    "hero_title",
+                    "hero_subtitle",
+                )
+            },
+        ),
+        (
+            "CTA-блок",
+            {
+                "fields": (
+                    "cta_title",
+                    "cta_subtitle",
+                )
+            },
+        ),
+    )
+
+    def has_add_permission(self, request):
+        if SiteSettings.objects.exists():
+            return False
+        return super().has_add_permission(request)
