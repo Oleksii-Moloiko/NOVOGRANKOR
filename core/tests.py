@@ -167,7 +167,7 @@ class HomeViewTests(TestCase):
     def test_home_page_uses_correct_template(self):
         response = self.client.get(reverse("home"))
 
-        self.assertTemplateUsed(response, "home.html")
+        self.assertTemplateUsed(response, "index.html")
 
     def test_home_page_shows_active_category(self):
         response = self.client.get(reverse("home"))

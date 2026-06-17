@@ -201,6 +201,26 @@ class SiteSettings(models.Model):
         help_text="Наприклад: Зателефонуйте нам — допоможемо підібрати памʼятник.",
     )
 
+    instagram = models.URLField(
+        blank=True,
+        verbose_name="Instagram",
+    )
+
+    facebook = models.URLField(
+        blank=True,
+        verbose_name="Facebook",
+    )
+
+    seo_title = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="SEO Title",
+    )
+
+    seo_description = models.TextField(
+        blank=True,
+        verbose_name="SEO Description",
+    )
     class Meta:
         verbose_name = "Налаштування сайту"
         verbose_name_plural = "Налаштування сайту"

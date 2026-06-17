@@ -6,18 +6,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>NOVOGRANKOR</title>
+    <title>
+        {% if site_settings and site_settings.seo_title %}
+            {{ site_settings.seo_title }}
+        {% else %}
+            NOVOGRANKOR — памʼятники з граніту
+        {% endif %}
+    </title>
 
+    <meta
+        name="description"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення памʼятників, меморіальних комплексів, доставка та встановлення по Україні.{% endif %}"
+    >
+
+    <meta
+        property="og:title"
+        content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR{% endif %}"
+    >
+    <meta
+        property="og:description"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення памʼятників з натурального граніту під ключ.{% endif %}"
+    >
+
+    {% if site_settings and site_settings.logo %}
+        <link rel="icon" href="{{ site_settings.logo.url }}">
+        <meta property="og:image" content="{{ site_settings.logo.url }}">
+    {% endif %}
+
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=7">
 </head>
 <body>
+    <a class="skip-link" href="#main-content">Перейти до контенту</a>
 
-{% block content %}
-{% endblock %}
+    {% block content %}
+    {% endblock %}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

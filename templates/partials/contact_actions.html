@@ -1,0 +1,39 @@
+{% if site_settings %}
+    <div class="contact-actions">
+        {% if site_settings.phone %}
+            <a href="tel:{{ site_settings.phone }}" class="contact-action contact-action-primary">
+                Подзвонити
+            </a>
+        {% endif %}
+
+        {% if site_settings.telegram %}
+            <a href="{{ site_settings.telegram }}" class="contact-action" target="_blank" rel="noopener noreferrer">
+                Telegram
+            </a>
+        {% endif %}
+
+        {% if site_settings.viber %}
+            <a href="{{ site_settings.viber }}" class="contact-action" target="_blank" rel="noopener noreferrer">
+                Viber
+            </a>
+        {% endif %}
+
+        {% if site_settings.whatsapp %}
+            <a href="{{ site_settings.whatsapp }}" class="contact-action" target="_blank" rel="noopener noreferrer">
+                WhatsApp
+            </a>
+        {% endif %}
+
+        {% if site_settings.instagram %}
+            <a href="{{ site_settings.instagram }}" class="contact-action" target="_blank" rel="noopener noreferrer">
+                Instagram
+            </a>
+        {% endif %}
+
+        {% if site_settings.facebook %}
+            <a href="{{ site_settings.facebook }}" class="contact-action" target="_blank" rel="noopener noreferrer">
+                Facebook
+            </a>
+        {% endif %}
+    </div>
+{% endif %}
