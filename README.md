@@ -2,7 +2,33 @@
 
 Односторінковий сайт для компанії **NOVOGRANKOR**, яка займається виготовленням та встановленням пам’ятників з натурального граніту.
 
-Основна ціль сайту — швидко показати приклади робіт, надати базову інформацію про компанію та привести користувача до контакту: дзвінка або повідомлення в Telegram, Viber чи WhatsApp.
+Основна ціль сайту — швидко показати приклади робіт, надати базову інформацію про компанію та привести користувача до контакту: **дзвінка або переходу в Telegram, Viber чи WhatsApp**.
+
+Сайт не використовує онлайн-замовлення, форми заявок або email-нотифікації. Основний бізнес-сценарій — користувач переглядає інформацію та телефонує або переходить у месенджер.
+
+---
+
+## Основна бізнес-логіка
+
+Сайт не є інтернет-магазином або системою онлайн-заявок.
+
+Основний сценарій користувача:
+
+```text
+Користувач заходить на сайт
+↓
+Швидко бачить, чим займається компанія
+↓
+Переглядає приклади робіт і відео процесу
+↓
+Телефонує або переходить у месенджер
+```
+
+Головна бізнес-ціль:
+
+```text
+Приклади робіт → довіра → дзвінок / месенджер
+```
 
 ---
 
@@ -16,9 +42,29 @@
 * Блок “Про нас”
 * Каталог робіт з категоріями
 * Фото пам’ятників через Django Admin
+* Відео галерея робочого процесу
 * Блок послуг
 * Фінальний контактний CTA
+* Контакти та CTA керуються через Django Admin
+* Активний / неактивний статус для контенту
+* Healthcheck endpoint
+* Базові automated tests
 * Адаптивна верстка для desktop та mobile
+
+---
+
+## Чого немає в проєкті
+
+У проєкті свідомо не реалізовано:
+
+* онлайн-замовлення;
+* форму заявки;
+* POST-обробку заявки;
+* email-нотифікації;
+* spam protection для форми;
+* модель `ContactRequest`.
+
+Основна дія користувача — **подзвонити або перейти в месенджер**.
 
 ---
 
@@ -26,10 +72,15 @@
 
 * Python
 * Django
-* SQLite
+* SQLite для локальної розробки
+* PostgreSQL через `DATABASE_URL` для продакшену за потреби
 * HTML
 * CSS
 * Bootstrap
+* WhiteNoise
+* Gunicorn
+* python-decouple
+* dj-database-url
 
 ---
 
@@ -37,18 +88,30 @@
 
 ```text
 novogrankor/
-├── config/              # Налаштування Django-проєкту
-├── core/                # Основний Django app
-├── templates/           # HTML-шаблони
+├── config/                     # Налаштування Django-проєкту
+│   ├── settings.py
+│   ├── urls.py
+│   ├── asgi.py
+│   └── wsgi.py
+├── core/                       # Основний Django app
+│   ├── admin.py
+│   ├── context_processors.py
+│   ├── models.py
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── templates/                  # HTML-шаблони
 │   ├── base.html
 │   └── home.html
-├── static/              # Статичні файли
+├── static/                     # Статичні файли
 │   ├── css/
 │   │   └── style.css
 │   └── img/
 │       └── logo.png
-├── media/               # Завантажені фото з адмінки
-├── db.sqlite3           # Локальна база даних
+├── media/                      # Локальні завантаження через адмінку
+├── staticfiles/                # Результат collectstatic, не додається в git
+├── .env.example                # Приклад env-змінних
+├── .gitignore
 ├── manage.py
 ├── requirements.txt
 └── README.md
@@ -60,11 +123,100 @@ novogrankor/
 
 У проєкті використовуються такі моделі:
 
-* `Category` — категорії пам’ятників
-* `Monument` — приклади робіт / пам’ятники
-* `Gallery` — додаткова галерея
-* `ContactRequest` — заявки від користувачів
-* `SiteSettings` — налаштування сайту: телефон, месенджери, hero-тексти
+### `Category`
+
+Категорії пам’ятників.
+
+Поля:
+
+* `name`
+* `order`
+* `is_active`
+* `created_at`
+* `updated_at`
+
+### `Monument`
+
+Приклади робіт / пам’ятники.
+
+Поля:
+
+* `category`
+* `title`
+* `image`
+* `alt_text`
+* `description`
+* `order`
+* `is_active`
+* `created_at`
+* `updated_at`
+
+### `Gallery`
+
+Відео галерея робочого процесу.
+
+Поля:
+
+* `title`
+* `video`
+* `poster`
+* `description`
+* `order`
+* `is_active`
+* `created_at`
+* `updated_at`
+
+### `SiteSettings`
+
+Singleton-модель для керування основними налаштуваннями сайту.
+
+Поля:
+
+* `phone`
+* `phone_display`
+* `telegram`
+* `viber`
+* `whatsapp`
+* `logo`
+* `hero_title`
+* `hero_subtitle`
+* `cta_title`
+* `cta_subtitle`
+
+У базі має бути лише один запис `SiteSettings`.
+
+---
+
+## Env-змінні
+
+Проєкт використовує `.env`.
+
+Приклад є у файлі:
+
+```text
+.env.example
+```
+
+Локально потрібно створити файл:
+
+```text
+.env
+```
+
+Приклад:
+
+```env
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
+DATABASE_URL=
+```
+
+Для генерації `SECRET_KEY`:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
 
 ---
 
@@ -80,7 +232,7 @@ cd novogrankor
 ### 2. Створити віртуальне середовище
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 ```
 
 ### 3. Активувати віртуальне середовище
@@ -100,28 +252,37 @@ source .venv/bin/activate
 ### 4. Встановити залежності
 
 ```bash
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-### 5. Застосувати міграції
+### 5. Створити `.env`
+
+```bash
+cp .env.example .env
+```
+
+Після цього заповнити `SECRET_KEY`.
+
+### 6. Застосувати міграції
 
 ```bash
 python manage.py migrate
 ```
 
-### 6. Створити суперкористувача
+### 7. Створити суперкористувача
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Запустити сервер
+### 8. Запустити сервер
 
 ```bash
 python manage.py runserver
 ```
 
-Після запуску сайт буде доступний за адресою:
+Сайт:
 
 ```text
 http://127.0.0.1:8000/
@@ -133,59 +294,85 @@ http://127.0.0.1:8000/
 http://127.0.0.1:8000/admin/
 ```
 
+Healthcheck:
+
+```text
+http://127.0.0.1:8000/healthcheck/
+```
+
 ---
 
 ## Робота з адмінкою
 
 Через Django Admin можна:
 
-1. Додати категорії пам’ятників:
+1. Керувати категоріями пам’ятників:
 
-   * Бюджетні
-   * Середні
-   * Елітні
-   * Військові
+   * назва;
+   * порядок;
+   * активність.
 
-2. Додати пам’ятники в кожну категорію:
+2. Додавати пам’ятники:
 
-   * назва
-   * опис
-   * фото
-   * категорія
+   * назва;
+   * опис;
+   * фото;
+   * alt-текст;
+   * категорія;
+   * порядок;
+   * активність.
 
-3. Оновити налаштування сайту:
+3. Додавати відео робочого процесу:
 
-   * телефон
-   * Telegram
-   * WhatsApp
-   * hero title
-   * hero subtitle
+   * назва;
+   * відеофайл;
+   * poster / обкладинка;
+   * опис;
+   * порядок;
+   * активність.
+
+4. Оновлювати налаштування сайту:
+
+   * телефон для посилання;
+   * телефон для відображення;
+   * Telegram;
+   * Viber;
+   * WhatsApp;
+   * логотип;
+   * hero title;
+   * hero subtitle;
+   * CTA title;
+   * CTA subtitle.
 
 ---
 
 ## Контакти на сайті
 
-Телефон використовується як клікабельне посилання:
+Контакти не захардкоджені в шаблонах. Вони керуються через `SiteSettings` в Django Admin.
 
-```html
-<a href="tel:+380959197152">
-    +38 (095) 919-71-52
-</a>
+Телефон для посилання:
+
+```text
++380671234567
 ```
 
-WhatsApp:
+Телефон для відображення:
 
-```html
-https://wa.me/380959197152
+```text
++38 (067) 123-45-67
 ```
 
-Viber:
+У шаблоні телефон використовується так:
 
-```html
-viber://chat?number=%2B380959197152
+```django
+{% if site_settings and site_settings.phone %}
+    <a href="tel:{{ site_settings.phone }}">
+        {{ site_settings.phone_display|default:site_settings.phone }}
+    </a>
+{% endif %}
 ```
 
-Telegram задається через `SiteSettings` в адмінці.
+Telegram, Viber і WhatsApp також задаються в адмінці як повні посилання.
 
 ---
 
@@ -197,49 +384,128 @@ CSS-файл:
 static/css/style.css
 ```
 
-Логотип:
+Локальні статичні файли:
 
 ```text
-static/img/logo.png
+static/
 ```
 
-Підключення статичних файлів у шаблоні:
+Продакшен-збірка статичних файлів:
 
-```django
-{% load static %}
+```bash
+python manage.py collectstatic --noinput
 ```
 
-Приклад використання логотипа:
+Після виконання команди файли збираються в:
 
-```django
-<img src="{% static 'img/logo.png' %}" alt="NOVOGRANKOR">
+```text
+staticfiles/
 ```
+
+Папка `staticfiles/` не додається в git.
 
 ---
 
 ## Робота з media-файлами
 
-Фото пам’ятників завантажуються через Django Admin і зберігаються в папці:
+Фото пам’ятників, логотип, poster-зображення та відео завантажуються через Django Admin і зберігаються в папці:
 
 ```text
 media/
 ```
 
-Для локального відображення media-файлів у `config/urls.py` має бути:
+Папка `media/` не додається в git.
+
+Для локального відображення media-файлів у `config/urls.py` має бути підключення через:
 
 ```python
 from django.conf import settings
 from django.conf.urls.static import static
+```
 
+та:
+
+```python
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 ```
 
-У `settings.py` має бути:
+---
 
-```python
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+## Тести
+
+У проєкті є базові automated tests для:
+
+* моделей;
+* singleton-логіки `SiteSettings`;
+* головної сторінки;
+* фільтрації active / inactive контенту;
+* CTA-контактів;
+* відсутності онлайн-форми заявки;
+* healthcheck endpoint;
+* базової конфігурації Django Admin.
+
+Запуск тестів:
+
+```bash
+python manage.py test
 ```
+
+Очікуваний результат:
+
+```text
+OK
+```
+
+---
+
+## Production readiness
+
+Проєкт підготовлений до продакшену частково:
+
+* конфіг винесено в `.env`;
+* `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS` читаються з env;
+* `DATABASE_URL` підтримується через `dj-database-url`;
+* додано `WhiteNoise`;
+* додано `Gunicorn`;
+* налаштовано `STATIC_ROOT`;
+* додано healthcheck endpoint;
+* додано production security settings для `DEBUG=False`.
+
+---
+
+## Gunicorn
+
+Приклад локальної перевірки Gunicorn:
+
+```bash
+gunicorn config.wsgi:application
+```
+
+Або з явним bind:
+
+```bash
+gunicorn config.wsgi:application --bind 0.0.0.0:8000
+```
+
+---
+
+## Production check
+
+Для перевірки production-налаштувань потрібно встановити:
+
+```env
+DEBUG=False
+ALLOWED_HOSTS=your-domain.com
+SECRET_KEY=your-production-secret-key
+```
+
+Після цього запустити:
+
+```bash
+python manage.py check --deploy
+```
+
+Деякі попередження можуть залежати від конкретного хостингу, HTTPS, reverse proxy та налаштувань домену.
 
 ---
 
@@ -259,71 +525,37 @@ staticfiles/
 __MACOSX/
 ```
 
-Рекомендований `.gitignore`:
-
-```gitignore
-.venv/
-__pycache__/
-*.pyc
-
-db.sqlite3
-media/
-staticfiles/
-
-.env
-.DS_Store
-__MACOSX/
-```
-
 ---
 
 ## Поточний статус
 
-Готовий MVP landing page:
+Готовий MVP landing page з call-first бізнес-логікою:
 
 * сайт запускається локально;
 * головна сторінка зверстана;
-* контакти клікабельні;
+* онлайн-заявки видалені;
+* контакти керуються через адмінку;
+* CTA ведуть на дзвінок або месенджери;
 * каталог наповнюється через адмінку;
 * фото пам’ятників виводяться по категоріях;
-* доданий фоновий watermark-логотип;
-* є адаптивні стилі для мобільної версії.
+* відео робочого процесу виводяться з Gallery;
+* є floating call button;
+* є healthcheck endpoint;
+* є automated tests;
+* конфіг підготовлений до production-середовища.
 
 ---
 
 ## Подальші покращення
 
 * Додати favicon
-* Перевірити реальні посилання на Telegram, Viber, WhatsApp
-* Додати більше фото в категорії
-* Покращити мобільну версію після тестування на реальному телефоні
-* Підготувати продакшен-налаштування
-* Винести секретні налаштування в `.env`
-* Перейти з SQLite на PostgreSQL для продакшену
-* Налаштувати деплой
 * Додати SEO meta title та description
-* Додати sitemap.xml і robots.txt
-
----
-
-## Основна логіка сайту
-
-Сайт не є інтернет-магазином або складним каталогом.
-
-Основний сценарій користувача:
-
-```text
-Користувач заходить на сайт
-↓
-Швидко бачить, чим займається компанія
-↓
-Переглядає приклади робіт
-↓
-Телефонує або пише в месенджер
-```
-
-Головна бізнес-ціль:
-
-```text
-Фото робіт → довіра → контакт
-```
+* Додати Open Graph meta tags
+* Додати sitemap.xml
+* Додати robots.txt
+* Оптимізувати зображення
+* Оптимізувати відео для web
+* Перевірити mobile UX на реальних пристроях
+* Перевірити реальні посилання на Telegram, Viber, WhatsApp
+* Перейти з SQLite на PostgreSQL для продакшену за потреби
+* Налаштувати деплой
