@@ -23,6 +23,13 @@ class Category(TimeStampedModel):
         verbose_name="Назва",
     )
 
+    price_from = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Ціна від, грн",
+        help_text="Стартова ціна для всієї категорії. Наприклад: 18000",
+    )
+
     order = models.PositiveIntegerField(
         default=0,
         verbose_name="Порядок",
@@ -38,9 +45,13 @@ class Category(TimeStampedModel):
         verbose_name_plural = "Категорії"
         ordering = ["order", "id"]
 
+    def get_price_display(self):
+        if self.price_from:
+            return f"від {self.price_from:,}".replace(",", " ") + " грн"
+        return ""
+
     def __str__(self):
         return self.name
-
 
 class Monument(TimeStampedModel):
     category = models.ForeignKey(
@@ -89,8 +100,7 @@ class Monument(TimeStampedModel):
 
     def __str__(self):
         return self.title
-
-
+    
 class Gallery(TimeStampedModel):
     title = models.CharField(
         max_length=255,
@@ -137,6 +147,8 @@ class Gallery(TimeStampedModel):
         if self.title:
             return self.title
         return f"Відео #{self.id}"
+
+
 class SiteSettings(models.Model):
     phone = models.CharField(
         max_length=30,
@@ -167,6 +179,24 @@ class SiteSettings(models.Model):
         blank=True,
         verbose_name="WhatsApp",
         help_text="Повне посилання, наприклад: https://wa.me/380671234567",
+    )
+
+    instagram = models.URLField(
+        blank=True,
+        verbose_name="Instagram",
+        help_text="Повне посилання на Instagram.",
+    )
+
+    facebook = models.URLField(
+        blank=True,
+        verbose_name="Facebook",
+        help_text="Повне посилання на Facebook.",
+    )
+
+    tiktok = models.URLField(
+        blank=True,
+        verbose_name="TikTok",
+        help_text="Повне посилання на TikTok.",
     )
 
     logo = models.ImageField(
@@ -201,16 +231,6 @@ class SiteSettings(models.Model):
         help_text="Наприклад: Зателефонуйте нам — допоможемо підібрати памʼятник.",
     )
 
-    instagram = models.URLField(
-        blank=True,
-        verbose_name="Instagram",
-    )
-
-    facebook = models.URLField(
-        blank=True,
-        verbose_name="Facebook",
-    )
-
     seo_title = models.CharField(
         max_length=255,
         blank=True,
@@ -221,6 +241,7 @@ class SiteSettings(models.Model):
         blank=True,
         verbose_name="SEO Description",
     )
+
     class Meta:
         verbose_name = "Налаштування сайту"
         verbose_name_plural = "Налаштування сайту"

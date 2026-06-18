@@ -5,27 +5,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffb24a">
 
     <title>
         {% if site_settings and site_settings.seo_title %}
             {{ site_settings.seo_title }}
         {% else %}
-            NOVOGRANKOR — памʼятники з граніту
+            NOVOGRANKOR — памʼятники з граніту від виробника
         {% endif %}
     </title>
 
     <meta
         name="description"
-        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення памʼятників, меморіальних комплексів, доставка та встановлення по Україні.{% endif %}"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення памʼятників з натурального граніту від прямого виробника. Каталог, 3D-візуалізація, доставка та встановлення по Україні.{% endif %}"
     >
 
+    <meta property="og:type" content="website">
     <meta
         property="og:title"
-        content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR{% endif %}"
+        content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR — памʼятники з граніту{% endif %}"
     >
     <meta
         property="og:description"
-        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення памʼятників з натурального граніту під ключ.{% endif %}"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Прямий виробник гранітних памʼятників. Ціни від по категоріях, консультація, доставка та встановлення.{% endif %}"
     >
 
     {% if site_settings and site_settings.logo %}
@@ -39,11 +41,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=7">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20">
 </head>
 <body>
     <a class="skip-link" href="#main-content">Перейти до контенту</a>
@@ -51,6 +53,6 @@
     {% block content %}
     {% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
 </body>
 </html>

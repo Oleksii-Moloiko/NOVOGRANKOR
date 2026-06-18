@@ -8,7 +8,6 @@ from .models import (
     SiteSettings,
 )
 
-
 class MonumentInline(admin.TabularInline):
     model = Monument
     extra = 0
@@ -30,6 +29,7 @@ class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "name",
+        "price_from",
         "order",
         "is_active",
         "updated_at",
@@ -43,14 +43,42 @@ class CategoryAdmin(admin.ModelAdmin):
         "name",
     )
 
+    list_editable = (
+        "price_from",
+        "order",
+        "is_active",
+    )
+
     ordering = (
         "order",
         "id",
     )
 
+    fieldsets = (
+        (
+            "Основна інформація",
+            {
+                "fields": (
+                    "name",
+                    "price_from",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Сортування",
+            {
+                "fields": (
+                    "order",
+                )
+            },
+        ),
+    )
+
     inlines = (
         MonumentInline,
     )
+
 
 
 @admin.register(Monument)
@@ -60,6 +88,7 @@ class MonumentAdmin(admin.ModelAdmin):
         "preview",
         "title",
         "category",
+        "price_display",
         "order",
         "is_active",
         "updated_at",
@@ -106,6 +135,16 @@ class MonumentAdmin(admin.ModelAdmin):
             },
         ),
         (
+            "Ціна",
+            {
+                "fields": (
+                    "price",
+                    "price_from",
+                    "price_to",
+                )
+            },
+        ),
+        (
             "Зображення",
             {
                 "fields": (
@@ -142,8 +181,11 @@ class MonumentAdmin(admin.ModelAdmin):
             )
         return "-"
 
-    preview.short_description = "Фото"
+    def price_display(self, obj):
+        return obj.get_price_display()
 
+    preview.short_description = "Фото"
+    price_display.short_description = "Ціна"
 
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
@@ -244,6 +286,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "telegram",
                     "viber",
                     "whatsapp",
+                    "instagram",
+                    "facebook",
+                    "tiktok",
                 )
             },
         ),
@@ -263,6 +308,15 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 "fields": (
                     "cta_title",
                     "cta_subtitle",
+                )
+            },
+        ),
+        (
+            "SEO",
+            {
+                "fields": (
+                    "seo_title",
+                    "seo_description",
                 )
             },
         ),
