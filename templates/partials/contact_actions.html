@@ -1,36 +1,46 @@
 {% if site_settings %}
     <div class="contact-block">
-        {% if site_settings.phone %}
-            <div class="contact-main-action">
-                <a
-                    href="tel:{{ site_settings.phone }}"
-                    class="contact-action contact-action-primary"
-                    aria-label="Подзвонити за номером {{ site_settings.phone_display|default:site_settings.phone }}"
-                >
-                    Подзвонити
-                </a>
+        {% if site_settings.phone or site_settings.viber %}
+            <div class="contact-priority-actions" aria-label="Основні способи звʼязку">
+                {% if site_settings.phone %}
+                    <a
+                        href="tel:{{ site_settings.phone }}"
+                        class="contact-action contact-action-call"
+                        aria-label="Подзвонити за номером {{ site_settings.phone_display|default:site_settings.phone }}"
+                    >
+                        <span class="contact-action-title">Подзвонити</span>
+                        <span class="contact-action-text">{{ site_settings.phone_display|default:site_settings.phone }}</span>
+                    </a>
+                {% endif %}
+
+                {% if site_settings.viber %}
+                    <a
+                        href="{{ site_settings.viber }}"
+                        class="contact-action contact-action-viber"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Написати у Viber"
+                    >
+                        <span class="contact-action-title">Viber</span>
+                        <span class="contact-action-text">написати або надіслати фото</span>
+                    </a>
+                {% endif %}
             </div>
         {% endif %}
 
-        {% if site_settings.telegram or site_settings.viber or site_settings.whatsapp %}
+        {% if site_settings.telegram or site_settings.whatsapp %}
             <div class="contact-action-group">
-                <span class="contact-action-group-label">Месенджери</span>
+                <span class="contact-action-group-label">Інші месенджери</span>
 
                 <div class="contact-actions">
                     {% if site_settings.telegram %}
-                        <a href="{{ site_settings.telegram }}" class="contact-action" target="_blank" rel="noopener noreferrer" aria-label="Написати в Telegram">
+                        <a href="{{ site_settings.telegram }}" class="contact-action contact-action-secondary" target="_blank" rel="noopener noreferrer" aria-label="Написати в Telegram">
                             Telegram
                         </a>
                     {% endif %}
 
-                    {% if site_settings.viber %}
-                        <a href="{{ site_settings.viber }}" class="contact-action" target="_blank" rel="noopener noreferrer" aria-label="Написати у Viber">
-                            Viber
-                        </a>
-                    {% endif %}
-
                     {% if site_settings.whatsapp %}
-                        <a href="{{ site_settings.whatsapp }}" class="contact-action" target="_blank" rel="noopener noreferrer" aria-label="Написати у WhatsApp">
+                        <a href="{{ site_settings.whatsapp }}" class="contact-action contact-action-secondary" target="_blank" rel="noopener noreferrer" aria-label="Написати у WhatsApp">
                             WhatsApp
                         </a>
                     {% endif %}
@@ -44,19 +54,19 @@
 
                 <div class="contact-actions contact-social-actions">
                     {% if site_settings.instagram %}
-                        <a href="{{ site_settings.instagram }}" class="contact-action contact-action-secondary" target="_blank" rel="noopener noreferrer" aria-label="Відкрити Instagram">
+                        <a href="{{ site_settings.instagram }}" class="contact-action contact-action-ghost" target="_blank" rel="noopener noreferrer" aria-label="Відкрити Instagram">
                             Instagram
                         </a>
                     {% endif %}
 
                     {% if site_settings.facebook %}
-                        <a href="{{ site_settings.facebook }}" class="contact-action contact-action-secondary" target="_blank" rel="noopener noreferrer" aria-label="Відкрити Facebook">
+                        <a href="{{ site_settings.facebook }}" class="contact-action contact-action-ghost" target="_blank" rel="noopener noreferrer" aria-label="Відкрити Facebook">
                             Facebook
                         </a>
                     {% endif %}
 
                     {% if site_settings.tiktok %}
-                        <a href="{{ site_settings.tiktok }}" class="contact-action contact-action-secondary" target="_blank" rel="noopener noreferrer" aria-label="Відкрити TikTok">
+                        <a href="{{ site_settings.tiktok }}" class="contact-action contact-action-ghost" target="_blank" rel="noopener noreferrer" aria-label="Відкрити TikTok">
                             TikTok
                         </a>
                     {% endif %}

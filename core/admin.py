@@ -134,16 +134,7 @@ class MonumentAdmin(admin.ModelAdmin):
                 )
             },
         ),
-        (
-            "Ціна",
-            {
-                "fields": (
-                    "price",
-                    "price_from",
-                    "price_to",
-                )
-            },
-        ),
+
         (
             "Зображення",
             {
@@ -182,7 +173,9 @@ class MonumentAdmin(admin.ModelAdmin):
         return "-"
 
     def price_display(self, obj):
-        return obj.get_price_display()
+        if obj.category:
+            return obj.category.get_price_display()
+        return "-"
 
     preview.short_description = "Фото"
     price_display.short_description = "Ціна"

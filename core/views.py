@@ -29,7 +29,7 @@ def home(request):
 
     return render(
         request,
-        "home.html",
+        "index.html",
         {
             "categories": categories,
             "gallery": gallery,
