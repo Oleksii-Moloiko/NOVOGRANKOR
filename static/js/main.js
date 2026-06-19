@@ -2,30 +2,53 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll("[data-catalog-tab]");
     const panels = document.querySelectorAll("[data-catalog-panel]");
 
-    if (!tabs.length || !panels.length) {
-        return;
+    if (tabs.length && panels.length) {
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                const targetId = tab.dataset.catalogTab;
+
+                tabs.forEach((item) => {
+                    item.classList.remove("active");
+                    item.setAttribute("aria-selected", "false");
+                });
+
+                panels.forEach((panel) => {
+                    panel.hidden = panel.dataset.catalogPanel !== targetId;
+                });
+
+                tab.classList.add("active");
+                tab.setAttribute("aria-selected", "true");
+            });
+        });
     }
 
-    tabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-            const targetId = tab.dataset.catalogTab;
+    const burgerBtn = document.getElementById("burgerBtn");
+    const mobileNav = document.getElementById("mobileNav");
+    const closeNav = document.getElementById("closeNav");
 
-            tabs.forEach((item) => {
-                item.classList.remove("is-active");
-                item.setAttribute("aria-selected", "false");
-            });
+    if (burgerBtn && mobileNav && closeNav) {
+        const openMenu = () => {
+            mobileNav.hidden = false;
+        };
 
-            panels.forEach((panel) => {
-                panel.hidden = panel.dataset.catalogPanel !== targetId;
-            });
+        const closeMenu = () => {
+            mobileNav.hidden = true;
+        };
 
-            tab.classList.add("is-active");
-            tab.setAttribute("aria-selected", "true");
+        burgerBtn.addEventListener("click", openMenu);
+        closeNav.addEventListener("click", closeMenu);
+
+        mobileNav.addEventListener("click", (event) => {
+            if (event.target === mobileNav) {
+                closeMenu();
+            }
         });
-    });
-});
 
-document.addEventListener("DOMContentLoaded", () => {
+        mobileNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", closeMenu);
+        });
+    }
+
     const triggers = Array.from(document.querySelectorAll("[data-lightbox-src]"));
     const lightbox = document.getElementById("photoLightbox");
 

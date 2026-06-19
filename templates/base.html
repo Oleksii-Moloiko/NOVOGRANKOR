@@ -4,39 +4,38 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#151515">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#fff4d9">
 
     <title>
         {% if site_settings and site_settings.seo_title %}
             {{ site_settings.seo_title }}
         {% else %}
-            NOVOGRANKOR — памʼятники з граніту від виробника
+            NOVOGRANKOR — Памʼятники з натурального граніту
         {% endif %}
     </title>
 
     <meta
         name="description"
-        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення памʼятників з натурального граніту від виробника. Телефон, Viber, каталог, приклади робіт, галерея, доставка та встановлення по Україні.{% endif %}"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення та встановлення памʼятників з натурального граніту по всій Україні. Каталог, відео, фото робіт, консультація телефоном або у Viber.{% endif %}"
     >
 
     <meta property="og:type" content="website">
     <meta
         property="og:title"
-        content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR — памʼятники з граніту{% endif %}"
+        content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR — Памʼятники з натурального граніту{% endif %}"
     >
     <meta
         property="og:description"
-        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Прямий виробник гранітних памʼятників. Консультація телефоном або у Viber, каталог, приклади робіт, доставка та встановлення.{% endif %}"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Гранітні памʼятники, власне виробництво, доставка та встановлення по Україні.{% endif %}"
     >
 
     {% if site_settings and site_settings.logo %}
         <link rel="icon" href="{{ site_settings.logo.url }}">
         <meta property="og:image" content="{{ site_settings.logo.url }}">
+    {% else %}
+        <link rel="icon" href="{% static 'img/logo.png' %}">
     {% endif %}
-
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +44,7 @@
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=32">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=40">
 </head>
 <body>
     <a class="skip-link" href="#main-content">Перейти до контенту</a>
@@ -53,7 +52,6 @@
     {% block content %}
     {% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="{% static 'js/main.js' %}?v=1" defer></script>
+    <script src="{% static 'js/main.js' %}?v=40" defer></script>
 </body>
 </html>

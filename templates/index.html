@@ -4,176 +4,206 @@
 {% block content %}
 
 <header class="site-header">
-    <div class="container">
-        <nav class="top-nav" aria-label="Основна навігація">
-            <a href="#main-content" class="brand-link" aria-label="NOVOGRANKOR — на головну">
+    <div class="wrap header-row">
+        <a href="#main-content" class="brand" aria-label="NOVOGRANKOR — на головну">
+            <span class="brand-mark brand-logo-holder">
                 {% if site_settings and site_settings.logo %}
                     <img src="{{ site_settings.logo.url }}" alt="NOVOGRANKOR" class="brand-logo">
                 {% else %}
-                    <img src="{% static 'img/logo.png' %}" alt="NOVOGRANKOR" class="brand-logo">
+                    N
                 {% endif %}
-                <span>NOVOGRANKOR</span>
-            </a>
+            </span>
 
-            <div class="top-nav-links">
-                <a href="#catalog">Каталог</a>
-                <a href="#works">Наші роботи</a>
-                {% if gallery %}<a href="#gallery">Галерея</a>{% endif %}
-                <a href="#process">Як замовити</a>
-                <a href="#contacts">Контакти</a>
-            </div>
+            <span class="brand-text">
+                <span class="brand-title">NOVOGRANKOR</span>
+                <span class="brand-subtitle">Збережіть памʼять про найрідніших</span>
+            </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Основна навігація">
+            <a href="#about">Про нас</a>
+            <a href="#catalog">Каталог</a>
+            <a href="#services">Послуги</a>
+            <a href="#gallery">Галерея</a>
+            <a href="#contacts">Контакти</a>
+        </nav>
+
+        <button class="burger" id="burgerBtn" type="button" aria-label="Відкрити меню">
+            <span></span>
+        </button>
+    </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav" hidden>
+    <div class="mobile-nav-panel">
+        <button class="mobile-nav-close" id="closeNav" type="button" aria-label="Закрити меню">✕</button>
+        <a href="#about">Про нас</a>
+        <a href="#catalog">Каталог</a>
+        <a href="#services">Послуги</a>
+        <a href="#gallery">Галерея</a>
+        <a href="#contacts">Контакти</a>
+    </div>
+</div>
+
+<main id="main-content">
+    <section class="hero">
+        <div class="hero-watermark" aria-hidden="true">
+            {% if site_settings and site_settings.logo %}
+                <img src="{{ site_settings.logo.url }}" alt="">
+            {% else %}
+                N
+            {% endif %}
+        </div>
+
+        <div class="wrap hero-inner">
+            <span class="eyebrow">● Виготовлення та встановлення по всій Україні</span>
+
+            <h1>
+                {% if site_settings and site_settings.hero_title %}
+                    {{ site_settings.hero_title }}
+                {% else %}
+                    Гранітні памʼятники, що <em>зберігають</em> памʼять про найрідніших
+                {% endif %}
+            </h1>
+
+            <p class="hero-sub">
+                {% if site_settings and site_settings.hero_subtitle %}
+                    {{ site_settings.hero_subtitle }}
+                {% else %}
+                    3D-візуалізація майбутнього виробу, власне виробництво та доставка на вашу локацію — від першого ескізу до встановлення на місці.
+                {% endif %}
+            </p>
 
             {% if site_settings %}
-                <div class="header-actions" aria-label="Швидкий звʼязок">
+                <div class="cta-row">
                     {% if site_settings.phone %}
-                        <a href="tel:{{ site_settings.phone }}" class="header-phone">
+                        <a class="btn btn-primary" href="tel:{{ site_settings.phone }}">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/>
+                            </svg>
                             {{ site_settings.phone_display|default:site_settings.phone }}
                         </a>
                     {% endif %}
 
                     {% if site_settings.viber %}
-                        <a href="{{ site_settings.viber }}" class="header-viber" target="_blank" rel="noopener noreferrer">
-                            Viber
+                        <a class="btn btn-secondary" href="{{ site_settings.viber }}" target="_blank" rel="noopener noreferrer">
+                            Написати в Viber
                         </a>
                     {% endif %}
                 </div>
-            {% endif %}
-        </nav>
-    </div>
-</header>
 
-<main id="main-content">
-    <section class="hero-section">
-        <div class="hero-bg-mark" aria-hidden="true">
-            {% if site_settings and site_settings.logo %}
-                <img src="{{ site_settings.logo.url }}" alt="">
-            {% else %}
-                <img src="{% static 'img/logo.png' %}" alt="">
+                {% if site_settings.telegram or site_settings.whatsapp %}
+                    <div class="messengers">
+                        {% if site_settings.telegram %}
+                            <a class="messenger-pill" href="{{ site_settings.telegram }}" target="_blank" rel="noopener noreferrer">
+                                Telegram
+                            </a>
+                        {% endif %}
+
+                        {% if site_settings.whatsapp %}
+                            <a class="messenger-pill" href="{{ site_settings.whatsapp }}" target="_blank" rel="noopener noreferrer">
+                                WhatsApp
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
+    </section>
 
-        <div class="container">
-            <div class="row align-items-center g-4 g-xl-5">
-                <div class="col-lg-7">
-                    <p class="eyebrow">Памʼятники з натурального граніту від виробника</p>
-
-                    <h1 class="hero-title">
-                        Гранітні памʼятники з виготовленням та встановленням
-                    </h1>
-
-                    <p class="hero-subtitle">
-                        Зателефонуйте або напишіть у Viber — уважно відповімо на запитання, покажемо каталог і підкажемо рішення, яке доречне саме для вашої ситуації.
-                    </p>
-
-                    <div class="hero-contact-priority">
-                        <p class="hero-contact-label">Для першої консультації — телефон або Viber</p>
-                        {% include "partials/contact_actions.html" %}
-                    </div>
-
-                    <div class="hero-nav-pills" aria-label="Швидка навігація">
-                        <a href="#catalog">Каталог памʼятників</a>
-                        <a href="#works">Наші роботи</a>
-                        {% if gallery %}<a href="#gallery">Галерея</a>{% endif %}
-                    </div>
-
-                    <div class="hero-trust-row" aria-label="Переваги компанії">
-                        <div>
-                            <strong>Власне виробництво</strong>
-                            <span>контроль матеріалу, обробки та якості</span>
-                        </div>
-                        <div>
-                            <strong>Спокійний підбір</strong>
-                            <span>пояснюємо варіанти без тиску та поспіху</span>
-                        </div>
-                        <div>
-                            <strong>Під ключ</strong>
-                            <span>виготовлення, доставка та встановлення</span>
-                        </div>
-                    </div>
+    <section class="strip" id="services">
+        <div class="wrap strip-grid">
+            <div class="strip-card">
+                <div class="strip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
                 </div>
+                <h2>По всій Україні</h2>
+                <p>Виготовлення та встановлення памʼятників під ключ у будь-якому регіоні.</p>
+            </div>
 
-                <div class="col-lg-5">
-                    <aside class="consultation-card" aria-label="Консультація телефоном або у Viber">
-                        <div class="consultation-card-top">
-                            <div class="consultation-logo">
-                                {% if site_settings and site_settings.logo %}
-                                    <img src="{{ site_settings.logo.url }}" alt="NOVOGRANKOR">
-                                {% else %}
-                                    <img src="{% static 'img/logo.png' %}" alt="NOVOGRANKOR">
-                                {% endif %}
-                            </div>
-                            <span>Можна звернутися сьогодні</span>
-                        </div>
-
-                        <h2>Почнемо з розмови</h2>
-                        <p>Розкажіть, що потрібно зробити, у якому місті планується встановлення та які побажання для майбутнього памʼятника. Ми уважно пояснимо можливі варіанти.</p>
-
-                        <div class="consultation-checklist" aria-label="Що можна уточнити під час консультації">
-                            <div>Тип, форму та розмір памʼятника</div>
-                            <div>Матеріал, колір і комплектацію</div>
-                            <div>Порядок робіт, доставку та встановлення</div>
-                        </div>
-
-                        {% if site_settings and site_settings.phone %}
-                            <a href="tel:{{ site_settings.phone }}" class="consultation-phone">
-                                {{ site_settings.phone_display|default:site_settings.phone }}
-                            </a>
-                        {% endif %}
-
-                        {% if site_settings and site_settings.viber %}
-                            <a href="{{ site_settings.viber }}" class="consultation-viber" target="_blank" rel="noopener noreferrer">
-                                Написати у Viber
-                            </a>
-                        {% endif %}
-                    </aside>
+            <div class="strip-card">
+                <div class="strip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                        <path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/>
+                    </svg>
                 </div>
+                <h2>3D-візуалізація</h2>
+                <p>Бачите готовий виріб ще до виготовлення — точна 3D-модель на узгодження.</p>
+            </div>
+
+            <div class="strip-card">
+                <div class="strip-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M1 3h15v13H1z"/>
+                        <path d="M16 8h4l3 3v5h-7V8Z"/>
+                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                    </svg>
+                </div>
+                <h2>Доставка</h2>
+                <p>Привозимо готовий виріб на вашу локацію в будь-яке місто чи село.</p>
             </div>
         </div>
     </section>
 
-    <section class="conversion-strip" aria-label="Чому зручно звернутися до NOVOGRANKOR">
-        <div class="container">
-            <div class="conversion-grid">
-                <div>
-                    <span>01</span>
-                    <strong>Спокійна консультація</strong>
-                    <p>Не потрібно самостійно розбиратися у всіх деталях — пояснимо простими словами та без поспіху.</p>
+    <section class="about" id="about">
+        <div class="wrap about-grid">
+            <div class="about-visual about-ukraine-card">
+                <div class="about-ukraine-content">
+                    <span class="about-ukraine-kicker">Працюємо по всій Україні</span>
+                    <h3>Доставка та встановлення у вашому регіоні</h3>
+                    <p>Виготовляємо памʼятники на власному виробництві та організовуємо доставку до міста чи села замовника.</p>
                 </div>
-                <div>
-                    <span>02</span>
-                    <strong>Фото можна надіслати у Viber</strong>
-                    <p>Покажіть приклад або побажання, а ми підберемо близькі варіанти.</p>
+
+                <div class="coverage-visual" aria-hidden="true">
+                    <span class="coverage-dot dot-1"></span>
+                    <span class="coverage-dot dot-2"></span>
+                    <span class="coverage-dot dot-3"></span>
+                    <span class="coverage-dot dot-4"></span>
+                    <span class="coverage-line line-1"></span>
+                    <span class="coverage-line line-2"></span>
+                    <span class="coverage-line line-3"></span>
                 </div>
-                <div>
-                    <span>03</span>
-                    <strong>Прозоре пояснення вартості</strong>
-                    <p>Пояснюємо, як на вартість впливають розмір, граніт, деталі, доставка та монтаж.</p>
+
+                <div class="about-stats">
+                    <div class="stat">
+                        <b>10+</b>
+                        <span>років досвіду</span>
+                    </div>
+                    <div class="stat">
+                        <b>500+</b>
+                        <span>встановлених виробів</span>
+                    </div>
                 </div>
-                <div>
-                    <span>04</span>
-                    <strong>Супровід до встановлення</strong>
-                    <p>Ведемо замовлення від підбору моделі до готового результату на місці.</p>
-                </div>
+            </div>
+
+            <div>
+                <span class="section-tag">Про компанію</span>
+                <h2>Українське виробництво з натурального граніту</h2>
+                <p>NOVOGRANKOR — українська компанія з виготовлення памʼятників та виробів із натурального граніту. Працюємо з широким асортиментом українських та імпортних гранітів, створюючи якісні меморіальні комплекси, памʼятники, надгробні плити та елементи благоустрою.</p>
+                <p>Пропонуємо індивідуальний підхід, безкоштовну розробку 3D-моделі та власне виробництво з встановленням по всій Україні.</p>
+                <p>Наша мета — допомогти зберегти памʼять про найрідніших у довговічному та гідному вигляді.</p>
             </div>
         </div>
     </section>
 
-    <section id="catalog" class="section catalog-section">
-        <div class="container">
-            <div class="section-heading text-center">
-                <p class="eyebrow">Каталог</p>
-                <h2 class="section-title">Оберіть категорію памʼятника</h2>
-                <p class="section-description">
-                    Перегляньте основні категорії памʼятників. Якщо складно визначитись — зателефонуйте або напишіть у Viber, і ми спокійно підкажемо, з чого краще почати.
-                </p>
+    <section class="catalog" id="catalog">
+        <div class="wrap">
+            <div class="catalog-head">
+                <span class="section-tag">Каталог</span>
+                <h2>Оберіть категорію памʼятника</h2>
             </div>
 
             {% if categories %}
-                <div class="catalog-tabs" role="tablist" aria-label="Категорії памʼятників">
+                <div class="tabs" role="tablist" aria-label="Категорії памʼятників">
                     {% for category in categories %}
                         <button
                             type="button"
-                            class="catalog-tab{% if forloop.first %} is-active{% endif %}"
+                            class="tab{% if forloop.first %} active{% endif %}"
                             data-catalog-tab="{{ category.id }}"
                             role="tab"
                             aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
@@ -186,63 +216,49 @@
                 <div class="catalog-panels">
                     {% for category in categories %}
                         <div
-                            class="catalog-tab-panel"
+                            class="catalog-panel"
                             data-catalog-panel="{{ category.id }}"
                             {% if not forloop.first %}hidden{% endif %}
                         >
-                            <div class="catalog-price-wrap">
-                                <div class="catalog-price-badge">
-                                    <span>Ціна від</span>
-                                    <strong>
+                            <div class="tab-price">
+                                <div class="price-badge">
+                                    <span class="lbl">Ціна від</span>
+                                    <span class="val">
                                         {% if category.price_from %}
-                                            {{ category.price_from }} грн
+                                            {{ category.get_price_display|cut:"від " }}
                                         {% else %}
                                             уточнюється
                                         {% endif %}
-                                    </strong>
+                                    </span>
                                 </div>
                             </div>
 
-                            <div class="product-strip catalog-tab-products">
+                            <div class="grid-products">
                                 {% for monument in category.active_monuments|slice:":5" %}
                                     <article class="product-card">
-                                        <div class="product-image-wrap">
+                                        <div class="product-media">
                                             {% if monument.image %}
                                                 <img
                                                     src="{{ monument.image.url }}"
                                                     alt="{{ monument.alt_text|default:monument.title }}"
-                                                    class="product-image"
                                                     loading="lazy"
                                                 >
                                             {% else %}
-                                                <div class="product-image-placeholder">NOVOGRANKOR</div>
+                                                <div class="product-placeholder">NOVOGRANKOR</div>
                                             {% endif %}
                                         </div>
-
-                                        <div class="product-card-body">
-                                            <span class="product-kicker">{{ category.name }}</span>
-                                            <h4>{{ monument.title }}</h4>
-
-                                            {% if monument.description %}
-                                                <p>{{ monument.description|truncatechars:120 }}</p>
-                                            {% endif %}
+                                        <div class="product-info">
+                                            <small>{{ category.name }} · {{ monument.title }}</small>
 
                                             {% if site_settings %}
-                                                {% if site_settings.phone or site_settings.viber %}
-                                                    <div class="product-card-actions">
-                                                        {% if site_settings.phone %}
-                                                            <a href="tel:{{ site_settings.phone }}" class="product-action-call">
-                                                                Подзвонити
-                                                            </a>
-                                                        {% endif %}
-
-                                                        {% if site_settings.viber %}
-                                                            <a href="{{ site_settings.viber }}" class="product-action-viber" target="_blank" rel="noopener noreferrer">
-                                                                Viber
-                                                            </a>
-                                                        {% endif %}
-                                                    </div>
-                                                {% endif %}
+                                                <div class="product-actions">
+                                                    {% if site_settings.phone %}
+                                                        <a href="tel:{{ site_settings.phone }}">Подзвонити</a>
+                                                    {% endif %}
+                                                    {% if site_settings.viber %}
+                                                        <a href="{{ site_settings.viber }}" target="_blank" rel="noopener noreferrer">Viber</a>
+                                                    {% endif %}
+                                                </div>
                                             {% endif %}
                                         </div>
                                     </article>
@@ -256,80 +272,17 @@
             {% else %}
                 <div class="empty-state">Каталог буде наповнений найближчим часом.</div>
             {% endif %}
-
-            <div class="cta-panel text-center">
-                <p class="eyebrow">Не знайшли точний варіант?</p>
-                <h3>{{ site_settings.cta_title|default:"Підберемо модель індивідуально" }}</h3>
-                <p>
-                    Зателефонуйте або напишіть у Viber — покажемо близькі варіанти, пояснимо комплектацію та допоможемо зробити виважений вибір.
-                </p>
-                {% include "partials/contact_actions.html" %}
-            </div>
         </div>
     </section>
 
-    <section id="works" class="section works-section">
-        <div class="container">
-            <div class="section-heading text-center">
-                <p class="eyebrow">Наші роботи</p>
-                <h2 class="section-title">Приклади памʼятників і готових рішень</h2>
-                <p class="section-description">
-                    Цей блок допомагає швидше зрозуміти стиль, форму та комплектацію. Для точного підбору краще надіслати приклад у Viber або обговорити телефоном.
-                </p>
+    <section class="gallery" id="gallery">
+        <div class="wrap">
+            <div class="gallery-head">
+                <span class="section-tag">Галерея</span>
+                <h2>Як ми створюємо та готові роботи</h2>
             </div>
 
-            <div class="works-grid">
-                {% for category in categories %}
-                    {% for monument in category.active_monuments %}
-                        <article class="work-card">
-                            {% if monument.image %}
-                                <button
-                                    type="button"
-                                    class="work-card-lightbox-trigger"
-                                    data-lightbox-src="{{ monument.image.url }}"
-                                    data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
-                                    aria-label="Відкрити фото {{ monument.title }}"
-                                >
-                                    <span class="work-card-image">
-                                        <img
-                                            src="{{ monument.image.url }}"
-                                            alt="{{ monument.alt_text|default:monument.title }}"
-                                            loading="lazy"
-                                        >
-                                    </span>
-                                </button>
-                            {% else %}
-                                <div class="work-card-image">
-                                    <div class="product-image-placeholder">NOVOGRANKOR</div>
-                                </div>
-                            {% endif %}
-
-                            <div class="work-card-body">
-                                <span>{{ category.name }}</span>
-                                <h3>{{ monument.title }}</h3>
-                            </div>
-                        </article>
-                    {% endfor %}
-                {% empty %}
-                    <div class="empty-state">Приклади робіт будуть додані після наповнення каталогу.</div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-
-    {% if gallery %}
-        <section id="gallery" class="section gallery-section">
-            <div class="container">
-                <div class="section-heading section-heading-split">
-                    <div>
-                        <p class="eyebrow">Галерея</p>
-                        <h2 class="section-title">Відео з виробництва та процесу роботи</h2>
-                    </div>
-                    <p class="section-description">
-                        Якщо якийсь приклад близький до того, що ви шукаєте, надішліть його у Viber — ми підкажемо, як його можна адаптувати.
-                    </p>
-                </div>
-
+            {% if gallery %}
                 <div class="video-grid">
                     {% for item in gallery %}
                         <article class="video-card">
@@ -345,262 +298,127 @@
                                 </video>
                             {% endif %}
 
-                            {% if item.title or item.description %}
-                                <div class="video-card-body">
-                                    {% if item.title %}<h3>{{ item.title }}</h3>{% endif %}
-                                    {% if item.description %}<p>{{ item.description }}</p>{% endif %}
-                                </div>
+                            {% if item.title %}
+                                <div class="cap">{{ item.title }}</div>
                             {% endif %}
                         </article>
                     {% endfor %}
                 </div>
-            </div>
-        </section>
-    {% endif %}
+            {% endif %}
 
-    <section id="process" class="section process-section">
-        <div class="container">
-            <div class="section-heading text-center">
-                <p class="eyebrow">Як замовити</p>
-                <h2 class="section-title">Процес без зайвого стресу</h2>
-                <p class="section-description">
-                    Ми не просимо одразу приймати складне рішення. Починаємо з консультації, далі поступово погоджуємо деталі.
-                </p>
-            </div>
-
-            <div class="process-grid">
-                <div class="process-card">
-                    <span>01</span>
-                    <h3>Телефон або Viber</h3>
-                    <p>Уважно уточнюємо побажання, місце встановлення, терміни та базову комплектацію.</p>
-                </div>
-                <div class="process-card">
-                    <span>02</span>
-                    <h3>Підбір варіантів</h3>
-                    <p>Показуємо доречні моделі, пояснюємо різницю між матеріалами, розмірами та формами.</p>
-                </div>
-                <div class="process-card">
-                    <span>03</span>
-                    <h3>Узгодження деталей</h3>
-                    <p>Погоджуємо написи, портрет, квітник, вази, лампадки та інші елементи.</p>
-                </div>
-                <div class="process-card">
-                    <span>04</span>
-                    <h3>Візуалізація</h3>
-                    <p>За потреби готуємо 3D-вигляд, щоб до виробництва було зрозуміло, як виглядатиме памʼятник.</p>
-                </div>
-                <div class="process-card">
-                    <span>05</span>
-                    <h3>Виготовлення</h3>
-                    <p>Працюємо з натуральним гранітом та контролюємо якість обробки кожної деталі.</p>
-                </div>
-                <div class="process-card">
-                    <span>06</span>
-                    <h3>Доставка і монтаж</h3>
-                    <p>Організовуємо доставку та встановлення, після чого перевіряємо фінальний результат.</p>
-                </div>
+            <div class="photo-grid">
+                {% for category in categories %}
+                    {% for monument in category.active_monuments %}
+                        {% if monument.image %}
+                            <button
+                                type="button"
+                                class="photo-card"
+                                data-lightbox-src="{{ monument.image.url }}"
+                                data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
+                                aria-label="Відкрити фото {{ monument.title }}"
+                            >
+                                <img
+                                    src="{{ monument.image.url }}"
+                                    alt="{{ monument.alt_text|default:monument.title }}"
+                                    loading="lazy"
+                                >
+                                <span class="tag">{{ monument.title }}</span>
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                {% empty %}
+                    <div class="empty-state">Фото робіт будуть додані після наповнення каталогу.</div>
+                {% endfor %}
             </div>
         </div>
     </section>
 
-    <section id="about" class="section about-section">
-        <div class="container">
-            <div class="row align-items-center g-4">
-                <div class="col-lg-5">
-                    <p class="eyebrow">Про компанію</p>
-                    <h2 class="section-title">Виробник, який пояснює спокійно і по суті</h2>
-                </div>
+    <section class="cta-band" id="contacts">
+        <div class="wrap">
+            <div class="cta-band-inner">
+                <h2>
+                    {% if site_settings and site_settings.cta_title %}
+                        {{ site_settings.cta_title }}
+                    {% else %}
+                        Готові обрати памʼятник для рідної людини?
+                    {% endif %}
+                </h2>
 
-                <div class="col-lg-7">
-                    <div class="text-card">
-                        <p>
-                            NOVOGRANKOR виготовляє памʼятники, меморіальні комплекси, надгробні плити та вироби з натурального граніту.
-                        </p>
-                        <p>
-                            Наша задача — не залишати вас сам на сам із десятками моделей, а спокійно пояснити, що буде доречним для місця встановлення, побажань родини та потрібної комплектації.
-                        </p>
-                        <p class="mb-0">
-                            Каталог, приклади робіт і галерея допомагають зорієнтуватися, а консультація телефоном або у Viber допоможе обрати наступний крок без поспіху.
-                        </p>
+                <p>
+                    {% if site_settings and site_settings.cta_subtitle %}
+                        {{ site_settings.cta_subtitle }}
+                    {% else %}
+                        Зателефонуйте або напишіть — розрахуємо вартість безкоштовно та запропонуємо 3D-візуалізацію.
+                    {% endif %}
+                </p>
+
+                {% if site_settings %}
+                    <div class="cta-row">
+                        {% if site_settings.phone %}
+                            <a class="btn btn-primary" href="tel:{{ site_settings.phone }}">
+                                Отримати безкоштовний прорахунок
+                            </a>
+                        {% endif %}
+
+                        {% if site_settings.viber %}
+                            <a class="btn btn-secondary" href="{{ site_settings.viber }}" target="_blank" rel="noopener noreferrer">
+                                Звʼязатися в Viber
+                            </a>
+                        {% endif %}
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="services" class="section services-section">
-        <div class="container">
-            <div class="section-heading text-center">
-                <p class="eyebrow">Послуги</p>
-                <h2 class="section-title">Що беремо на себе</h2>
-                <p class="section-description">
-                    Повний цикл робіт — від першого дзвінка до готового встановленого памʼятника.
-                </p>
-            </div>
-
-            <div class="services-grid">
-                <div class="service-card">
-                    <span>01</span>
-                    <h3>Виготовлення памʼятників</h3>
-                    <p>Одинарні, подвійні, сімейні памʼятники та меморіальні комплекси.</p>
-                </div>
-                <div class="service-card">
-                    <span>02</span>
-                    <h3>3D-моделювання</h3>
-                    <p>Показуємо майбутній вигляд виробу до старту виробництва.</p>
-                </div>
-                <div class="service-card">
-                    <span>03</span>
-                    <h3>Доставка та встановлення</h3>
-                    <p>Організовуємо доставку та монтаж памʼятника по Україні.</p>
-                </div>
-                <div class="service-card">
-                    <span>04</span>
-                    <h3>Підбір матеріалів</h3>
-                    <p>Допомагаємо обрати граніт, колір, фактуру та комплектацію.</p>
-                </div>
-                <div class="service-card">
-                    <span>05</span>
-                    <h3>Оформлення деталей</h3>
-                    <p>Написи, портрети, вази, лампадки, квітники та інші елементи.</p>
-                </div>
-                <div class="service-card">
-                    <span>06</span>
-                    <h3>Комплексний супровід</h3>
-                    <p>Ведемо замовлення від першої консультації до готового результату.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="faq" class="section faq-section">
-        <div class="container">
-            <div class="section-heading text-center">
-                <p class="eyebrow">Питання</p>
-                <h2 class="section-title">Що важливо знати перед замовленням</h2>
-            </div>
-
-            <div class="faq-list">
-                <details class="faq-item">
-                    <summary>Чому краще почати з дзвінка або Viber?</summary>
-                    <p>Памʼятник має багато параметрів: розмір, граніт, форма, портрет, написи, доставка та монтаж. У розмові ми швидше звужуємо вибір і не перевантажуємо вас зайвими варіантами.</p>
-                </details>
-
-                <details class="faq-item">
-                    <summary>Чому ціна вказана “від”?</summary>
-                    <p>Тому що фінальна вартість залежить від розміру, типу граніту, складності форми, портрета, написів, додаткових елементів, доставки та монтажу.</p>
-                </details>
-
-                <details class="faq-item">
-                    <summary>Чи можна змінити форму або комплектацію?</summary>
-                    <p>Так. Готові приклади з каталогу можна адаптувати під ваші побажання, матеріал, розмір і потрібну комплектацію.</p>
-                </details>
-
-                <details class="faq-item">
-                    <summary>Чи робите ви 3D-візуалізацію?</summary>
-                    <p>Так. Перед виготовленням можна підготувати 3D-візуалізацію, щоб погодити вигляд памʼятника до старту робіт.</p>
-                </details>
-
-                <details class="faq-item">
-                    <summary>Чи є доставка та встановлення?</summary>
-                    <p>Так. Ми організовуємо доставку та встановлення памʼятника по Україні.</p>
-                </details>
-            </div>
-        </div>
-    </section>
-
-    <section id="contacts" class="section contacts-section">
-        <div class="container">
-            <div class="contact-panel text-center">
-                <p class="eyebrow">Контакти</p>
-                <h2>Звʼяжіться з нами телефоном або у Viber</h2>
-                <p>Розкажіть, що потрібно, або надішліть приклад у Viber — ми уважно підкажемо можливі варіанти, комплектацію та наступні кроки.</p>
-
-                {% include "partials/contact_actions.html" %}
+                {% endif %}
             </div>
         </div>
     </section>
 </main>
 
-<footer class="site-footer" id="footer">
-    <div class="container">
-        <div class="footer-grid">
+<footer class="site-footer">
+    <div class="wrap">
+        <div class="footer-top">
             <div class="footer-brand">
-                <a href="#main-content" class="footer-brand-link" aria-label="NOVOGRANKOR — на головну">
-                    {% if site_settings and site_settings.logo %}
-                        <img src="{{ site_settings.logo.url }}" alt="NOVOGRANKOR" class="footer-logo">
-                    {% else %}
-                        <img src="{% static 'img/logo.png' %}" alt="NOVOGRANKOR" class="footer-logo">
-                    {% endif %}
-                    <span>NOVOGRANKOR</span>
+                <a href="#main-content" class="brand">
+                    <span class="brand-mark brand-logo-holder footer-logo-holder">
+                        {% if site_settings and site_settings.logo %}
+                            <img src="{{ site_settings.logo.url }}" alt="NOVOGRANKOR" class="brand-logo">
+                        {% else %}
+                            N
+                        {% endif %}
+                    </span>
+                    <span class="brand-text">
+                        <span class="brand-title">NOVOGRANKOR</span>
+                    </span>
                 </a>
-
-                <p>
-                    Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.
-                </p>
-            </div>
-
-            <div class="footer-column">
-                <h3>Навігація</h3>
-                <nav class="footer-nav" aria-label="Навігація у футері">
-                    <a href="#catalog">Каталог</a>
-                    <a href="#works">Наші роботи</a>
-                    {% if gallery %}<a href="#gallery">Галерея</a>{% endif %}
-                    <a href="#about">Про компанію</a>
-                    <a href="#contacts">Контакти</a>
-                </nav>
+                <p>Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.</p>
             </div>
 
             {% if site_settings %}
-                <div class="footer-column">
-                    <h3>Контакти</h3>
-                    <div class="footer-contacts">
-                        {% if site_settings.phone %}
-                            <a href="tel:{{ site_settings.phone }}">
-                                {{ site_settings.phone_display|default:site_settings.phone }}
-                            </a>
-                        {% endif %}
-
-                        {% if site_settings.viber %}
-                            <a href="{{ site_settings.viber }}" target="_blank" rel="noopener noreferrer">
-                                Viber
-                            </a>
-                        {% endif %}
-
-                        {% if site_settings.telegram %}
-                            <a href="{{ site_settings.telegram }}" target="_blank" rel="noopener noreferrer">
-                                Telegram
-                            </a>
-                        {% endif %}
-
-                        {% if site_settings.whatsapp %}
-                            <a href="{{ site_settings.whatsapp }}" target="_blank" rel="noopener noreferrer">
-                                WhatsApp
-                            </a>
-                        {% endif %}
-                    </div>
+                <div class="footer-contacts">
+                    {% if site_settings.phone %}
+                        <a href="tel:{{ site_settings.phone }}">{{ site_settings.phone_display|default:site_settings.phone }}</a>
+                    {% endif %}
+                    {% if site_settings.viber %}
+                        <a href="{{ site_settings.viber }}" target="_blank" rel="noopener noreferrer">Viber</a>
+                    {% endif %}
+                    {% if site_settings.telegram %}
+                        <a href="{{ site_settings.telegram }}" target="_blank" rel="noopener noreferrer">Telegram</a>
+                    {% endif %}
+                    {% if site_settings.whatsapp %}
+                        <a href="{{ site_settings.whatsapp }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                    {% endif %}
                 </div>
 
                 {% if site_settings.instagram or site_settings.facebook or site_settings.tiktok %}
-                    <div class="footer-column">
-                        <h3>Соцмережі</h3>
-                        <div class="footer-socials">
+                    <div>
+                        <p class="footer-social-title">Ми в соцмережах</p>
+                        <div class="social-row">
                             {% if site_settings.instagram %}
-                                <a href="{{ site_settings.instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                                    Instagram
-                                </a>
+                                <a class="social-circle" href="{{ site_settings.instagram }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
                             {% endif %}
-
                             {% if site_settings.facebook %}
-                                <a href="{{ site_settings.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                                    Facebook
-                                </a>
+                                <a class="social-circle" href="{{ site_settings.facebook }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
                             {% endif %}
-
                             {% if site_settings.tiktok %}
-                                <a href="{{ site_settings.tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-                                    TikTok
-                                </a>
+                                <a class="social-circle" href="{{ site_settings.tiktok }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">TT</a>
                             {% endif %}
                         </div>
                     </div>
@@ -615,39 +433,26 @@
     </div>
 </footer>
 
-{% if site_settings %}
-    {% if site_settings.phone or site_settings.viber %}
-        <div class="sticky-contact-bar" aria-label="Швидкий звʼязок">
-            {% if site_settings.phone %}
-                <a
-                    href="tel:{{ site_settings.phone }}"
-                    class="sticky-contact-link sticky-contact-phone"
-                    aria-label="Подзвонити за номером {{ site_settings.phone_display|default:site_settings.phone }}"
-                >
-                    <span>Подзвонити</span>
-                </a>
-            {% endif %}
-
-            {% if site_settings.viber %}
-                <a
-                    href="{{ site_settings.viber }}"
-                    class="sticky-contact-link sticky-contact-viber"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Написати у Viber"
-                >
-                    <span>Viber</span>
-                </a>
-            {% endif %}
-        </div>
-    {% endif %}
+{% if site_settings and site_settings.phone or site_settings.viber %}
+    <div class="sticky-contact-bar" aria-label="Швидкий звʼязок">
+        {% if site_settings.phone %}
+            <a href="tel:{{ site_settings.phone }}" class="sticky-contact-link sticky-contact-phone">
+                Подзвонити
+            </a>
+        {% endif %}
+        {% if site_settings.viber %}
+            <a href="{{ site_settings.viber }}" class="sticky-contact-link sticky-contact-viber" target="_blank" rel="noopener noreferrer">
+                Viber
+            </a>
+        {% endif %}
+    </div>
 {% endif %}
+
 <div class="photo-lightbox" id="photoLightbox" hidden>
     <button type="button" class="photo-lightbox-close" aria-label="Закрити фото">×</button>
     <button type="button" class="photo-lightbox-nav photo-lightbox-prev" aria-label="Попереднє фото">‹</button>
-
     <img src="" alt="" class="photo-lightbox-image">
-
     <button type="button" class="photo-lightbox-nav photo-lightbox-next" aria-label="Наступне фото">›</button>
 </div>
+
 {% endblock %}
