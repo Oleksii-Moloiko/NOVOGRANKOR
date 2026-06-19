@@ -1021,11 +1021,10 @@ button {
 }
 
 .footer-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1.2fr 0.7fr 0.7fr;
     gap: 30px;
-    flex-wrap: wrap;
+    align-items: flex-start;
     margin-bottom: 30px;
 }
 
@@ -1058,6 +1057,10 @@ button {
     color: var(--brown);
 }
 
+.footer-social-block {
+    min-width: 180px;
+}
+
 .footer-social-title {
     font-size: 12.5px;
     font-weight: 800;
@@ -1082,15 +1085,24 @@ button {
     align-items: center;
     justify-content: center;
     color: var(--gold);
-    font-size: 12px;
-    font-weight: 900;
-    transition: transform 0.2s ease, background 0.2s ease;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.social-circle svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .social-circle:hover {
     color: var(--gold);
     transform: translateY(-3px) scale(1.05);
     background: var(--rust);
+    box-shadow: 0 10px 22px rgba(63, 42, 26, 0.18);
 }
 
 .footer-bottom {
@@ -1278,7 +1290,7 @@ button {
     }
 
     .footer-top {
-        flex-direction: column;
+        grid-template-columns: 1fr;
     }
 }
 
