@@ -169,8 +169,9 @@ class SiteSettings(models.Model):
         help_text="Повне посилання, наприклад: https://t.me/username",
     )
 
-    viber = models.URLField(
+    viber = models.CharField(
         blank=True,
+        max_length=255,
         verbose_name="Viber",
         help_text="Повне посилання на Viber.",
     )

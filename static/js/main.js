@@ -1,26 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const tabs = document.querySelectorAll("[data-catalog-tab]");
-    const panels = document.querySelectorAll("[data-catalog-panel]");
-
-    if (tabs.length && panels.length) {
-        tabs.forEach((tab) => {
-            tab.addEventListener("click", () => {
-                const targetId = tab.dataset.catalogTab;
-
-                tabs.forEach((item) => {
-                    item.classList.remove("active");
-                    item.setAttribute("aria-selected", "false");
-                });
-
-                panels.forEach((panel) => {
-                    panel.hidden = panel.dataset.catalogPanel !== targetId;
-                });
-
-                tab.classList.add("active");
-                tab.setAttribute("aria-selected", "true");
-            });
-        });
-    }
 
     const burgerBtn = document.getElementById("burgerBtn");
     const mobileNav = document.getElementById("mobileNav");
@@ -96,9 +74,20 @@ document.addEventListener("DOMContentLoaded", () => {
         trigger.addEventListener("click", () => openLightbox(index));
     });
 
-    closeButton.addEventListener("click", closeLightbox);
-    prevButton.addEventListener("click", showPrev);
-    nextButton.addEventListener("click", showNext);
+    closeButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        closeLightbox();
+    });
+
+    prevButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showPrev();
+    });
+
+    nextButton.addEventListener("click", (event) => {
+        event.stopPropagation();
+        showNext();
+    });
 
     lightbox.addEventListener("click", (event) => {
         if (event.target === lightbox) {
@@ -141,5 +130,173 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             showNext();
         }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const catalog = document.getElementById("catalog");
+    const catalogTabs = Array.from(document.querySelectorAll("[data-catalog-tab]"));
+    const catalogPanels = Array.from(document.querySelectorAll("[data-catalog-panel]"));
+    const visibleLimit = 10;
+
+    if (!catalogTabs.length || !catalogPanels.length) {
+        return;
+    }
+
+    const updateCatalogPanel = (panel) => {
+        const items = Array.from(panel.querySelectorAll("[data-catalog-item]"));
+        const toggle = panel.querySelector("[data-catalog-toggle]");
+        const isExpanded = panel.dataset.expanded === "true";
+        const hiddenCount = Math.max(items.length - visibleLimit, 0);
+
+        if (!toggle || !items.length) {
+            return;
+        }
+
+        items.forEach((item, index) => {
+            item.hidden = !isExpanded && index >= visibleLimit;
+        });
+
+        if (items.length <= visibleLimit) {
+            toggle.hidden = true;
+            return;
+        }
+
+        toggle.hidden = false;
+        toggle.textContent = isExpanded
+            ? "Показати менше ↑"
+            : `Дивитись більше +${hiddenCount}`;
+    };
+
+    const resetPanel = (panel) => {
+        panel.dataset.expanded = "false";
+        updateCatalogPanel(panel);
+    };
+
+    const activateCatalogTab = (selectedId) => {
+        catalogTabs.forEach((tab) => {
+            const isActive = tab.dataset.catalogTab === selectedId;
+
+            tab.classList.toggle("active", isActive);
+            tab.setAttribute("aria-selected", isActive ? "true" : "false");
+            tab.setAttribute("tabindex", isActive ? "0" : "-1");
+        });
+
+        catalogPanels.forEach((panel) => {
+            const isActive = panel.dataset.catalogPanel === selectedId;
+
+            panel.hidden = !isActive;
+
+            if (isActive) {
+                resetPanel(panel);
+            }
+        });
+    };
+
+    catalogPanels.forEach((panel) => {
+        const toggle = panel.querySelector("[data-catalog-toggle]");
+
+        if (!toggle) {
+            return;
+        }
+
+        toggle.addEventListener("click", () => {
+            const isExpanded = panel.dataset.expanded === "true";
+
+            if (isExpanded) {
+                panel.dataset.expanded = "false";
+                updateCatalogPanel(panel);
+
+                if (catalog) {
+                    catalog.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+
+                return;
+            }
+
+            panel.dataset.expanded = "true";
+            updateCatalogPanel(panel);
+        });
+    });
+
+    catalogTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            activateCatalogTab(tab.dataset.catalogTab);
+        });
+
+        tab.addEventListener("keydown", (event) => {
+            const currentIndex = catalogTabs.indexOf(tab);
+
+            if (event.key === "ArrowRight") {
+                event.preventDefault();
+                const nextTab = catalogTabs[currentIndex + 1] || catalogTabs[0];
+                nextTab.focus();
+                activateCatalogTab(nextTab.dataset.catalogTab);
+            }
+
+            if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                const prevTab = catalogTabs[currentIndex - 1] || catalogTabs[catalogTabs.length - 1];
+                prevTab.focus();
+                activateCatalogTab(prevTab.dataset.catalogTab);
+            }
+        });
+    });
+
+    const activeTab = document.querySelector("[data-catalog-tab].active") || catalogTabs[0];
+
+    if (activeTab) {
+        activateCatalogTab(activeTab.dataset.catalogTab);
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const videoCards = Array.from(document.querySelectorAll(".video-preview-card"));
+
+    if (!videoCards.length) {
+        return;
+    }
+
+    videoCards.forEach((card) => {
+        const video = card.querySelector("video");
+        const playButton = card.querySelector(".video-play-btn");
+
+        if (!video || !playButton) {
+            return;
+        }
+
+        const playVideo = () => {
+            card.classList.add("is-playing");
+            video.controls = true;
+
+            const playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    card.classList.remove("is-playing");
+                    video.controls = false;
+                });
+            }
+        };
+
+        playButton.addEventListener("click", playVideo);
+
+        video.addEventListener("pause", () => {
+            if (!video.ended) {
+                return;
+            }
+
+            card.classList.remove("is-playing");
+            video.controls = false;
+        });
+
+        video.addEventListener("ended", () => {
+            card.classList.remove("is-playing");
+            video.controls = false;
+            video.currentTime = 0;
+        });
     });
 });
