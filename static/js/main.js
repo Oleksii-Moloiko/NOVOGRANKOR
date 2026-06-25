@@ -159,13 +159,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (items.length <= visibleLimit) {
             toggle.hidden = true;
+            toggle.classList.remove("is-expanded");
             return;
         }
 
         toggle.hidden = false;
-        toggle.textContent = isExpanded
-            ? "Показати менше ↑"
-            : `Дивитись більше +${hiddenCount}`;
+        toggle.classList.toggle("is-expanded", isExpanded);
+
+        if (isExpanded) {
+            toggle.innerHTML = `<span>Показати менше</span>`;
+        } else {
+            toggle.innerHTML = `
+                <span>Дивитись більше</span>
+                <span class="catalog-toggle-count">+${hiddenCount}</span>
+            `;
+        }
     };
 
     const resetPanel = (panel) => {
@@ -254,49 +262,87 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    const videoCards = Array.from(document.querySelectorAll(".video-preview-card"));
+    const showreel = document.querySelector(".showreel-video");
 
-    if (!videoCards.length) {
+    if (!showreel) {
         return;
     }
 
-    videoCards.forEach((card) => {
-        const video = card.querySelector("video");
-        const playButton = card.querySelector(".video-play-btn");
+    const card = showreel.querySelector(".showreel-card");
+    const videos = Array.from(showreel.querySelectorAll("[data-showreel-video]"));
+    const thumbs = Array.from(showreel.querySelectorAll("[data-showreel-thumb]"));
+    const playButton = showreel.querySelector(".showreel-play-btn");
 
-        if (!video || !playButton) {
+    if (!card || !videos.length || !playButton) {
+        return;
+    }
+
+    let activeIndex = 0;
+
+    const getActiveVideo = () => videos[activeIndex];
+
+    const pauseAllVideos = () => {
+        videos.forEach((video) => {
+            video.pause();
+            video.controls = false;
+            video.currentTime = 0;
+        });
+
+        card.classList.remove("is-playing");
+    };
+
+    const activateVideo = (index) => {
+        pauseAllVideos();
+
+        activeIndex = index;
+
+        videos.forEach((video, videoIndex) => {
+            const isActive = videoIndex === activeIndex;
+            video.hidden = !isActive;
+            video.classList.toggle("active", isActive);
+        });
+
+        thumbs.forEach((thumb, thumbIndex) => {
+            thumb.classList.toggle("active", thumbIndex === activeIndex);
+        });
+    };
+
+    const playActiveVideo = () => {
+        const video = getActiveVideo();
+
+        if (!video) {
             return;
         }
 
-        const playVideo = () => {
-            card.classList.add("is-playing");
-            video.controls = true;
+        card.classList.add("is-playing");
+        video.controls = true;
 
-            const playPromise = video.play();
+        const playPromise = video.play();
 
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    card.classList.remove("is-playing");
-                    video.controls = false;
-                });
-            }
-        };
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                card.classList.remove("is-playing");
+                video.controls = false;
+            });
+        }
+    };
 
-        playButton.addEventListener("click", playVideo);
-
-        video.addEventListener("pause", () => {
-            if (!video.ended) {
-                return;
-            }
-
-            card.classList.remove("is-playing");
-            video.controls = false;
+    thumbs.forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+            const index = Number(thumb.dataset.showreelThumb);
+            activateVideo(index);
         });
+    });
 
+    playButton.addEventListener("click", playActiveVideo);
+
+    videos.forEach((video) => {
         video.addEventListener("ended", () => {
             card.classList.remove("is-playing");
             video.controls = false;
             video.currentTime = 0;
         });
     });
+
+    activateVideo(0);
 });

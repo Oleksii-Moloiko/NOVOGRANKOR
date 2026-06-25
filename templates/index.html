@@ -465,35 +465,53 @@
             </div>
 
             {% if gallery %}
-                <div class="video-grid">
-                    {% for item in gallery %}
-                        {% if item.video %}
-                            <article class="video-card video-preview-card">
-                                <div class="video-preview-wrap">
+                <div class="showreel-video">
+                    <article class="showreel-card">
+                        <div class="showreel-media-wrap">
+                            {% for item in gallery %}
+                                {% if item.video %}
                                     <video
-                                        class="video-media"
+                                        class="showreel-media{% if forloop.first %} active{% endif %}"
+                                        data-showreel-video="{{ forloop.counter0 }}"
                                         preload="metadata"
                                         playsinline
                                         {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
+                                        {% if not forloop.first %}hidden{% endif %}
                                     >
                                         <source src="{{ item.video.url }}" type="video/mp4">
                                         Ваш браузер не підтримує відео.
                                     </video>
+                                {% endif %}
+                            {% endfor %}
 
-                                    <button
-                                        type="button"
-                                        class="video-play-btn"
-                                        aria-label="Відтворити відео"
-                                    >
-                                        <span class="video-play-icon" aria-hidden="true"></span>
-                                        <span>Відтворити відео</span>
-                                    </button>
-                                </div>
-                            </article>
-                        {% endif %}
-                    {% endfor %}
+                            <button
+                                type="button"
+                                class="showreel-play-btn"
+                                aria-label="Відтворити showreel"
+                            >
+                                <span class="showreel-play-icon" aria-hidden="true"></span>
+                                <span>Відтворити showreel</span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <div class="showreel-thumbs" aria-label="Вибір відео">
+                        {% for item in gallery %}
+                            {% if item.video %}
+                                <button
+                                    type="button"
+                                    class="showreel-thumb{% if forloop.first %} active{% endif %}"
+                                    data-showreel-thumb="{{ forloop.counter0 }}"
+                                >
+                                    <span class="showreel-thumb-number">{{ forloop.counter }}</span>
+                                    <span class="showreel-thumb-label">Відео</span>
+                                </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
             {% endif %}
+
         </div>
     </section>
     
