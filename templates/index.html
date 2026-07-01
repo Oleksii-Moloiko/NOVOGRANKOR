@@ -40,7 +40,12 @@
             <span></span>
         </button>
     </div>
+
+
+
 </header>
+
+<div class="divider-1"></div>
 
 <div class="mobile-nav" id="mobileNav" hidden>
     <div class="mobile-nav-panel">
@@ -307,20 +312,19 @@
                             {% for category in categories %}
                                 {% for monument in category.active_monuments %}
                                     <article class="product-card" data-catalog-item>
-                                        <div class="product-media">
+                                        <div
+                                            class="product-media"
+                                            data-lightbox-src="{{ monument.image.url }}"
+                                            data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
+                                        >
                                             {% if monument.image %}
-                                                <img
-                                                    src="{{ monument.image.url }}"
-                                                    alt="{{ monument.alt_text|default:monument.title }}"
-                                                    loading="lazy"
-                                                >
+                                                <img src="{{ monument.image.url }}" alt="{{ monument.alt_text|default:monument.title }}" loading="lazy">
 
                                                 <button
                                                     type="button"
                                                     class="product-expand-btn"
-                                                    data-lightbox-src="{{ monument.image.url }}"
-                                                    data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
-                                                    aria-label="Розкрити фото {{ monument.title }}"
+                                                    tabindex="-1"
+                                                    aria-hidden="true"
                                                 >
                                                     <svg
                                                         width="16"
@@ -387,20 +391,19 @@
                             <div class="grid-products" data-catalog-grid>
                                 {% for monument in category.active_monuments %}
                                     <article class="product-card" data-catalog-item>
-                                        <div class="product-media">
+                                        <div
+                                            class="product-media"
+                                            data-lightbox-src="{{ monument.image.url }}"
+                                            data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
+                                        >
                                             {% if monument.image %}
-                                                <img
-                                                    src="{{ monument.image.url }}"
-                                                    alt="{{ monument.alt_text|default:monument.title }}"
-                                                    loading="lazy"
-                                                >
+                                                <img src="{{ monument.image.url }}" alt="{{ monument.alt_text|default:monument.title }}" loading="lazy">
 
                                                 <button
                                                     type="button"
                                                     class="product-expand-btn"
-                                                    data-lightbox-src="{{ monument.image.url }}"
-                                                    data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
-                                                    aria-label="Розкрити фото {{ monument.title }}"
+                                                    tabindex="-1"
+                                                    aria-hidden="true"
                                                 >
                                                     <svg
                                                         width="16"
@@ -465,50 +468,33 @@
             </div>
 
             {% if gallery %}
-                <div class="showreel-video">
-                    <article class="showreel-card">
-                        <div class="showreel-media-wrap">
-                            {% for item in gallery %}
-                                {% if item.video %}
+                <div class="showreel-grid">
+                    {% for item in gallery %}
+                        {% if item.video %}
+                            <article class="showreel-card" data-showreel-card>
+                                <div class="showreel-media-wrap">
                                     <video
-                                        class="showreel-media{% if forloop.first %} active{% endif %}"
-                                        data-showreel-video="{{ forloop.counter0 }}"
+                                        class="showreel-media"
                                         preload="metadata"
                                         playsinline
                                         {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
-                                        {% if not forloop.first %}hidden{% endif %}
                                     >
                                         <source src="{{ item.video.url }}" type="video/mp4">
                                         Ваш браузер не підтримує відео.
                                     </video>
-                                {% endif %}
-                            {% endfor %}
 
-                            <button
-                                type="button"
-                                class="showreel-play-btn"
-                                aria-label="Відтворити showreel"
-                            >
-                                <span class="showreel-play-icon" aria-hidden="true"></span>
-                                <span>Відтворити showreel</span>
-                            </button>
-                        </div>
-                    </article>
-
-                    <div class="showreel-thumbs" aria-label="Вибір відео">
-                        {% for item in gallery %}
-                            {% if item.video %}
-                                <button
-                                    type="button"
-                                    class="showreel-thumb{% if forloop.first %} active{% endif %}"
-                                    data-showreel-thumb="{{ forloop.counter0 }}"
-                                >
-                                    <span class="showreel-thumb-number">{{ forloop.counter }}</span>
-                                    <span class="showreel-thumb-label">Відео</span>
-                                </button>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
+                                    <button
+                                        type="button"
+                                        class="showreel-play-btn"
+                                        aria-label="Відтворити відео {{ forloop.counter }}"
+                                    >
+                                        <span class="showreel-play-icon" aria-hidden="true"></span>
+                                        <span>Відео {{ forloop.counter }}</span>
+                                    </button>
+                                </div>
+                            </article>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             {% endif %}
 
@@ -746,10 +732,12 @@
 {% endif %}
 
 <div class="photo-lightbox" id="photoLightbox" hidden>
-    <button type="button" class="photo-lightbox-close" aria-label="Закрити фото">×</button>
-    <button type="button" class="photo-lightbox-nav photo-lightbox-prev" aria-label="Попереднє фото">‹</button>
-    <img src="" alt="" class="photo-lightbox-image">
-    <button type="button" class="photo-lightbox-nav photo-lightbox-next" aria-label="Наступне фото">›</button>
+    <div class="photo-lightbox-frame">
+        <button type="button" class="photo-lightbox-close" aria-label="Закрити фото">×</button>
+        <button type="button" class="photo-lightbox-nav photo-lightbox-prev" aria-label="Попереднє фото">‹</button>
+        <img src="" alt="" class="photo-lightbox-image">
+        <button type="button" class="photo-lightbox-nav photo-lightbox-next" aria-label="Наступне фото">›</button>
+    </div>
 </div>
 
 {% endblock %}

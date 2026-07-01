@@ -117,6 +117,11 @@ button {
     gap: 16px;
 }
 
+.divider-1 {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(42,26,10,0.18) 20%, rgba(42,26,10,0.18) 80%, transparent);
+}
+
 .brand {
     display: flex;
     align-items: center;
@@ -877,7 +882,7 @@ button {
 }
 
 .price-hint {
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.4;
     color: #8a6d3a;
     text-align: center;
@@ -914,6 +919,7 @@ button {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .product-media img {
@@ -1008,11 +1014,12 @@ button {
 /* Catalog show more / show less button */
 
 .catalog-toggle {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
 
+    width: max-content;
     min-height: 48px;
     margin: 28px auto 0;
     padding: 12px 28px;
@@ -1167,7 +1174,10 @@ button {
     color: var(--brown-soft);
 }
 
-.showreel-video {
+.showreel-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
     max-width: 1180px;
     margin: 0 auto;
 }
@@ -1175,15 +1185,15 @@ button {
 .showreel-card {
     position: relative;
     overflow: hidden;
-    border-radius: 28px;
+    border-radius: 20px;
     background: var(--footer-dark);
-    box-shadow: 0 24px 60px rgba(63, 42, 26, 0.22);
+    box-shadow: 0 16px 36px rgba(63, 42, 26, 0.18);
 }
 
 .showreel-media-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 7.7;
+    aspect-ratio: 3 / 4;
     overflow: hidden;
     border-radius: inherit;
     background: var(--footer-dark);
@@ -1222,13 +1232,13 @@ button {
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    min-height: 48px;
-    padding: 0 24px;
+    min-height: 44px;
+    padding: 0 20px;
     border: 1px solid rgba(255, 250, 240, 0.36);
     border-radius: 999px;
     background: rgba(255, 250, 240, 0.24);
     color: #fffaf0;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.02em;
@@ -1246,65 +1256,21 @@ button {
 .showreel-play-icon {
     width: 0;
     height: 0;
-    border-top: 9px solid transparent;
-    border-bottom: 9px solid transparent;
-    border-left: 13px solid currentColor;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-left: 12px solid currentColor;
 }
 
 .showreel-card.is-playing .showreel-play-btn {
     display: none;
 }
 
-.showreel-thumbs {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 18px;
-}
 
-.showreel-thumb {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-height: 42px;
-    padding: 0 16px;
-    border-radius: 999px;
-    border: 1.5px solid rgba(63, 42, 26, 0.28);
-    background: rgba(255, 250, 240, 0.52);
-    color: var(--brown);
-    font-size: 13px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
-}
-
-.showreel-thumb:hover {
-    transform: translateY(-1px);
-    border-color: var(--brown);
-    background: var(--paper);
-}
-
-.showreel-thumb.active {
-    background: var(--brown);
-    border-color: var(--brown);
-    color: var(--gold);
-}
-
-.showreel-thumb-number {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(63, 42, 26, 0.1);
-    font-size: 12px;
-    font-weight: 900;
-}
-
-.showreel-thumb.active .showreel-thumb-number {
-    background: rgba(255, 217, 122, 0.16);
+@media (max-width: 767px) {
+    .showreel-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
 }
 
 /* CTA band */
@@ -1606,6 +1572,13 @@ button {
     background: rgba(0, 0, 0, 0.86);
 }
 
+.photo-lightbox-frame {
+    position: relative;
+    display: inline-flex;
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .photo-lightbox[hidden] {
     display: none !important;
 }
@@ -1626,10 +1599,9 @@ button {
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
-    transition: none;
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
@@ -1637,7 +1609,7 @@ button {
 
 .photo-lightbox-close:hover,
 .photo-lightbox-nav:hover {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.72);
 }
 
 .photo-lightbox-close {

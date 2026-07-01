@@ -262,87 +262,55 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    const showreel = document.querySelector(".showreel-video");
+    const cards = Array.from(document.querySelectorAll("[data-showreel-card]"));
 
-    if (!showreel) {
+    if (!cards.length) {
         return;
     }
 
-    const card = showreel.querySelector(".showreel-card");
-    const videos = Array.from(showreel.querySelectorAll("[data-showreel-video]"));
-    const thumbs = Array.from(showreel.querySelectorAll("[data-showreel-thumb]"));
-    const playButton = showreel.querySelector(".showreel-play-btn");
-
-    if (!card || !videos.length || !playButton) {
-        return;
-    }
-
-    let activeIndex = 0;
-
-    const getActiveVideo = () => videos[activeIndex];
-
-    const pauseAllVideos = () => {
-        videos.forEach((video) => {
-            video.pause();
-            video.controls = false;
-            video.currentTime = 0;
-        });
-
-        card.classList.remove("is-playing");
-    };
-
-    const activateVideo = (index) => {
-        pauseAllVideos();
-
-        activeIndex = index;
-
-        videos.forEach((video, videoIndex) => {
-            const isActive = videoIndex === activeIndex;
-            video.hidden = !isActive;
-            video.classList.toggle("active", isActive);
-        });
-
-        thumbs.forEach((thumb, thumbIndex) => {
-            thumb.classList.toggle("active", thumbIndex === activeIndex);
-        });
-    };
-
-    const playActiveVideo = () => {
-        const video = getActiveVideo();
+    const pauseCard = (card) => {
+        const video = card.querySelector(".showreel-media");
 
         if (!video) {
             return;
         }
 
-        card.classList.add("is-playing");
-        video.controls = true;
-
-        const playPromise = video.play();
-
-        if (playPromise !== undefined) {
-            playPromise.catch(() => {
-                card.classList.remove("is-playing");
-                video.controls = false;
-            });
-        }
+        video.pause();
+        video.controls = false;
+        video.currentTime = 0;
+        card.classList.remove("is-playing");
     };
 
-    thumbs.forEach((thumb) => {
-        thumb.addEventListener("click", () => {
-            const index = Number(thumb.dataset.showreelThumb);
-            activateVideo(index);
+    cards.forEach((card) => {
+        const video = card.querySelector(".showreel-media");
+        const playButton = card.querySelector(".showreel-play-btn");
+
+        if (!video || !playButton) {
+            return;
+        }
+
+        playButton.addEventListener("click", () => {
+            cards.forEach((otherCard) => {
+                if (otherCard !== card) {
+                    pauseCard(otherCard);
+                }
+            });
+
+            card.classList.add("is-playing");
+            video.controls = true;
+
+            const playPromise = video.play();
+
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    card.classList.remove("is-playing");
+                    video.controls = false;
+                });
+            }
         });
-    });
 
-    playButton.addEventListener("click", playActiveVideo);
-
-    videos.forEach((video) => {
         video.addEventListener("ended", () => {
-            card.classList.remove("is-playing");
-            video.controls = false;
-            video.currentTime = 0;
+            pauseCard(card);
         });
     });
-
-    activateVideo(0);
 });
