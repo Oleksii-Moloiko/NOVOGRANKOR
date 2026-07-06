@@ -191,7 +191,6 @@ class AboutSectionAdmin(admin.ModelAdmin):
         if AboutSection.objects.exists():
             return False
         return super().has_add_permission(request)
-    
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

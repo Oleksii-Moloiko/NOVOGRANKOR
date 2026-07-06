@@ -31,6 +31,7 @@ def home(request):
         .first()
     )
 
+
     advantages = Advantage.objects.filter(
         is_active=True,
     ).order_by("order", "id")
