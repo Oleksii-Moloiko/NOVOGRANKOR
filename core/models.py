@@ -159,6 +159,46 @@ class AboutStat(TimeStampedModel):
     def __str__(self):
         return f"{self.value} {self.label}"
 
+class GallerySection(TimeStampedModel):
+    class SectionType(models.TextChoices):
+        PROCESS = "process", "Процес"
+        WORKS = "works", "Наші роботи"
+
+    section_type = models.CharField(
+        max_length=20,
+        choices=SectionType.choices,
+        unique=True,
+        verbose_name="Тип секції",
+    )
+
+    tag = models.CharField(
+        max_length=100,
+        verbose_name="Мітка секції",
+    )
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Заголовок",
+    )
+
+    subtitle = models.TextField(
+        blank=True,
+        verbose_name="Підзаголовок",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна",
+    )
+
+    class Meta:
+        verbose_name = "Заголовок галереї"
+        verbose_name_plural = "Заголовки галерей"
+        ordering = ["section_type"]
+
+    def __str__(self):
+        return f"{self.get_section_type_display()} — {self.title}"
+    
 class Category(TimeStampedModel):
     name = models.CharField(
         max_length=100,

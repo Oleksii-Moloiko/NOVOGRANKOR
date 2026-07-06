@@ -3,13 +3,23 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
-from .admin import AdvantageAdmin, AboutSectionAdmin, CategoryAdmin, GalleryAdmin, MonumentAdmin, SiteSettingsAdmin
+from .admin import (
+    AboutSectionAdmin,
+    AdvantageAdmin,
+    CategoryAdmin,
+    GalleryAdmin,
+    GallerySectionAdmin,
+    MonumentAdmin,
+    SiteSettingsAdmin,
+)
+
 from .models import (
     AboutSection,
     AboutStat,
     Advantage,
     Category,
     Gallery,
+    GallerySection,
     Monument,
     SiteSettings,
 )
@@ -79,6 +89,19 @@ class GalleryModelTests(TestCase):
 
         self.assertTrue(item.is_active)
 
+class GallerySectionModelTests(TestCase):
+    def test_gallery_section_str_returns_type_and_title(self):
+        section = GallerySection.objects.create(
+            section_type=GallerySection.SectionType.PROCESS,
+            tag="Процес",
+            title="Від каменю до готового пам'ятника",
+            subtitle="Тестовий опис.",
+        )
+
+        self.assertEqual(
+            str(section),
+            "Процес — Від каменю до готового пам'ятника",
+        )
 
 class SiteSettingsModelTests(TestCase):
     def test_site_settings_str(self):
@@ -249,6 +272,22 @@ class HomeViewTests(TestCase):
             is_active=False,
         )
 
+        self.process_section = GallerySection.objects.create(
+            section_type=GallerySection.SectionType.PROCESS,
+            tag="Тестовий процес",
+            title="Тестовий заголовок процесу",
+            subtitle="Тестовий підзаголовок процесу.",
+            is_active=True,
+        )
+
+        self.works_section = GallerySection.objects.create(
+            section_type=GallerySection.SectionType.WORKS,
+            tag="Тестові роботи",
+            title="Тестовий заголовок робіт",
+            subtitle="Тестовий підзаголовок робіт.",
+            is_active=True,
+        )
+
         SiteSettings.objects.create(
             phone="+380671234567",
             phone_display="+38 (067) 123-45-67",
@@ -350,6 +389,21 @@ class HomeViewTests(TestCase):
 
         self.assertNotContains(response, "999+")
         self.assertNotContains(response, "неактивна статистика")
+
+    def test_home_page_shows_process_gallery_section_heading(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестовий процес")
+        self.assertContains(response, "Тестовий заголовок процесу")
+        self.assertContains(response, "Тестовий підзаголовок процесу.")
+
+    def test_home_page_shows_works_gallery_section_heading(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестові роботи")
+        self.assertContains(response, "Тестовий заголовок робіт")
+        self.assertContains(response, "Тестовий підзаголовок робіт.")
+
 class AdminSmokeTests(TestCase):
     def setUp(self):
         self.site = AdminSite()
@@ -379,6 +433,13 @@ class AdminSmokeTests(TestCase):
         self.assertIn("title", admin.search_fields)
         self.assertIn("is_active", admin.list_filter)
         self.assertIn("icon", admin.list_filter)
+
+    def test_gallery_section_admin_registered_configuration(self):
+        admin = GallerySectionAdmin(GallerySection, self.site)
+
+        self.assertIn("title", admin.search_fields)
+        self.assertIn("section_type", admin.list_filter)
+        self.assertIn("is_active", admin.list_filter)
 
     def test_site_settings_admin_disallows_add_when_settings_exists(self):
         SiteSettings.objects.create(

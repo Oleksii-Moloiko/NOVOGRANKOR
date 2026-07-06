@@ -471,13 +471,18 @@
 
     <section class="gallery" id="gallery">
         <div class="wrap">
-            <div class="gallery-head">
-                <span class="section-tag">Процес</span>
-                <h2>Від каменю до готового пам'ятника</h2>
-                <p class="gallery-subtitle">
-                    Дивіться результати виробництва та встановлення у відео
-                </p>
-            </div>
+            {% if process_section %}
+                <div class="gallery-head">
+                    <span class="section-tag">{{ process_section.tag }}</span>
+                    <h2>{{ process_section.title }}</h2>
+
+                    {% if process_section.subtitle %}
+                        <p class="gallery-subtitle">
+                            {{ process_section.subtitle }}
+                        </p>
+                    {% endif %}
+                </div>
+            {% endif %}
 
             {% if process_gallery %}
                 <div class="showreel-grid">
@@ -521,13 +526,18 @@
     
     <section class="gallery" id="works">
         <div class="wrap">
-            <div class="gallery-head">
-                <span class="section-tag">Наші роботи</span>
-                <h2>Готові пам'ятники</h2>
-                <p class="gallery-subtitle">
-                    Приклади виконаних робіт наших майстрів
-                </p>
-            </div>
+            {% if works_section %}
+                <div class="gallery-head">
+                    <span class="section-tag">{{ works_section.tag }}</span>
+                    <h2>{{ works_section.title }}</h2>
+
+                    {% if works_section.subtitle %}
+                        <p class="gallery-subtitle">
+                            {{ works_section.subtitle }}
+                        </p>
+                    {% endif %}
+                </div>
+            {% endif %}
 
             {% if works_gallery %}
                 <div class="showreel-grid">

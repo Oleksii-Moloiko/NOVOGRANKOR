@@ -7,6 +7,7 @@ from .models import (
     Advantage,
     Category,
     Gallery,
+    GallerySection,
     Monument,
     SiteSettings,
 )
@@ -31,6 +32,15 @@ def home(request):
         .first()
     )
 
+    process_section = GallerySection.objects.filter(
+        section_type=GallerySection.SectionType.PROCESS,
+        is_active=True,
+    ).first()
+
+    works_section = GallerySection.objects.filter(
+        section_type=GallerySection.SectionType.WORKS,
+        is_active=True,
+    ).first()
 
     advantages = Advantage.objects.filter(
         is_active=True,
@@ -57,6 +67,8 @@ def home(request):
             "about_section": about_section,
             "process_gallery": process_gallery,
             "works_gallery": works_gallery,
+            "process_section": process_section,
+            "works_section": works_section,
             "site_settings": site_settings,
         },
     )

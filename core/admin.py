@@ -6,8 +6,9 @@ from .models import (
     AboutSection,
     AboutStat,
     Category,
-    Monument,
     Gallery,
+    GallerySection,
+    Monument,
     SiteSettings,
 )
 
@@ -191,6 +192,60 @@ class AboutSectionAdmin(admin.ModelAdmin):
         if AboutSection.objects.exists():
             return False
         return super().has_add_permission(request)
+
+@admin.register(GallerySection)
+class GallerySectionAdmin(admin.ModelAdmin):
+    list_display = (
+        "section_type",
+        "tag",
+        "title",
+        "is_active",
+        "updated_at",
+    )
+
+    list_filter = (
+        "section_type",
+        "is_active",
+    )
+
+    search_fields = (
+        "tag",
+        "title",
+        "subtitle",
+    )
+
+    list_editable = (
+        "is_active",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        (
+            "Основна інформація",
+            {
+                "fields": (
+                    "section_type",
+                    "tag",
+                    "title",
+                    "subtitle",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Системна інформація",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
