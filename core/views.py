@@ -18,12 +18,16 @@ def home(request):
         )
         .order_by("order", "id")
     )
+    
+    process_gallery = Gallery.objects.filter(
+        section=Gallery.Section.PROCESS,
+        is_active=True,
+    ).order_by("order", "id")
 
-    gallery = (
-        Gallery.objects
-        .filter(is_active=True)
-        .order_by("order", "id")
-    )
+    works_gallery = Gallery.objects.filter(
+        section=Gallery.Section.WORKS,
+        is_active=True,
+    ).order_by("order", "id")
 
     site_settings = SiteSettings.objects.first()
 
@@ -32,7 +36,8 @@ def home(request):
         "index.html",
         {
             "categories": categories,
-            "gallery": gallery,
+            "process_gallery": process_gallery,
+            "works_gallery": works_gallery,
             "site_settings": site_settings,
         },
     )

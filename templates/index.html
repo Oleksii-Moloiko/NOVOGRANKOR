@@ -32,7 +32,8 @@
             <a href="#about">Про нас</a>
             <a href="#catalog">Каталог</a>
             <a href="#services">Послуги</a>
-            <a href="#gallery">Результат</a>
+            <a href="#gallery">Процес</a>
+            <a href="#works">Наші роботи</a>
             <a href="#contacts">Контакти</a>
         </nav>
 
@@ -53,7 +54,8 @@
         <a href="#about">Про нас</a>
         <a href="#catalog">Каталог</a>
         <a href="#services">Послуги</a>
-        <a href="#gallery">Результат</a>
+        <a href="#gallery">Процес</a>
+        <a href="#works">Наші роботи</a>
         <a href="#contacts">Контакти</a>
     </div>
 </div>
@@ -460,16 +462,16 @@
     <section class="gallery" id="gallery">
         <div class="wrap">
             <div class="gallery-head">
-                <span class="section-tag">Результат</span>
+                <span class="section-tag">Процес</span>
                 <h2>Від каменю до готового пам'ятника</h2>
                 <p class="gallery-subtitle">
                     Дивіться результати виробництва та встановлення у відео
                 </p>
             </div>
 
-            {% if gallery %}
+            {% if process_gallery %}
                 <div class="showreel-grid">
-                    {% for item in gallery %}
+                    {% for item in process_gallery %}
                         {% if item.video %}
                             <article class="showreel-card" data-showreel-card>
                                 <div class="showreel-media-wrap">
@@ -501,6 +503,49 @@
         </div>
     </section>
     
+    <section class="gallery" id="works">
+        <div class="wrap">
+            <div class="gallery-head">
+                <span class="section-tag">Наші роботи</span>
+                <h2>Готові пам'ятники</h2>
+                <p class="gallery-subtitle">
+                    Приклади виконаних робіт наших майстрів
+                </p>
+            </div>
+
+            {% if works_gallery %}
+                <div class="showreel-grid">
+                    {% for item in works_gallery %}
+                        {% if item.video %}
+                            <article class="showreel-card" data-showreel-card>
+                                <div class="showreel-media-wrap">
+                                    <video
+                                        class="showreel-media"
+                                        preload="metadata"
+                                        playsinline
+                                        {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
+                                    >
+                                        <source src="{{ item.video.url }}" type="video/mp4">
+                                        Ваш браузер не підтримує відео.
+                                    </video>
+
+                                    <button
+                                        type="button"
+                                        class="showreel-play-btn"
+                                        aria-label="Відтворити відео {{ forloop.counter }}"
+                                    >
+                                        <span class="showreel-play-icon"></span>
+                                        <span>Робота {{ forloop.counter }}</span>
+                                    </button>
+                                </div>
+                            </article>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
     <section class="cta-band" id="contacts">
         <div class="wrap">
             <div class="cta-band-inner">

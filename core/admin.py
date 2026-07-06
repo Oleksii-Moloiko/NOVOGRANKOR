@@ -183,15 +183,14 @@ class MonumentAdmin(admin.ModelAdmin):
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "title",
-        "video_preview",
+        "section",
         "order",
         "is_active",
-        "updated_at",
     )
 
     list_filter = (
+        "section",
         "is_active",
     )
 
@@ -222,9 +221,9 @@ class GalleryAdmin(admin.ModelAdmin):
             {
                 "fields": (
                     "title",
+                    "section",
                     "video",
                     "poster",
-                    "video_preview",
                     "description",
                     "is_active",
                 )

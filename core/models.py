@@ -102,6 +102,18 @@ class Monument(TimeStampedModel):
         return self.title
     
 class Gallery(TimeStampedModel):
+
+    class Section(models.TextChoices):
+        PROCESS = "process", "Процес"
+        WORKS = "works", "Наші роботи"
+
+    section = models.CharField(
+        max_length=20,
+        choices=Section.choices,
+        default=Section.PROCESS,
+        verbose_name="Секція",
+    )
+    
     title = models.CharField(
         max_length=255,
         blank=True,
