@@ -3,8 +3,8 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
-from .admin import CategoryAdmin, GalleryAdmin, MonumentAdmin, SiteSettingsAdmin
-from .models import Category, Gallery, Monument, SiteSettings
+from .admin import AdvantageAdmin, CategoryAdmin, GalleryAdmin, MonumentAdmin, SiteSettingsAdmin
+from .models import Advantage, Category, Gallery, Monument, SiteSettings
 
 
 class CategoryModelTests(TestCase):
@@ -99,6 +99,24 @@ class SiteSettingsModelTests(TestCase):
         with self.assertRaises(ValidationError):
             second_settings.full_clean()
 
+class AdvantageModelTests(TestCase):
+    def test_advantage_str_returns_title(self):
+        advantage = Advantage.objects.create(
+            title="По всій Україні",
+            description="Виготовлення та встановлення памʼятників під ключ.",
+            icon=Advantage.Icon.LOCATION,
+        )
+
+        self.assertEqual(str(advantage), "По всій Україні")
+
+    def test_advantage_default_is_active_true(self):
+        advantage = Advantage.objects.create(
+            title="Доставка",
+            description="Привозимо готовий виріб на вашу локацію.",
+            icon=Advantage.Icon.DELIVERY,
+        )
+
+        self.assertTrue(advantage.is_active)
 
 class HomeViewTests(TestCase):
     def setUp(self):
@@ -144,6 +162,22 @@ class HomeViewTests(TestCase):
         self.inactive_gallery_item = Gallery.objects.create(
             title="Неактивне відео",
             video="gallery/videos/inactive.mp4",
+            is_active=False,
+        )
+
+        self.active_advantage = Advantage.objects.create(
+            title="Активна перевага",
+            description="Ця перевага має відображатися на сайті.",
+            icon=Advantage.Icon.LOCATION,
+            order=1,
+            is_active=True,
+        )
+
+        self.inactive_advantage = Advantage.objects.create(
+            title="Неактивна перевага",
+            description="Ця перевага не має відображатися на сайті.",
+            icon=Advantage.Icon.DELIVERY,
+            order=2,
             is_active=False,
         )
 
@@ -220,6 +254,15 @@ class HomeViewTests(TestCase):
         self.assertNotContains(response, "Надіслати заявку")
         self.assertNotContains(response, "Замовити онлайн")
 
+    def test_home_page_shows_active_advantage(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Активна перевага")
+
+    def test_home_page_does_not_show_inactive_advantage(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertNotContains(response, "Неактивна перевага")
 
 class AdminSmokeTests(TestCase):
     def setUp(self):
@@ -243,6 +286,13 @@ class AdminSmokeTests(TestCase):
 
         self.assertIn("title", admin.search_fields)
         self.assertIn("is_active", admin.list_filter)
+
+    def test_advantage_admin_registered_configuration(self):
+        admin = AdvantageAdmin(Advantage, self.site)
+
+        self.assertIn("title", admin.search_fields)
+        self.assertIn("is_active", admin.list_filter)
+        self.assertIn("icon", admin.list_filter)
 
     def test_site_settings_admin_disallows_add_when_settings_exists(self):
         SiteSettings.objects.create(

@@ -2,7 +2,7 @@ from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from .models import Category, Gallery, Monument, SiteSettings
+from .models import Advantage, Category, Gallery, Monument, SiteSettings
 
 
 def home(request):
@@ -19,6 +19,10 @@ def home(request):
         .order_by("order", "id")
     )
     
+    advantages = Advantage.objects.filter(
+        is_active=True,
+    ).order_by("order", "id")
+
     process_gallery = Gallery.objects.filter(
         section=Gallery.Section.PROCESS,
         is_active=True,
@@ -36,6 +40,7 @@ def home(request):
         "index.html",
         {
             "categories": categories,
+            "advantages": advantages,
             "process_gallery": process_gallery,
             "works_gallery": works_gallery,
             "site_settings": site_settings,

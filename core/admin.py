@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from .models import (
+    Advantage,
     Category,
     Monument,
     Gallery,
@@ -23,6 +24,71 @@ class MonumentInline(admin.TabularInline):
         "id",
     )
 
+@admin.register(Advantage)
+class AdvantageAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "icon",
+        "order",
+        "is_active",
+        "updated_at",
+    )
+
+    list_filter = (
+        "icon",
+        "is_active",
+    )
+
+    search_fields = (
+        "title",
+        "description",
+    )
+
+    list_editable = (
+        "order",
+        "is_active",
+    )
+
+    ordering = (
+        "order",
+        "id",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        (
+            "Основна інформація",
+            {
+                "fields": (
+                    "title",
+                    "description",
+                    "icon",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Сортування",
+            {
+                "fields": (
+                    "order",
+                )
+            },
+        ),
+        (
+            "Системна інформація",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

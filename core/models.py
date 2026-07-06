@@ -16,7 +16,46 @@ class TimeStampedModel(models.Model):
     class Meta:
         abstract = True
 
+class Advantage(TimeStampedModel):
+    class Icon(models.TextChoices):
+        LOCATION = "location", "Локація"
+        CUBE = "cube", "3D-візуалізація"
+        DELIVERY = "delivery", "Доставка"
 
+    title = models.CharField(
+        max_length=100,
+        verbose_name="Заголовок",
+    )
+
+    description = models.TextField(
+        verbose_name="Опис",
+    )
+
+    icon = models.CharField(
+        max_length=30,
+        choices=Icon.choices,
+        default=Icon.LOCATION,
+        verbose_name="Іконка",
+    )
+
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна",
+    )
+
+    class Meta:
+        verbose_name = "Перевага"
+        verbose_name_plural = "Переваги"
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return self.title
+    
 class Category(TimeStampedModel):
     name = models.CharField(
         max_length=100,
@@ -269,3 +308,4 @@ class SiteSettings(models.Model):
 
     def __str__(self):
         return "Налаштування сайту"
+    

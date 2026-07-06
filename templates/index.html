@@ -182,44 +182,39 @@
         </div>
     </section>
 
-    <section class="strip" id="services">
-        <div class="wrap strip-grid">
-            <div class="strip-card">
-                <div class="strip-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/>
-                        <circle cx="12" cy="10" r="3"/>
-                    </svg>
-                </div>
-                <h2>По всій Україні</h2>
-                <p>Виготовлення та встановлення памʼятників під ключ у будь-якому регіоні.</p>
-            </div>
+        {% if advantages %}
+            <section class="strip" id="services">
+                <div class="wrap strip-grid">
+                    {% for advantage in advantages %}
+                        <div class="strip-card">
+                            <div class="strip-icon" aria-hidden="true">
+                                {% if advantage.icon == "location" %}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0Z"/>
+                                        <circle cx="12" cy="10" r="3"/>
+                                    </svg>
+                                {% elif advantage.icon == "cube" %}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                                        <path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/>
+                                    </svg>
+                                {% elif advantage.icon == "delivery" %}
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M1 3h15v13H1z"/>
+                                        <path d="M16 8h4l3 3v5h-7V8Z"/>
+                                        <circle cx="5.5" cy="18.5" r="2.5"/>
+                                        <circle cx="18.5" cy="18.5" r="2.5"/>
+                                    </svg>
+                                {% endif %}
+                            </div>
 
-            <div class="strip-card">
-                <div class="strip-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
-                        <path d="M3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/>
-                    </svg>
+                            <h2>{{ advantage.title }}</h2>
+                            <p>{{ advantage.description }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
-                <h2>3D-візуалізація</h2>
-                <p>Бачите готовий виріб ще до виготовлення — точна 3D-модель на узгодження.</p>
-            </div>
-
-            <div class="strip-card">
-                <div class="strip-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M1 3h15v13H1z"/>
-                        <path d="M16 8h4l3 3v5h-7V8Z"/>
-                        <circle cx="5.5" cy="18.5" r="2.5"/>
-                        <circle cx="18.5" cy="18.5" r="2.5"/>
-                    </svg>
-                </div>
-                <h2>Доставка</h2>
-                <p>Привозимо готовий виріб на вашу локацію в будь-яке місто чи село.</p>
-            </div>
-        </div>
-    </section>
+            </section>
+        {% endif %}
 
     <section class="about" id="about">
         <div class="wrap about-grid">
@@ -491,7 +486,13 @@
                                         aria-label="Відтворити відео {{ forloop.counter }}"
                                     >
                                         <span class="showreel-play-icon" aria-hidden="true"></span>
-                                        <span>Відео {{ forloop.counter }}</span>
+                                        <span>
+                                            {% if item.title %}
+                                                {{ item.title }}
+                                            {% else %}
+                                                Відео {{ forloop.counter }}
+                                            {% endif %}
+                                        </span>
                                     </button>
                                 </div>
                             </article>
