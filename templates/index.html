@@ -24,7 +24,13 @@
 
             <span class="brand-text">
                 <span class="brand-title">NOVOGRANKOR</span>
-                <span class="brand-subtitle">Збережіть памʼять про найрідніших</span>
+                <span class="brand-subtitle">
+                    {% if site_settings and site_settings.brand_subtitle %}
+                        {{ site_settings.brand_subtitle }}
+                    {% else %}
+                        Збережіть памʼять про найрідніших
+                    {% endif %}
+                </span>
             </span>
         </a>
 
@@ -71,7 +77,13 @@
         </div>
 
         <div class="wrap hero-inner">
-            <span class="eyebrow">● Виготовлення та встановлення по всій Україні</span>
+            <span class="eyebrow">
+                {% if site_settings and site_settings.hero_eyebrow %}
+                    {{ site_settings.hero_eyebrow }}
+                {% else %}
+                    ● Виготовлення та встановлення по всій Україні
+                {% endif %}
+            </span>
 
             <h1>
                 {% if site_settings and site_settings.hero_title %}
@@ -108,7 +120,13 @@
                             rel="noopener noreferrer"
                             aria-label="Написати у Viber"
                         >
-                            <span>Написати в Viber</span>
+                            <span>
+                                {% if site_settings.hero_viber_button_text %}
+                                    {{ site_settings.hero_viber_button_text }}
+                                {% else %}
+                                    Написати в Viber
+                                {% endif %}
+                            </span>
 
                             <span class="hero-viber-icon-wrap" aria-hidden="true">
                                 <svg
@@ -623,13 +641,21 @@
                     <div class="cta-row">
                         {% if site_settings.phone %}
                             <a class="btn btn-primary" href="tel:{{ site_settings.phone }}">
-                                Отримати безкоштовний прорахунок
+                                {% if site_settings.cta_primary_button_text %}
+                                    {{ site_settings.cta_primary_button_text }}
+                                {% else %}
+                                    Отримати безкоштовний прорахунок
+                                {% endif %}
                             </a>
                         {% endif %}
 
                         {% if site_settings.viber %}
                             <a class="btn btn-secondary" href="{{ site_settings.viber }}" target="_blank" rel="noopener noreferrer">
-                                Звʼязатися в Viber
+                                {% if site_settings.cta_viber_button_text %}
+                                    {{ site_settings.cta_viber_button_text }}
+                                {% else %}
+                                    Звʼязатися в Viber
+                                {% endif %}
                             </a>
                         {% endif %}
                     </div>
@@ -655,7 +681,13 @@
                         <span class="brand-title">NOVOGRANKOR</span>
                     </span>
                 </a>
-                <p>Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.</p>
+                <p>
+                    {% if site_settings and site_settings.footer_description %}
+                        {{ site_settings.footer_description }}
+                    {% else %}
+                        Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.
+                    {% endif %}
+                </p>
             </div>
 
             {% if site_settings %}
@@ -742,8 +774,21 @@
         </div>
 
         <div class="footer-bottom">
-            <span>© 2026 NOVOGRANKOR. Усі права захищено.</span>
-            <span>Збережіть памʼять про найрідніших</span>
+            <span>
+                {% if site_settings and site_settings.copyright_text %}
+                    {{ site_settings.copyright_text }}
+                {% else %}
+                    © 2026 NOVOGRANKOR. Усі права захищено.
+                {% endif %}
+            </span>
+
+            <span>
+                {% if site_settings and site_settings.footer_slogan %}
+                    {{ site_settings.footer_slogan }}
+                {% else %}
+                    Збережіть памʼять про найрідніших
+                {% endif %}
+            </span>
         </div>
     </div>
 </footer>

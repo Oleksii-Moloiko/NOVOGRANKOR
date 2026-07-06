@@ -578,6 +578,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "instagram",
                     "facebook",
                     "tiktok",
+                    "brand_subtitle",
                 )
             },
         ),
@@ -588,6 +589,8 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "logo",
                     "hero_title",
                     "hero_subtitle",
+                    "hero_eyebrow",
+                    "hero_viber_button_text",
                 )
             },
         ),
@@ -597,9 +600,23 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                 "fields": (
                     "cta_title",
                     "cta_subtitle",
+                    "cta_primary_button_text",
+                    "cta_viber_button_text",
                 )
             },
         ),
+
+        (
+            "Футер",
+            {
+                "fields": (
+                    "footer_description",
+                    "footer_slogan",
+                    "copyright_text",
+                )
+            },
+        ),
+
         (
             "SEO",
             {

@@ -485,6 +485,53 @@ class SiteSettings(models.Model):
         help_text="Наприклад: Зателефонуйте нам — допоможемо підібрати памʼятник.",
     )
 
+    brand_subtitle = models.CharField(
+        max_length=150,
+        default="Збережіть памʼять про найрідніших",
+        verbose_name="Підпис біля логотипу",
+    )
+
+    hero_eyebrow = models.CharField(
+        max_length=150,
+        default="● Виготовлення та встановлення по всій Україні",
+        verbose_name="Мітка Hero-блоку",
+    )
+
+    hero_viber_button_text = models.CharField(
+        max_length=100,
+        default="Написати в Viber",
+        verbose_name="Текст кнопки Viber у Hero",
+    )
+
+    cta_primary_button_text = models.CharField(
+        max_length=100,
+        default="Отримати безкоштовний прорахунок",
+        verbose_name="Текст основної CTA-кнопки",
+    )
+
+    cta_viber_button_text = models.CharField(
+        max_length=100,
+        default="Звʼязатися в Viber",
+        verbose_name="Текст Viber-кнопки в CTA",
+    )
+
+    footer_description = models.TextField(
+        default="Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.",
+        verbose_name="Опис у футері",
+    )
+
+    footer_slogan = models.CharField(
+        max_length=150,
+        default="Збережіть памʼять про найрідніших",
+        verbose_name="Слоган у футері",
+    )
+
+    copyright_text = models.CharField(
+        max_length=150,
+        default="© 2026 NOVOGRANKOR. Усі права захищено.",
+        verbose_name="Copyright",
+    )
+
     seo_title = models.CharField(
         max_length=255,
         blank=True,

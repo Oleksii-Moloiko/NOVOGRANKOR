@@ -318,6 +318,14 @@ class HomeViewTests(TestCase):
             hero_subtitle="Збережіть памʼять про найрідніших",
             cta_title="Потрібна консультація?",
             cta_subtitle="Зателефонуйте нам — допоможемо підібрати памʼятник.",
+            brand_subtitle="Тестовий підпис бренду",
+            hero_eyebrow="Тестова мітка hero",
+            hero_viber_button_text="Тестова кнопка Viber hero",
+            cta_primary_button_text="Тестова основна CTA кнопка",
+            cta_viber_button_text="Тестова CTA Viber кнопка",
+            footer_description="Тестовий опис футера.",
+            footer_slogan="Тестовий слоган футера",
+            copyright_text="© 2026 Тестовий copyright",
         )
 
     def test_home_page_returns_200(self):
@@ -377,6 +385,29 @@ class HomeViewTests(TestCase):
 
         self.assertContains(response, 'href="tel:+380671234567"')
         self.assertContains(response, "+38 (067) 123-45-67")
+
+    def test_home_page_shows_brand_subtitle_from_site_settings(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестовий підпис бренду")
+
+    def test_home_page_shows_hero_eyebrow_from_site_settings(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестова мітка hero")
+
+    def test_home_page_shows_cta_button_texts_from_site_settings(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестова основна CTA кнопка")
+        self.assertContains(response, "Тестова CTA Viber кнопка")
+
+    def test_home_page_shows_footer_texts_from_site_settings(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестовий опис футера.")
+        self.assertContains(response, "Тестовий слоган футера")
+        self.assertContains(response, "© 2026 Тестовий copyright")
 
     def test_home_page_shows_messenger_links_from_site_settings(self):
         response = self.client.get(reverse("home"))
