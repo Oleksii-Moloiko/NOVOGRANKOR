@@ -55,7 +55,110 @@ class Advantage(TimeStampedModel):
 
     def __str__(self):
         return self.title
-    
+
+class AboutSection(TimeStampedModel):
+    tag = models.CharField(
+        max_length=100,
+        default="Про компанію",
+        verbose_name="Мітка секції",
+    )
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Заголовок",
+    )
+
+    text_1 = models.TextField(
+        verbose_name="Перший абзац",
+    )
+
+    text_2 = models.TextField(
+        blank=True,
+        verbose_name="Другий абзац",
+    )
+
+    text_3 = models.TextField(
+        blank=True,
+        verbose_name="Третій абзац",
+    )
+
+    card_kicker = models.CharField(
+        max_length=150,
+        verbose_name="Мітка картки",
+    )
+
+    card_title = models.CharField(
+        max_length=255,
+        verbose_name="Заголовок картки",
+    )
+
+    card_description = models.TextField(
+        verbose_name="Опис картки",
+    )
+
+    image = models.ImageField(
+        upload_to="about/",
+        blank=True,
+        verbose_name="Зображення",
+        help_text="Наприклад, карта України або інше зображення для лівої картки.",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна",
+    )
+
+    class Meta:
+        verbose_name = "Блок про компанію"
+        verbose_name_plural = "Блок про компанію"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.pk and AboutSection.objects.exists():
+            return
+        super().save(*args, **kwargs)
+
+
+class AboutStat(TimeStampedModel):
+    about_section = models.ForeignKey(
+        AboutSection,
+        on_delete=models.CASCADE,
+        related_name="stats",
+        verbose_name="Блок про компанію",
+    )
+
+    value = models.CharField(
+        max_length=50,
+        verbose_name="Значення",
+        help_text="Наприклад: 10+, 500+",
+    )
+
+    label = models.CharField(
+        max_length=150,
+        verbose_name="Підпис",
+        help_text="Наприклад: років досвіду",
+    )
+
+    order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна",
+    )
+
+    class Meta:
+        verbose_name = "Статистика про компанію"
+        verbose_name_plural = "Статистика про компанію"
+        ordering = ["order", "id"]
+
+    def __str__(self):
+        return f"{self.value} {self.label}"
+
 class Category(TimeStampedModel):
     name = models.CharField(
         max_length=100,

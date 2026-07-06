@@ -2,8 +2,14 @@ from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import render
 
-from .models import Advantage, Category, Gallery, Monument, SiteSettings
-
+from .models import (
+    AboutSection,
+    Advantage,
+    Category,
+    Gallery,
+    Monument,
+    SiteSettings,
+)
 
 def home(request):
     categories = (
@@ -19,6 +25,12 @@ def home(request):
         .order_by("order", "id")
     )
     
+    about_section = (
+        AboutSection.objects.filter(is_active=True)
+        .prefetch_related("stats")
+        .first()
+    )
+
     advantages = Advantage.objects.filter(
         is_active=True,
     ).order_by("order", "id")
@@ -41,6 +53,7 @@ def home(request):
         {
             "categories": categories,
             "advantages": advantages,
+            "about_section": about_section,
             "process_gallery": process_gallery,
             "works_gallery": works_gallery,
             "site_settings": site_settings,

@@ -3,6 +3,8 @@ from django.utils.html import format_html
 
 from .models import (
     Advantage,
+    AboutSection,
+    AboutStat,
     Category,
     Monument,
     Gallery,
@@ -89,6 +91,107 @@ class AdvantageAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+class AboutStatInline(admin.TabularInline):
+    model = AboutStat
+    extra = 0
+
+    fields = (
+        "value",
+        "label",
+        "order",
+        "is_active",
+    )
+
+    ordering = (
+        "order",
+        "id",
+    )
+
+@admin.register(AboutSection)
+class AboutSectionAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "tag",
+        "is_active",
+        "updated_at",
+    )
+
+    list_filter = (
+        "is_active",
+    )
+
+    search_fields = (
+        "title",
+        "text_1",
+        "text_2",
+        "text_3",
+        "card_title",
+        "card_description",
+    )
+
+    readonly_fields = (
+        "image_preview",
+        "created_at",
+        "updated_at",
+    )
+
+    inlines = (
+        AboutStatInline,
+    )
+
+    fieldsets = (
+        (
+            "Основний текст",
+            {
+                "fields": (
+                    "tag",
+                    "title",
+                    "text_1",
+                    "text_2",
+                    "text_3",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Ліва картка",
+            {
+                "fields": (
+                    "card_kicker",
+                    "card_title",
+                    "card_description",
+                    "image",
+                    "image_preview",
+                )
+            },
+        ),
+        (
+            "Системна інформація",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-width: 220px; border-radius: 12px;" />',
+                obj.image.url,
+            )
+        return "-"
+
+    image_preview.short_description = "Превʼю зображення"
+
+    def has_add_permission(self, request):
+        if AboutSection.objects.exists():
+            return False
+        return super().has_add_permission(request)
+    
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):

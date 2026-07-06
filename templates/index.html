@@ -216,43 +216,58 @@
             </section>
         {% endif %}
 
-    <section class="about" id="about">
-        <div class="wrap about-grid">
-            <div class="about-visual about-ukraine-card">
-                <div class="about-ukraine-content">
-                    <span class="about-ukraine-kicker">Працюємо по всій Україні</span>
-                    <h3>Доставка та встановлення у вашому регіоні</h3>
-                    <p>Виготовляємо памʼятники на власному виробництві та організовуємо доставку до міста чи села замовника.</p>
-                </div>
+        {% if about_section %}
+            <section class="about" id="about">
+                <div class="wrap about-grid">
+                    <div class="about-visual about-ukraine-card">
+                        <div class="about-ukraine-content">
+                            <span class="about-ukraine-kicker">{{ about_section.card_kicker }}</span>
+                            <h3>{{ about_section.card_title }}</h3>
+                            <p>{{ about_section.card_description }}</p>
+                        </div>
 
-                <div class="coverage-visual">
-                    <img
-                        src="{% static 'img/3d_map.png' %}"
-                        alt=""
-                    >
-                </div>
+                        {% if about_section.image %}
+                            <div class="coverage-visual">
+                                <img
+                                    src="{{ about_section.image.url }}"
+                                    alt=""
+                                >
+                            </div>
+                        {% endif %}
 
-                <div class="about-stats">
-                    <div class="stat">
-                        <b>10+</b>
-                        <span>років досвіду</span>
+                        {% with active_stats=about_section.stats.all %}
+                            {% if active_stats %}
+                                <div class="about-stats">
+                                    {% for stat in active_stats %}
+                                        {% if stat.is_active %}
+                                            <div class="stat">
+                                                <b>{{ stat.value }}</b>
+                                                <span>{{ stat.label }}</span>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% endwith %}
                     </div>
-                    <div class="stat">
-                        <b>500+</b>
-                        <span>встановлених виробів</span>
+
+                    <div>
+                        <span class="section-tag">{{ about_section.tag }}</span>
+                        <h2>{{ about_section.title }}</h2>
+
+                        <p>{{ about_section.text_1 }}</p>
+
+                        {% if about_section.text_2 %}
+                            <p>{{ about_section.text_2 }}</p>
+                        {% endif %}
+
+                        {% if about_section.text_3 %}
+                            <p>{{ about_section.text_3 }}</p>
+                        {% endif %}
                     </div>
                 </div>
-            </div>
-
-            <div>
-                <span class="section-tag">Про компанію</span>
-                <h2>Українське виробництво з натурального граніту</h2>
-                <p>NOVOGRANKOR — українська компанія з виготовлення памʼятників та виробів із натурального граніту. Працюємо з широким асортиментом українських та імпортних гранітів, створюючи якісні меморіальні комплекси, памʼятники, надгробні плити та елементи благоустрою.</p>
-                <p>Пропонуємо індивідуальний підхід, безкоштовну розробку 3D-моделі та власне виробництво з встановленням по всій Україні.</p>
-                <p>Наша мета — допомогти зберегти памʼять про найрідніших у довговічному та гідному вигляді.</p>
-            </div>
-        </div>
-    </section>
+            </section>
+        {% endif %}
 
 
     <section class="catalog" id="catalog">

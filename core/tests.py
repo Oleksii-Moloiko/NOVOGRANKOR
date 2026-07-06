@@ -3,9 +3,16 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.urls import reverse
 
-from .admin import AdvantageAdmin, CategoryAdmin, GalleryAdmin, MonumentAdmin, SiteSettingsAdmin
-from .models import Advantage, Category, Gallery, Monument, SiteSettings
-
+from .admin import AdvantageAdmin, AboutSectionAdmin, CategoryAdmin, GalleryAdmin, MonumentAdmin, SiteSettingsAdmin
+from .models import (
+    AboutSection,
+    AboutStat,
+    Advantage,
+    Category,
+    Gallery,
+    Monument,
+    SiteSettings,
+)
 
 class CategoryModelTests(TestCase):
     def test_category_str_returns_name(self):
@@ -118,6 +125,39 @@ class AdvantageModelTests(TestCase):
 
         self.assertTrue(advantage.is_active)
 
+
+class AboutSectionModelTests(TestCase):
+    def test_about_section_str_returns_title(self):
+        about = AboutSection.objects.create(
+            tag="Про компанію",
+            title="Українське виробництво",
+            text_1="Перший текст.",
+            card_kicker="Працюємо по всій Україні",
+            card_title="Доставка у вашому регіоні",
+            card_description="Опис картки.",
+        )
+
+        self.assertEqual(str(about), "Українське виробництво")
+
+
+class AboutStatModelTests(TestCase):
+    def test_about_stat_str_returns_value_and_label(self):
+        about = AboutSection.objects.create(
+            tag="Про компанію",
+            title="Українське виробництво",
+            text_1="Перший текст.",
+            card_kicker="Працюємо по всій Україні",
+            card_title="Доставка у вашому регіоні",
+            card_description="Опис картки.",
+        )
+
+        stat = AboutStat.objects.create(
+            about_section=about,
+            value="10+",
+            label="років досвіду",
+        )
+
+        self.assertEqual(str(stat), "10+ років досвіду")
 class HomeViewTests(TestCase):
     def setUp(self):
         self.active_category = Category.objects.create(
@@ -177,6 +217,34 @@ class HomeViewTests(TestCase):
             title="Неактивна перевага",
             description="Ця перевага не має відображатися на сайті.",
             icon=Advantage.Icon.DELIVERY,
+            order=2,
+            is_active=False,
+        )
+
+        self.about_section = AboutSection.objects.create(
+            tag="Про компанію",
+            title="Тестовий блок про компанію",
+            text_1="Перший тестовий абзац про компанію.",
+            text_2="Другий тестовий абзац про компанію.",
+            text_3="Третій тестовий абзац про компанію.",
+            card_kicker="Працюємо по всій Україні",
+            card_title="Тестова доставка у вашому регіоні",
+            card_description="Тестовий опис лівої картки.",
+            is_active=True,
+        )
+
+        self.active_about_stat = AboutStat.objects.create(
+            about_section=self.about_section,
+            value="10+",
+            label="років досвіду",
+            order=1,
+            is_active=True,
+        )
+
+        self.inactive_about_stat = AboutStat.objects.create(
+            about_section=self.about_section,
+            value="999+",
+            label="неактивна статистика",
             order=2,
             is_active=False,
         )
@@ -264,6 +332,24 @@ class HomeViewTests(TestCase):
 
         self.assertNotContains(response, "Неактивна перевага")
 
+    def test_home_page_shows_about_section(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестовий блок про компанію")
+        self.assertContains(response, "Перший тестовий абзац про компанію.")
+        self.assertContains(response, "Тестова доставка у вашому регіоні")
+
+    def test_home_page_shows_active_about_stat(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "10+")
+        self.assertContains(response, "років досвіду")
+
+    def test_home_page_does_not_show_inactive_about_stat(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertNotContains(response, "999+")
+        self.assertNotContains(response, "неактивна статистика")
 class AdminSmokeTests(TestCase):
     def setUp(self):
         self.site = AdminSite()
@@ -304,6 +390,13 @@ class AdminSmokeTests(TestCase):
         admin = SiteSettingsAdmin(SiteSettings, self.site)
 
         self.assertFalse(admin.has_add_permission(request=None))
+
+    def test_about_section_admin_registered_configuration(self):
+        admin = AboutSectionAdmin(AboutSection, self.site)
+
+        self.assertIn("title", admin.search_fields)
+        self.assertIn("is_active", admin.list_filter)
+        self.assertIn("image_preview", admin.readonly_fields)
 
 class HealthcheckTests(TestCase):
     def test_healthcheck_returns_ok(self):
