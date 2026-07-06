@@ -6,6 +6,7 @@ from django.urls import reverse
 from .admin import (
     AboutSectionAdmin,
     AdvantageAdmin,
+    CatalogSectionAdmin,
     CategoryAdmin,
     GalleryAdmin,
     GallerySectionAdmin,
@@ -17,6 +18,7 @@ from .models import (
     AboutSection,
     AboutStat,
     Advantage,
+    CatalogSection,
     Category,
     Gallery,
     GallerySection,
@@ -40,6 +42,14 @@ class CategoryModelTests(TestCase):
 
         self.assertTrue(category.is_active)
 
+class CatalogSectionModelTests(TestCase):
+    def test_catalog_section_str_returns_title(self):
+        section = CatalogSection.objects.create(
+            tag="Каталог",
+            title="Оберіть категорію пам'ятника",
+        )
+
+        self.assertEqual(str(section), "Оберіть категорію пам'ятника")
 
 class MonumentModelTests(TestCase):
     def setUp(self):
@@ -263,6 +273,16 @@ class HomeViewTests(TestCase):
             order=1,
             is_active=True,
         )
+        self.catalog_section = CatalogSection.objects.create(
+            tag="Тестовий каталог",
+            title="Тестовий заголовок каталогу",
+            default_price_from=12000,
+            price_hint="Тестова підказка під ціною.",
+            price_on_request_text="Тестова ціна уточнюється",
+            empty_category_text="Тестова категорія порожня",
+            empty_catalog_text="Тестовий каталог порожній",
+            is_active=True,
+        )
 
         self.inactive_about_stat = AboutStat.objects.create(
             about_section=self.about_section,
@@ -334,11 +354,23 @@ class HomeViewTests(TestCase):
         response = self.client.get(reverse("home"))
 
         self.assertContains(response, "Активне відео")
-
+    
     def test_home_page_does_not_show_inactive_gallery_item(self):
         response = self.client.get(reverse("home"))
 
         self.assertNotContains(response, "Неактивне відео")
+
+    def test_home_page_shows_catalog_section_heading(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "Тестовий каталог")
+        self.assertContains(response, "Тестовий заголовок каталогу")
+
+    def test_home_page_shows_catalog_price_hint(self):
+        response = self.client.get(reverse("home"))
+
+        self.assertContains(response, "12000")
+        self.assertContains(response, "Тестова підказка під ціною.")
 
     def test_home_page_shows_phone_from_site_settings(self):
         response = self.client.get(reverse("home"))
@@ -433,6 +465,13 @@ class AdminSmokeTests(TestCase):
         self.assertIn("title", admin.search_fields)
         self.assertIn("is_active", admin.list_filter)
         self.assertIn("icon", admin.list_filter)
+
+    def test_catalog_section_admin_registered_configuration(self):
+        admin = CatalogSectionAdmin(CatalogSection, self.site)
+
+        self.assertIn("title", admin.search_fields)
+        self.assertIn("is_active", admin.list_filter)
+        self.assertIn("created_at", admin.readonly_fields)
 
     def test_gallery_section_admin_registered_configuration(self):
         admin = GallerySectionAdmin(GallerySection, self.site)

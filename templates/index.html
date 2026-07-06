@@ -272,10 +272,12 @@
 
     <section class="catalog" id="catalog">
         <div class="wrap">
-            <div class="catalog-head">
-                <span class="section-tag">Каталог</span>
-                <h2>Оберіть категорію пам'ятника — решту беремо на себе</h2>
-            </div>
+            {% if catalog_section %}
+                <div class="catalog-head">
+                    <span class="section-tag">{{ catalog_section.tag }}</span>
+                    <h2>{{ catalog_section.title }}</h2>
+                </div>
+            {% endif %}
 
             {% if categories %}
                 <div class="tabs" role="tablist" aria-label="Категорії памʼятників">
@@ -311,14 +313,16 @@
                         data-expanded="false"
                     >
 
-                        <div class="price-block">
-                            <div class="price-badge">
-                                <span class="price-from">від</span>
-                                <span class="price-amount">9 000</span>
-                                <span class="price-cur">грн</span>
+                        {% if catalog_section %}
+                            <div class="price-block">
+                                <div class="price-badge">
+                                    <span class="price-from">від</span>
+                                    <span class="price-amount">{{ catalog_section.default_price_from }}</span>
+                                    <span class="price-cur">грн</span>
+                                </div>
+                                <div class="price-hint">{{ catalog_section.price_hint }}</div>
                             </div>
-                            <div class="price-hint">Натисніть «Замовити» для уточнення всіх деталей</div>
-                        </div>
+                        {% endif %}
 
                         <div class="grid-products" data-catalog-grid>
                             {% for category in categories %}
@@ -394,10 +398,22 @@
                                         <span class="price-amount">{{ category.get_price_display|cut:"від "|cut:" грн" }}</span>
                                         <span class="price-cur">грн</span>
                                     {% else %}
-                                        <span class="price-amount price-amount-text">Ціна уточнюється</span>
+                                        <span class="price-amount price-amount-text">
+                                            {% if catalog_section %}
+                                                {{ catalog_section.price_on_request_text }}
+                                            {% else %}
+                                                Ціна уточнюється
+                                            {% endif %}
+                                        </span>
                                     {% endif %}
                                 </div>
-                                <div class="price-hint">Натисніть «Замовити» для уточнення всіх деталей</div>
+                                <div class="price-hint">
+                                    {% if catalog_section %}
+                                        {{ catalog_section.price_hint }}
+                                    {% else %}
+                                        Натисніть «Замовити» для уточнення всіх деталей
+                                    {% endif %}
+                                </div>
                             </div>
 
                             <div class="grid-products" data-catalog-grid>
@@ -452,7 +468,13 @@
                                 {% empty %}
                                     <div class="empty-state catalog-empty-state">
                                         <span class="empty-state-icon">!</span>
-                                        <span>Товар відсутній</span>
+                                        <span>
+                                            {% if catalog_section %}
+                                                {{ catalog_section.empty_category_text }}
+                                            {% else %}
+                                                Товар відсутній
+                                            {% endif %}
+                                        </span>
                                     </div>
                                 {% endfor %}
                             </div>
@@ -464,7 +486,13 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="empty-state">Каталог буде наповнений найближчим часом.</div>
+                <div class="empty-state">
+                    {% if catalog_section %}
+                        {{ catalog_section.empty_catalog_text }}
+                    {% else %}
+                        Каталог буде наповнений найближчим часом.
+                    {% endif %}
+                </div>
             {% endif %}
         </div>
     </section>

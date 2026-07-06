@@ -5,6 +5,7 @@ from django.shortcuts import render
 from .models import (
     AboutSection,
     Advantage,
+    CatalogSection,
     Category,
     Gallery,
     GallerySection,
@@ -42,6 +43,10 @@ def home(request):
         is_active=True,
     ).first()
 
+    catalog_section = CatalogSection.objects.filter(
+        is_active=True,
+    ).first()
+
     advantages = Advantage.objects.filter(
         is_active=True,
     ).order_by("order", "id")
@@ -65,6 +70,7 @@ def home(request):
             "categories": categories,
             "advantages": advantages,
             "about_section": about_section,
+            "catalog_section": catalog_section,
             "process_gallery": process_gallery,
             "works_gallery": works_gallery,
             "process_section": process_section,

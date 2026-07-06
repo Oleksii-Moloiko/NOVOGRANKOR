@@ -199,6 +199,65 @@ class GallerySection(TimeStampedModel):
     def __str__(self):
         return f"{self.get_section_type_display()} — {self.title}"
     
+class CatalogSection(TimeStampedModel):
+    tag = models.CharField(
+        max_length=100,
+        default="Каталог",
+        verbose_name="Мітка секції",
+    )
+
+    title = models.CharField(
+        max_length=255,
+        verbose_name="Заголовок",
+    )
+
+    default_price_from = models.PositiveIntegerField(
+        default=9000,
+        verbose_name="Загальна ціна від",
+        help_text="Показується у вкладці 'Всі'. Наприклад: 9000",
+    )
+
+    price_hint = models.CharField(
+        max_length=255,
+        default="Натисніть «Замовити» для уточнення всіх деталей",
+        verbose_name="Підказка під ціною",
+    )
+
+    price_on_request_text = models.CharField(
+        max_length=100,
+        default="Ціна уточнюється",
+        verbose_name="Текст, якщо ціна не вказана",
+    )
+
+    empty_category_text = models.CharField(
+        max_length=150,
+        default="Товар відсутній",
+        verbose_name="Текст порожньої категорії",
+    )
+
+    empty_catalog_text = models.CharField(
+        max_length=150,
+        default="Каталог буде наповнений найближчим часом.",
+        verbose_name="Текст порожнього каталогу",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Активна",
+    )
+
+    class Meta:
+        verbose_name = "Блок каталогу"
+        verbose_name_plural = "Блок каталогу"
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.pk and CatalogSection.objects.exists():
+            return
+        super().save(*args, **kwargs)
+
 class Category(TimeStampedModel):
     name = models.CharField(
         max_length=100,

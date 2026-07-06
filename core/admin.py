@@ -5,6 +5,7 @@ from .models import (
     Advantage,
     AboutSection,
     AboutStat,
+    CatalogSection,
     Category,
     Gallery,
     GallerySection,
@@ -302,6 +303,79 @@ class CategoryAdmin(admin.ModelAdmin):
         MonumentInline,
     )
 
+@admin.register(CatalogSection)
+class CatalogSectionAdmin(admin.ModelAdmin):
+    list_display = (
+        "title",
+        "tag",
+        "default_price_from",
+        "is_active",
+        "updated_at",
+    )
+
+    list_filter = (
+        "is_active",
+    )
+
+    search_fields = (
+        "tag",
+        "title",
+        "price_hint",
+        "price_on_request_text",
+        "empty_category_text",
+        "empty_catalog_text",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
+
+    fieldsets = (
+        (
+            "Заголовок секції",
+            {
+                "fields": (
+                    "tag",
+                    "title",
+                    "is_active",
+                )
+            },
+        ),
+        (
+            "Ціни та підказки",
+            {
+                "fields": (
+                    "default_price_from",
+                    "price_hint",
+                    "price_on_request_text",
+                )
+            },
+        ),
+        (
+            "Порожні стани",
+            {
+                "fields": (
+                    "empty_category_text",
+                    "empty_catalog_text",
+                )
+            },
+        ),
+        (
+            "Системна інформація",
+            {
+                "fields": (
+                    "created_at",
+                    "updated_at",
+                )
+            },
+        ),
+    )
+
+    def has_add_permission(self, request):
+        if CatalogSection.objects.exists():
+            return False
+        return super().has_add_permission(request)
 
 
 @admin.register(Monument)
