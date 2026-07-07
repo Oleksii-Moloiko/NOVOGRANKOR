@@ -109,8 +109,8 @@ class AboutSection(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Блок про компанію"
-        verbose_name_plural = "Блок про компанію"
+        verbose_name = "Блок «Про компанію»"
+        verbose_name_plural = "Блок «Про компанію»"
 
     def __str__(self):
         return self.title
@@ -152,8 +152,8 @@ class AboutStat(TimeStampedModel):
     )
 
     class Meta:
-        verbose_name = "Статистика про компанію"
-        verbose_name_plural = "Статистика про компанію"
+        verbose_name = "Статистика блоку «Про компанію»"
+        verbose_name_plural = "Статистика блоку «Про компанію»"
         ordering = ["order", "id"]
 
     def __str__(self):
@@ -337,7 +337,7 @@ class Monument(TimeStampedModel):
     class Meta:
         verbose_name = "Пам'ятник"
         verbose_name_plural = "Пам'ятники"
-        ordering = ["order", "id"]
+        ordering = ["category__order", "order", "id"]
 
     def __str__(self):
         return self.title
@@ -394,7 +394,7 @@ class Gallery(TimeStampedModel):
     class Meta:
         verbose_name = "Відео галереї"
         verbose_name_plural = "Відео галерея"
-        ordering = ["order", "id"]
+        ordering = ["section", "order", "id"]
 
     def __str__(self):
         if self.title:

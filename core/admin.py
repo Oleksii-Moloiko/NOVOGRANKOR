@@ -13,6 +13,11 @@ from .models import (
     SiteSettings,
 )
 
+class TimestampReadonlyMixin:
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+    )
 class MonumentInline(admin.TabularInline):
     model = Monument
     extra = 0
@@ -53,14 +58,14 @@ class AdvantageAdmin(admin.ModelAdmin):
         "is_active",
     )
 
-    ordering = (
-        "order",
-        "id",
-    )
-
     readonly_fields = (
         "created_at",
         "updated_at",
+    )
+
+    ordering = (
+        "order",
+        "id",
     )
 
     fieldsets = (
@@ -124,6 +129,7 @@ class AboutSectionAdmin(admin.ModelAdmin):
     )
 
     search_fields = (
+        "tag",
         "title",
         "text_1",
         "text_2",
@@ -251,7 +257,6 @@ class GallerySectionAdmin(admin.ModelAdmin):
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
         "name",
         "price_from",
         "order",
@@ -271,6 +276,11 @@ class CategoryAdmin(admin.ModelAdmin):
         "price_from",
         "order",
         "is_active",
+    )
+
+    readonly_fields = (
+        "created_at",
+        "updated_at",
     )
 
     ordering = (
@@ -381,13 +391,11 @@ class CatalogSectionAdmin(admin.ModelAdmin):
 @admin.register(Monument)
 class MonumentAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
-        "preview",
         "title",
         "category",
-        "price_display",
         "order",
         "is_active",
+        "image_preview",
         "updated_at",
     )
 
@@ -407,16 +415,17 @@ class MonumentAdmin(admin.ModelAdmin):
         "is_active",
     )
 
+    readonly_fields = (
+        "image_preview",
+        "created_at",
+        "updated_at",
+    )
+
+
     ordering = (
         "category",
         "order",
         "id",
-    )
-
-    readonly_fields = (
-        "preview",
-        "created_at",
-        "updated_at",
     )
 
     fieldsets = (
@@ -426,19 +435,17 @@ class MonumentAdmin(admin.ModelAdmin):
                 "fields": (
                     "category",
                     "title",
-                    "description",
+                    "alt_text",
                     "is_active",
                 )
             },
         ),
-
         (
             "Зображення",
             {
                 "fields": (
                     "image",
-                    "preview",
-                    "alt_text",
+                    "image_preview",
                 )
             },
         ),
@@ -460,6 +467,16 @@ class MonumentAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+    def image_preview(self, obj):
+        if obj.image:
+            return format_html(
+                '<img src="{}" style="max-width: 140px; height: auto; border-radius: 10px;" />',
+                obj.image.url,
+            )
+        return "-"
+
+    image_preview.short_description = "Превʼю"
 
     def preview(self, obj):
         if obj.image:
@@ -484,6 +501,8 @@ class GalleryAdmin(admin.ModelAdmin):
         "section",
         "order",
         "is_active",
+        "video_preview",
+        "updated_at",
     )
 
     list_filter = (
@@ -493,7 +512,6 @@ class GalleryAdmin(admin.ModelAdmin):
 
     search_fields = (
         "title",
-        "description",
     )
 
     list_editable = (
@@ -502,12 +520,14 @@ class GalleryAdmin(admin.ModelAdmin):
     )
 
     ordering = (
+        "section",
         "order",
         "id",
     )
 
     readonly_fields = (
         "video_preview",
+        "poster_preview",
         "created_at",
         "updated_at",
     )
@@ -545,6 +565,16 @@ class GalleryAdmin(admin.ModelAdmin):
         ),
     )
 
+    def poster_preview(self, obj):
+        if obj.poster:
+            return format_html(
+                '<img src="{}" style="max-width: 180px; height: auto; border-radius: 10px;" />',
+                obj.poster.url,
+            )
+        return "-"
+
+    poster_preview.short_description = "Превʼю постера"
+
     def video_preview(self, obj):
         if obj.video:
             return format_html(
@@ -557,7 +587,7 @@ class GalleryAdmin(admin.ModelAdmin):
         return "-"
 
     video_preview.short_description = "Превʼю відео"
-
+    
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     list_display = (
