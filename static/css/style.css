@@ -1203,7 +1203,12 @@ button {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    background: var(--footer-dark);
+}
+
+.showreel-media:fullscreen,
+.showreel-media:-webkit-full-screen {
+    object-fit: contain;
+    background: #000;
 }
 
 .showreel-media[hidden] {
