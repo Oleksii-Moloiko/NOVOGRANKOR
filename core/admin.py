@@ -1,3 +1,4 @@
+from unfold.admin import ModelAdmin
 from django.contrib import admin
 from django.utils.html import format_html
 
@@ -34,7 +35,7 @@ class MonumentInline(admin.TabularInline):
     )
 
 @admin.register(Advantage)
-class AdvantageAdmin(admin.ModelAdmin):
+class AdvantageAdmin(ModelAdmin):
     list_display = (
         "title",
         "icon",
@@ -116,7 +117,7 @@ class AboutStatInline(admin.TabularInline):
     )
 
 @admin.register(AboutSection)
-class AboutSectionAdmin(admin.ModelAdmin):
+class AboutSectionAdmin(ModelAdmin):
     list_display = (
         "title",
         "tag",
@@ -201,7 +202,7 @@ class AboutSectionAdmin(admin.ModelAdmin):
         return super().has_add_permission(request)
 
 @admin.register(GallerySection)
-class GallerySectionAdmin(admin.ModelAdmin):
+class GallerySectionAdmin(ModelAdmin):
     list_display = (
         "section_type",
         "tag",
@@ -255,7 +256,7 @@ class GallerySectionAdmin(admin.ModelAdmin):
     )
 
 @admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(ModelAdmin):
     list_display = (
         "name",
         "price_from",
@@ -314,7 +315,7 @@ class CategoryAdmin(admin.ModelAdmin):
     )
 
 @admin.register(CatalogSection)
-class CatalogSectionAdmin(admin.ModelAdmin):
+class CatalogSectionAdmin(ModelAdmin):
     list_display = (
         "title",
         "tag",
@@ -389,7 +390,7 @@ class CatalogSectionAdmin(admin.ModelAdmin):
 
 
 @admin.register(Monument)
-class MonumentAdmin(admin.ModelAdmin):
+class MonumentAdmin(ModelAdmin):
     list_display = (
         "title",
         "category",
@@ -495,7 +496,7 @@ class MonumentAdmin(admin.ModelAdmin):
     price_display.short_description = "Ціна"
 
 @admin.register(Gallery)
-class GalleryAdmin(admin.ModelAdmin):
+class GalleryAdmin(ModelAdmin):
     list_display = (
         "title",
         "section",
@@ -587,9 +588,9 @@ class GalleryAdmin(admin.ModelAdmin):
         return "-"
 
     video_preview.short_description = "Превʼю відео"
-    
+
 @admin.register(SiteSettings)
-class SiteSettingsAdmin(admin.ModelAdmin):
+class SiteSettingsAdmin(ModelAdmin):
     list_display = (
         "phone_display",
         "hero_title",

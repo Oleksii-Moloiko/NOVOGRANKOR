@@ -19,6 +19,8 @@ ALLOWED_HOSTS = config(
 
 
 INSTALLED_APPS = [
+    "unfold",
+
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -131,3 +133,12 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+
+UNFOLD = {
+    "SITE_TITLE": "NOVOGRANKOR Admin",
+    "SITE_HEADER": "NOVOGRANKOR",
+    "SITE_SYMBOL": "settings",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
+}
