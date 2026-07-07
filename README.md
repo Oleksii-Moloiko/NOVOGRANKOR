@@ -1,224 +1,69 @@
-# NOVOGRANKOR Landing Page
+# NOVOGRANKOR
 
-Односторінковий сайт для компанії **NOVOGRANKOR**, яка займається виготовленням та встановленням пам’ятників з натурального граніту.
+Django-сайт для компанії NOVOGRANKOR з виготовлення та встановлення памʼятників із натурального граніту.
 
-Основна ціль сайту — швидко показати приклади робіт, надати базову інформацію про компанію та привести користувача до контакту: **дзвінка або переходу в Telegram, Viber чи WhatsApp**.
+Проєкт реалізований як невелика CMS: основний контент головної сторінки, каталог, галереї, контакти, SEO та глобальні тексти керуються через Django Admin.
 
-Сайт не використовує онлайн-замовлення, форми заявок або email-нотифікації. Основний бізнес-сценарій — користувач переглядає інформацію та телефонує або переходить у месенджер.
+## Основний функціонал
 
----
+* Головна сторінка з Hero-блоком
+* CMS-блок переваг
+* CMS-блок “Про компанію”
+* CMS-блок каталогу
+* Категорії памʼятників
+* Памʼятники з фото
+* Відеогалерея процесу
+* Відеогалерея готових робіт
+* Глобальні налаштування сайту
+* Контакти та месенджери
+* SEO-налаштування
+* Зручна адмінпанель на базі Django Unfold
+* Тести для моделей, views та admin-конфігурації
 
-## Основна бізнес-логіка
-
-Сайт не є інтернет-магазином або системою онлайн-заявок.
-
-Основний сценарій користувача:
-
-```text
-Користувач заходить на сайт
-↓
-Швидко бачить, чим займається компанія
-↓
-Переглядає приклади робіт і відео процесу
-↓
-Телефонує або переходить у месенджер
-```
-
-Головна бізнес-ціль:
-
-```text
-Приклади робіт → довіра → дзвінок / месенджер
-```
-
----
-
-## Функціонал
-
-* Односторінковий Landing Page
-* Hero-блок з назвою компанії, слоганом і CTA
-* Клікабельний номер телефону
-* Кнопки Telegram / Viber / WhatsApp
-* Floating call button для швидкого дзвінка
-* Блок “Про нас”
-* Каталог робіт з категоріями
-* Фото пам’ятників через Django Admin
-* Відео галерея робочого процесу
-* Блок послуг
-* Фінальний контактний CTA
-* Контакти та CTA керуються через Django Admin
-* Активний / неактивний статус для контенту
-* Healthcheck endpoint
-* Базові automated tests
-* Адаптивна верстка для desktop та mobile
-
----
-
-## Чого немає в проєкті
-
-У проєкті свідомо не реалізовано:
-
-* онлайн-замовлення;
-* форму заявки;
-* POST-обробку заявки;
-* email-нотифікації;
-* spam protection для форми;
-* модель `ContactRequest`.
-
-Основна дія користувача — **подзвонити або перейти в месенджер**.
-
----
-
-## Стек
+## Технології
 
 * Python
 * Django
 * SQLite для локальної розробки
-* PostgreSQL через `DATABASE_URL` для продакшену за потреби
-* HTML
-* CSS
-* Bootstrap
-* WhiteNoise
-* Gunicorn
+* HTML / CSS / JavaScript
+* Django Admin
+* Django Unfold
+* Pillow
 * python-decouple
-* dj-database-url
 
----
+## CMS-структура
 
-## Структура проєкту
+### Контент сайту
 
-```text
-novogrankor/
-├── config/                     # Налаштування Django-проєкту
-│   ├── settings.py
-│   ├── urls.py
-│   ├── asgi.py
-│   └── wsgi.py
-├── core/                       # Основний Django app
-│   ├── admin.py
-│   ├── context_processors.py
-│   ├── models.py
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
-├── templates/                  # HTML-шаблони
-│   ├── base.html
-│   └── home.html
-├── static/                     # Статичні файли
-│   ├── css/
-│   │   └── style.css
-│   └── img/
-│       └── logo.png
-├── media/                      # Локальні завантаження через адмінку
-├── staticfiles/                # Результат collectstatic, не додається в git
-├── .env.example                # Приклад env-змінних
-├── .gitignore
-├── manage.py
-├── requirements.txt
-└── README.md
-```
+* `Advantage` — переваги на головній сторінці
+* `AboutSection` — блок “Про компанію”
+* `AboutStat` — статистика в блоці “Про компанію”
+* `CatalogSection` — заголовки, підказки та порожні стани каталогу
+* `GallerySection` — заголовки секцій “Процес” і “Наші роботи”
+* `Gallery` — відео для секцій галереї
 
----
+### Каталог
 
-## Основні моделі
+* `Category` — категорії памʼятників
+* `Monument` — памʼятники всередині категорій
 
-У проєкті використовуються такі моделі:
+### Налаштування
 
-### `Category`
+* `SiteSettings` — глобальні налаштування сайту:
 
-Категорії пам’ятників.
-
-Поля:
-
-* `name`
-* `order`
-* `is_active`
-* `created_at`
-* `updated_at`
-
-### `Monument`
-
-Приклади робіт / пам’ятники.
-
-Поля:
-
-* `category`
-* `title`
-* `image`
-* `alt_text`
-* `description`
-* `order`
-* `is_active`
-* `created_at`
-* `updated_at`
-
-### `Gallery`
-
-Відео галерея робочого процесу.
-
-Поля:
-
-* `title`
-* `video`
-* `poster`
-* `description`
-* `order`
-* `is_active`
-* `created_at`
-* `updated_at`
-
-### `SiteSettings`
-
-Singleton-модель для керування основними налаштуваннями сайту.
-
-Поля:
-
-* `phone`
-* `phone_display`
-* `telegram`
-* `viber`
-* `whatsapp`
-* `logo`
-* `hero_title`
-* `hero_subtitle`
-* `cta_title`
-* `cta_subtitle`
-
-У базі має бути лише один запис `SiteSettings`.
-
----
-
-## Env-змінні
-
-Проєкт використовує `.env`.
-
-Приклад є у файлі:
-
-```text
-.env.example
-```
-
-Локально потрібно створити файл:
-
-```text
-.env
-```
-
-Приклад:
-
-```env
-SECRET_KEY=your-secret-key
-DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-DATABASE_URL=
-```
-
-Для генерації `SECRET_KEY`:
-
-```bash
-python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-```
-
----
+  * назва сайту
+  * логотип
+  * favicon
+  * hero-тексти
+  * CTA-тексти
+  * телефон
+  * email
+  * Viber
+  * Telegram
+  * WhatsApp
+  * соцмережі
+  * SEO
+  * footer-тексти
 
 ## Локальний запуск
 
@@ -232,14 +77,7 @@ cd novogrankor
 ### 2. Створити віртуальне середовище
 
 ```bash
-python3 -m venv .venv
-```
-
-### 3. Активувати віртуальне середовище
-
-Для macOS / Linux:
-
-```bash
+python -m venv .venv
 source .venv/bin/activate
 ```
 
@@ -249,313 +87,307 @@ source .venv/bin/activate
 .venv\Scripts\activate
 ```
 
-### 4. Встановити залежності
+### 3. Встановити залежності
 
 ```bash
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-### 5. Створити `.env`
+### 4. Створити `.env`
 
-```bash
-cp .env.example .env
+У корені проєкту створи файл `.env`.
+
+Приклад:
+
+```env
+SECRET_KEY=your-secret-key
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
 ```
 
-Після цього заповнити `SECRET_KEY`.
+Для production потрібно використовувати сильний `SECRET_KEY`, вимкнути `DEBUG` і вказати реальні домени в `ALLOWED_HOSTS`.
 
-### 6. Застосувати міграції
+### 5. Застосувати міграції
 
 ```bash
 python manage.py migrate
 ```
 
-### 7. Створити суперкористувача
+### 6. Створити адміністратора
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 8. Запустити сервер
+### 7. Запустити сервер
 
 ```bash
 python manage.py runserver
 ```
 
-Сайт:
+Сайт буде доступний за адресою:
 
 ```text
 http://127.0.0.1:8000/
 ```
 
-Адмінка:
+Адмінпанель:
 
 ```text
 http://127.0.0.1:8000/admin/
 ```
 
-Healthcheck:
+## Наповнення адмінки
 
-```text
-http://127.0.0.1:8000/healthcheck/
-```
+Після першого запуску потрібно заповнити основні CMS-блоки.
 
----
+### 1. Налаштування сайту
 
-## Робота з адмінкою
+Створи один запис `SiteSettings`.
 
-Через Django Admin можна:
+Заповни:
 
-1. Керувати категоріями пам’ятників:
+* назву сайту
+* логотип
+* favicon
+* телефон
+* Viber / Telegram / WhatsApp
+* Hero-тексти
+* CTA-тексти
+* SEO-тексти
+* footer-тексти
 
-   * назва;
-   * порядок;
-   * активність.
+### 2. Переваги
 
-2. Додавати пам’ятники:
+Створи записи `Advantage`, наприклад:
 
-   * назва;
-   * опис;
-   * фото;
-   * alt-текст;
-   * категорія;
-   * порядок;
-   * активність.
+1. По всій Україні
+2. 3D-візуалізація
+3. Доставка
 
-3. Додавати відео робочого процесу:
+Для кожної переваги можна вказати іконку, порядок і статус активності.
 
-   * назва;
-   * відеофайл;
-   * poster / обкладинка;
-   * опис;
-   * порядок;
-   * активність.
+### 3. Блок “Про компанію”
 
-4. Оновлювати налаштування сайту:
+Створи один запис `AboutSection`.
 
-   * телефон для посилання;
-   * телефон для відображення;
-   * Telegram;
-   * Viber;
-   * WhatsApp;
-   * логотип;
-   * hero title;
-   * hero subtitle;
-   * CTA title;
-   * CTA subtitle.
+Додай:
 
----
+* заголовок
+* основні тексти
+* ліву картку
+* зображення
+* статистику через inline `AboutStat`
 
-## Контакти на сайті
+Приклади статистики:
 
-Контакти не захардкоджені в шаблонах. Вони керуються через `SiteSettings` в Django Admin.
+* `10+` — років досвіду
+* `500+` — встановлених виробів
 
-Телефон для посилання:
+### 4. Блок каталогу
 
-```text
-+380671234567
-```
+Створи один запис `CatalogSection`.
 
-Телефон для відображення:
+Він керує:
 
-```text
-+38 (067) 123-45-67
-```
+* міткою секції
+* заголовком каталогу
+* загальною ціною “від”
+* підказкою під ціною
+* текстом “Ціна уточнюється”
+* текстами порожніх станів
 
-У шаблоні телефон використовується так:
+### 5. Категорії та памʼятники
 
-```django
-{% if site_settings and site_settings.phone %}
-    <a href="tel:{{ site_settings.phone }}">
-        {{ site_settings.phone_display|default:site_settings.phone }}
-    </a>
-{% endif %}
-```
+Створи категорії через `Category`.
 
-Telegram, Viber і WhatsApp також задаються в адмінці як повні посилання.
+Потім додай памʼятники через `Monument`.
 
----
+Для кожного памʼятника можна вказати:
 
-## Робота зі статикою
+* категорію
+* назву
+* зображення
+* alt-текст
+* порядок
+* активність
 
-CSS-файл:
+### 6. Заголовки галерей
 
-```text
-static/css/style.css
-```
+Створи два записи `GallerySection`:
 
-Локальні статичні файли:
+1. `Процес`
+2. `Наші роботи`
 
-```text
-static/
-```
+Вони керують заголовками та підзаголовками відеосекцій.
 
-Продакшен-збірка статичних файлів:
+### 7. Відеогалерея
 
-```bash
-python manage.py collectstatic --noinput
-```
+Через `Gallery` додай відео для секцій:
 
-Після виконання команди файли збираються в:
+* `process`
+* `works`
 
-```text
-staticfiles/
-```
+Для кожного відео можна вказати:
 
-Папка `staticfiles/` не додається в git.
-
----
-
-## Робота з media-файлами
-
-Фото пам’ятників, логотип, poster-зображення та відео завантажуються через Django Admin і зберігаються в папці:
-
-```text
-media/
-```
-
-Папка `media/` не додається в git.
-
-Для локального відображення media-файлів у `config/urls.py` має бути підключення через:
-
-```python
-from django.conf import settings
-from django.conf.urls.static import static
-```
-
-та:
-
-```python
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-```
-
----
+* назву
+* секцію
+* відеофайл
+* постер
+* порядок
+* активність
 
 ## Тести
 
-У проєкті є базові automated tests для:
-
-* моделей;
-* singleton-логіки `SiteSettings`;
-* головної сторінки;
-* фільтрації active / inactive контенту;
-* CTA-контактів;
-* відсутності онлайн-форми заявки;
-* healthcheck endpoint;
-* базової конфігурації Django Admin.
-
-Запуск тестів:
+Запуск усіх тестів:
 
 ```bash
 python manage.py test
 ```
 
-Очікуваний результат:
+Перед кожним комітом бажано запускати тести та перевіряти, що всі проходять.
+
+## Адмінпанель
+
+У проєкті використовується Django Unfold.
+
+Адмінпанель має логічну навігацію:
+
+### Контент сайту
+
+* Переваги
+* Про компанію
+* Блок каталогу
+* Заголовки галерей
+* Відеогалерея
+
+### Каталог
+
+* Категорії
+* Памʼятники
+
+### Налаштування
+
+* Сайт
+
+### Користувачі та доступ
+
+* Користувачі
+* Групи
+
+## Робота з медіафайлами
+
+Зображення та відео завантажуються через Django Admin.
+
+Локально медіафайли зберігаються в директорії:
 
 ```text
-OK
-```
-
----
-
-## Production readiness
-
-Проєкт підготовлений до продакшену частково:
-
-* конфіг винесено в `.env`;
-* `SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS` читаються з env;
-* `DATABASE_URL` підтримується через `dj-database-url`;
-* додано `WhiteNoise`;
-* додано `Gunicorn`;
-* налаштовано `STATIC_ROOT`;
-* додано healthcheck endpoint;
-* додано production security settings для `DEBUG=False`.
-
----
-
-## Gunicorn
-
-Приклад локальної перевірки Gunicorn:
-
-```bash
-gunicorn config.wsgi:application
-```
-
-Або з явним bind:
-
-```bash
-gunicorn config.wsgi:application --bind 0.0.0.0:8000
-```
-
----
-
-## Production check
-
-Для перевірки production-налаштувань потрібно встановити:
-
-```env
-DEBUG=False
-ALLOWED_HOSTS=your-domain.com
-SECRET_KEY=your-production-secret-key
-```
-
-Після цього запустити:
-
-```bash
-python manage.py check --deploy
-```
-
-Деякі попередження можуть залежати від конкретного хостингу, HTTPS, reverse proxy та налаштувань домену.
-
----
-
-## Git ignore
-
-У репозиторій не потрібно додавати:
-
-```text
-.venv/
-__pycache__/
-*.pyc
-db.sqlite3
 media/
-staticfiles/
-.env
-.DS_Store
-__MACOSX/
 ```
 
----
+Для production потрібно переконатися, що `MEDIA_URL` і `MEDIA_ROOT` налаштовані правильно.
 
-## Поточний статус
+## Деплой на PythonAnywhere
 
-Готовий MVP landing page з call-first бізнес-логікою:
+Базовий порядок деплою:
 
-* сайт запускається локально;
-* головна сторінка зверстана;
-* онлайн-заявки видалені;
-* контакти керуються через адмінку;
-* CTA ведуть на дзвінок або месенджери;
-* каталог наповнюється через адмінку;
-* фото пам’ятників виводяться по категоріях;
-* відео робочого процесу виводяться з Gallery;
-* є floating call button;
-* є healthcheck endpoint;
-* є automated tests;
-* конфіг підготовлений до production-середовища.
+1. Завантажити код на PythonAnywhere
+2. Створити virtualenv
+3. Встановити залежності:
 
----
+```bash
+pip install -r requirements.txt
+```
 
-## Подальші покращення
+4. Створити `.env` з production-налаштуваннями
+5. Виконати міграції:
 
-* Додати favicon
-* Додати SEO meta title та description
-* Додати Open Graph meta tags
-* Додати sitemap.xml
-* Додати robots.txt
-* Оптимізувати зображення
-* Оптимізувати відео для web
-* Перевірити mobile UX на реальних пристроях
-* Перевірити реальні посилання на Telegram, Viber, WhatsApp
-* Перейти з SQLite на PostgreSQL для продакшену за потреби
-* Налаштувати деплой
+```bash
+python manage.py migrate
+```
+
+6. Зібрати static-файли, якщо це передбачено конфігурацією:
+
+```bash
+python manage.py collectstatic
+```
+
+7. Налаштувати WSGI-файл
+8. Перевірити `ALLOWED_HOSTS`
+9. Перезапустити web app на PythonAnywhere
+
+## Production checklist
+
+Перед запуском у production потрібно перевірити:
+
+* `DEBUG=False`
+* сильний `SECRET_KEY`
+* коректний `ALLOWED_HOSTS`
+* налаштовані `STATIC_ROOT` і `MEDIA_ROOT`
+* виконані всі міграції
+* створений superuser
+* заповнені CMS-блоки
+* завантажені медіафайли
+* сайт відкривається без помилок
+* адмінка відкривається
+* тести проходять
+
+## Поточний стан проєкту
+
+Виконано:
+
+* винесено переваги в CMS
+* винесено блок “Про компанію” в CMS
+* винесено статистику в CMS
+* винесено заголовки відеогалерей в CMS
+* винесено тексти каталогу в CMS
+* глобальні тексти перенесено в `SiteSettings`
+* покращено Django Admin
+* встановлено та налаштовано Django Unfold
+* налаштовано логічну навігацію адмінки
+* додано й оновлено тести
+
+## Можливі майбутні покращення
+
+* додати модель для FAQ
+* додати модель для заявок із сайту
+* додати контактну форму
+* додати email-сповіщення про заявки
+* додати drag-and-drop сортування
+* додати форматування цін із пробілами
+* додати sitemap.xml
+* додати robots.txt
+* додати Open Graph image
+* додати production security settings
+* підключити PostgreSQL для production
+* додати логування помилок
+* додати backup media-файлів
+
+## Команди для розробки
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python manage.py test
+python manage.py runserver
+```
+
+## Коміти
+
+Рекомендований формат комітів:
+
+```text
+feat: add new feature
+fix: fix bug
+refactor: improve code without changing behavior
+chore: maintenance task
+docs: update documentation
+```
+
+Приклади:
+
+```bash
+git commit -m "feat: add catalog section CMS"
+git commit -m "refactor: improve admin UX configuration"
+git commit -m "docs: update project README"
+```
