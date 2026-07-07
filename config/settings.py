@@ -141,4 +141,85 @@ UNFOLD = {
     "SITE_SYMBOL": "settings",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
+
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Контент сайту",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Переваги",
+                        "icon": "star",
+                        "link": "/admin/core/advantage/",
+                    },
+                    {
+                        "title": "Про компанію",
+                        "icon": "info",
+                        "link": "/admin/core/aboutsection/",
+                    },
+                    {
+                        "title": "Блок каталогу",
+                        "icon": "view_list",
+                        "link": "/admin/core/catalogsection/",
+                    },
+                    {
+                        "title": "Заголовки галерей",
+                        "icon": "title",
+                        "link": "/admin/core/gallerysection/",
+                    },
+                    {
+                        "title": "Відеогалерея",
+                        "icon": "video_library",
+                        "link": "/admin/core/gallery/",
+                    },
+                ],
+            },
+            {
+                "title": "Каталог",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Категорії",
+                        "icon": "category",
+                        "link": "/admin/core/category/",
+                    },
+                    {
+                        "title": "Памʼятники",
+                        "icon": "image",
+                        "link": "/admin/core/monument/",
+                    },
+                ],
+            },
+            {
+                "title": "Налаштування",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Сайт",
+                        "icon": "settings",
+                        "link": "/admin/core/sitesettings/",
+                    },
+                ],
+            },
+            {
+                "title": "Користувачі та доступ",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Користувачі",
+                        "icon": "person",
+                        "link": "/admin/auth/user/",
+                    },
+                    {
+                        "title": "Групи",
+                        "icon": "group",
+                        "link": "/admin/auth/group/",
+                    },
+                ],
+            },
+        ],
+    },
 }
