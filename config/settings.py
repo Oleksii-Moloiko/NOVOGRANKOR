@@ -17,6 +17,11 @@ ALLOWED_HOSTS = config(
     cast=Csv(),
 )
 
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default="",
+    cast=Csv(),
+)
 
 INSTALLED_APPS = [
     "unfold",
@@ -134,6 +139,10 @@ if not DEBUG:
 
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    X_FRAME_OPTIONS = "DENY"
 
 UNFOLD = {
     "SITE_TITLE": "NOVOGRANKOR Admin",
