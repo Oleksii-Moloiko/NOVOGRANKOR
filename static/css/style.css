@@ -33,13 +33,13 @@ body {
     font-family: "Manrope", sans-serif;
     color: var(--brown);
     background: linear-gradient(
-        180deg,
-        var(--cream) 0%,
-        var(--gold) 30%,
-        var(--amber) 60%,
-        var(--peach) 80%,
-        var(--rust) 100%
-    );
+    135deg,
+    #fff9e6 0%,
+    #ffedb0 25%,
+    #ffd97a 50%,
+    #f0b94a 75%,
+    #d99b26 100%
+);
     overflow-x: hidden;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -763,7 +763,7 @@ button {
 
 .catalog {
     padding: 50px 0 60px;
-    background: #f7e3a1;
+    background: transparent;
 }
 
 .catalog-head {
@@ -1145,9 +1145,7 @@ button {
 
 .gallery {
     padding: 64px 0 72px;
-    background:
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.34), transparent 34%),
-        linear-gradient(180deg, var(--gold) 0%, var(--amber) 58%, var(--peach) 100%);
+    background: transparent;
 }
 
 .gallery-head {
@@ -2227,8 +2225,4 @@ button {
     pointer-events:none;
     opacity:.7;
     cursor:wait;
-}
-
-.catalog-panel:not(.expanded) .product-card:nth-child(n + 11){
-    display:none;
 }
