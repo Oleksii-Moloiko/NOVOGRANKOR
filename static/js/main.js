@@ -1,323 +1,387 @@
+
+"use strict";
+
 document.addEventListener("DOMContentLoaded", () => {
+    initMenu();
+    initLightbox();
+    initCatalog();
+    initShowreel();
+});
+
+function initMenu() {
 
     const burgerBtn = document.getElementById("burgerBtn");
     const mobileNav = document.getElementById("mobileNav");
     const closeNav = document.getElementById("closeNav");
 
-    if (burgerBtn && mobileNav && closeNav) {
-        const openMenu = () => {
-            mobileNav.hidden = false;
-        };
-
-        const closeMenu = () => {
-            mobileNav.hidden = true;
-        };
-
-        burgerBtn.addEventListener("click", openMenu);
-        closeNav.addEventListener("click", closeMenu);
-
-        mobileNav.addEventListener("click", (event) => {
-            if (event.target === mobileNav) {
-                closeMenu();
-            }
-        });
-
-        mobileNav.querySelectorAll("a").forEach((link) => {
-            link.addEventListener("click", closeMenu);
-        });
-    }
-
-    const triggers = Array.from(document.querySelectorAll("[data-lightbox-src]"));
-    const lightbox = document.getElementById("photoLightbox");
-
-    if (!triggers.length || !lightbox) {
+    if (!burgerBtn || !mobileNav || !closeNav) {
         return;
     }
 
+    const openMenu = () => {
+        mobileNav.hidden = false;
+        document.body.classList.add("menu-open");
+    };
+
+    const closeMenu = () => {
+        mobileNav.hidden = true;
+        document.body.classList.remove("menu-open");
+    };
+
+    burgerBtn.addEventListener("click", openMenu);
+
+    closeNav.addEventListener("click", closeMenu);
+
+    mobileNav.addEventListener("click", (e) => {
+        if (e.target === mobileNav) {
+            closeMenu();
+        }
+    });
+
+    mobileNav.querySelectorAll("a").forEach(link => {
+        link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !mobileNav.hidden) {
+            closeMenu();
+        }
+    });
+
+}
+
+function initLightbox() {
+
+    const triggers = [...document.querySelectorAll("[data-lightbox-src]")];
+    const lightbox = document.getElementById("photoLightbox");
+
+    if (!triggers.length || !lightbox) return;
+
     const image = lightbox.querySelector(".photo-lightbox-image");
-    const closeButton = lightbox.querySelector(".photo-lightbox-close");
-    const prevButton = lightbox.querySelector(".photo-lightbox-prev");
-    const nextButton = lightbox.querySelector(".photo-lightbox-next");
+    const closeBtn = lightbox.querySelector(".photo-lightbox-close");
+    const prevBtn = lightbox.querySelector(".photo-lightbox-prev");
+    const nextBtn = lightbox.querySelector(".photo-lightbox-next");
 
-    let currentIndex = 0;
-    let touchStartX = 0;
+    let current = 0;
+    let touchStart = 0;
 
-    const openLightbox = (index) => {
-        currentIndex = index;
-        const trigger = triggers[currentIndex];
+    function render(index) {
+
+        current = (index + triggers.length) % triggers.length;
+
+        const trigger = triggers[current];
 
         image.src = trigger.dataset.lightboxSrc;
         image.alt = trigger.dataset.lightboxAlt || "";
 
-        lightbox.hidden = false;
-        document.body.classList.add("lightbox-open");
-    };
-
-    const closeLightbox = () => {
-        lightbox.hidden = true;
-        image.src = "";
-        image.alt = "";
-        document.body.classList.remove("lightbox-open");
-    };
-
-    const showPrev = () => {
-        currentIndex = (currentIndex - 1 + triggers.length) % triggers.length;
-        openLightbox(currentIndex);
-    };
-
-    const showNext = () => {
-        currentIndex = (currentIndex + 1) % triggers.length;
-        openLightbox(currentIndex);
-    };
-
-    triggers.forEach((trigger, index) => {
-        trigger.addEventListener("click", () => openLightbox(index));
-    });
-
-    closeButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        closeLightbox();
-    });
-
-    prevButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        showPrev();
-    });
-
-    nextButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        showNext();
-    });
-
-    lightbox.addEventListener("click", (event) => {
-        if (event.target === lightbox) {
-            closeLightbox();
-        }
-    });
-
-    document.addEventListener("keydown", (event) => {
-        if (lightbox.hidden) {
-            return;
-        }
-
-        if (event.key === "Escape") {
-            closeLightbox();
-        }
-
-        if (event.key === "ArrowLeft") {
-            showPrev();
-        }
-
-        if (event.key === "ArrowRight") {
-            showNext();
-        }
-    });
-
-    lightbox.addEventListener("touchstart", (event) => {
-        touchStartX = event.changedTouches[0].screenX;
-    });
-
-    lightbox.addEventListener("touchend", (event) => {
-        const touchEndX = event.changedTouches[0].screenX;
-        const diff = touchEndX - touchStartX;
-
-        if (Math.abs(diff) < 50) {
-            return;
-        }
-
-        if (diff > 0) {
-            showPrev();
-        } else {
-            showNext();
-        }
-    });
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    const catalog = document.getElementById("catalog");
-    const catalogTabs = Array.from(document.querySelectorAll("[data-catalog-tab]"));
-    const catalogPanels = Array.from(document.querySelectorAll("[data-catalog-panel]"));
-    const visibleLimit = 10;
-
-    if (!catalogTabs.length || !catalogPanels.length) {
-        return;
     }
 
-    const updateCatalogPanel = (panel) => {
-        const items = Array.from(panel.querySelectorAll("[data-catalog-item]"));
-        const toggle = panel.querySelector("[data-catalog-toggle]");
-        const isExpanded = panel.dataset.expanded === "true";
-        const hiddenCount = Math.max(items.length - visibleLimit, 0);
+    function open(index) {
 
-        if (!toggle || !items.length) {
-            return;
+        render(index);
+
+        lightbox.hidden = false;
+        document.body.classList.add("lightbox-open");
+
+    }
+
+    function close() {
+
+        lightbox.hidden = true;
+
+        image.removeAttribute("src");
+        image.removeAttribute("alt");
+
+        document.body.classList.remove("lightbox-open");
+
+    }
+
+    function prev() {
+        render(current - 1);
+    }
+
+    function next() {
+        render(current + 1);
+    }
+
+    triggers.forEach((trigger, index) => {
+        trigger.addEventListener("click", () => open(index));
+    });
+
+    closeBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        close();
+    });
+
+    prevBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        prev();
+    });
+
+    nextBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        next();
+    });
+
+    lightbox.addEventListener("click", e => {
+
+        if (e.target === lightbox) {
+            close();
         }
 
+    });
+
+    document.addEventListener("keydown", e => {
+
+        if (lightbox.hidden) return;
+
+        switch (e.key) {
+
+            case "Escape":
+                close();
+                break;
+
+            case "ArrowLeft":
+                prev();
+                break;
+
+            case "ArrowRight":
+                next();
+                break;
+
+        }
+
+    });
+
+    lightbox.addEventListener("touchstart", e => {
+        touchStart = e.changedTouches[0].screenX;
+    });
+
+    lightbox.addEventListener("touchend", e => {
+
+        const diff = e.changedTouches[0].screenX - touchStart;
+
+        if (Math.abs(diff) < 50) return;
+
+        diff > 0 ? prev() : next();
+
+    });
+
+}
+
+function initCatalog() {
+
+    const catalog = document.getElementById("catalog");
+    const tabs = [...document.querySelectorAll("[data-catalog-tab]")];
+    const panels = [...document.querySelectorAll("[data-catalog-panel]")];
+
+    const VISIBLE_LIMIT = 10;
+
+    if (!tabs.length || !panels.length) return;
+
+    function updatePanel(panel) {
+
+        const items = [...panel.querySelectorAll("[data-catalog-item]")];
+        const toggle = panel.querySelector("[data-catalog-toggle]");
+
+        if (!toggle) return;
+
+        const expanded = panel.classList.contains("expanded");
+
         items.forEach((item, index) => {
-            item.hidden = !isExpanded && index >= visibleLimit;
+            item.hidden = !expanded && index >= VISIBLE_LIMIT;
         });
 
-        if (items.length <= visibleLimit) {
+        if (items.length <= VISIBLE_LIMIT) {
             toggle.hidden = true;
-            toggle.classList.remove("is-expanded");
             return;
         }
 
         toggle.hidden = false;
-        toggle.classList.toggle("is-expanded", isExpanded);
+        toggle.classList.toggle("is-expanded", expanded);
 
-        if (isExpanded) {
-            toggle.innerHTML = `<span>Показати менше</span>`;
-        } else {
-            toggle.innerHTML = `
+        const hiddenCount = items.length - VISIBLE_LIMIT;
+
+        toggle.innerHTML = expanded
+            ? "<span>Показати менше</span>"
+            : `
                 <span>Дивитись більше</span>
-                <span class="catalog-toggle-count">+${hiddenCount}</span>
+                <span class="catalog-toggle-count">
+                    +${hiddenCount}
+                </span>
             `;
-        }
-    };
+    }
 
-    const resetPanel = (panel) => {
-        panel.dataset.expanded = "false";
-        updateCatalogPanel(panel);
-    };
+    function resetPanel(panel) {
 
-    const activateCatalogTab = (selectedId) => {
-        catalogTabs.forEach((tab) => {
-            const isActive = tab.dataset.catalogTab === selectedId;
+        panel.classList.remove("expanded");
 
-            tab.classList.toggle("active", isActive);
-            tab.setAttribute("aria-selected", isActive ? "true" : "false");
-            tab.setAttribute("tabindex", isActive ? "0" : "-1");
+        updatePanel(panel);
+
+    }
+
+    function activateTab(id) {
+
+        tabs.forEach(tab => {
+
+            const active = tab.dataset.catalogTab === id;
+
+            tab.classList.toggle("active", active);
+            tab.setAttribute("aria-selected", active ? "true" : "false");
+            tab.tabIndex = active ? 0 : -1;
+
         });
 
-        catalogPanels.forEach((panel) => {
-            const isActive = panel.dataset.catalogPanel === selectedId;
+        panels.forEach(panel => {
 
-            panel.hidden = !isActive;
+            const active = panel.dataset.catalogPanel === id;
 
-            if (isActive) {
+            panel.hidden = !active;
+
+            if (active) {
                 resetPanel(panel);
             }
-        });
-    };
 
-    catalogPanels.forEach((panel) => {
+        });
+
+    }
+
+    panels.forEach(panel => {
+
         const toggle = panel.querySelector("[data-catalog-toggle]");
 
-        if (!toggle) {
-            return;
-        }
+        if (!toggle) return;
 
-        toggle.addEventListener("click", () => {
-            const isExpanded = panel.dataset.expanded === "true";
+        let busy = false;
 
-            if (isExpanded) {
-                panel.dataset.expanded = "false";
-                updateCatalogPanel(panel);
+        toggle.addEventListener("click", async () => {
 
-                if (catalog) {
-                    catalog.scrollIntoView({
-                        behavior: "smooth",
-                        block: "start"
-                    });
-                }
+            if (busy) return;
 
+            busy = true;
+
+            toggle.disabled = true;
+
+            panel.classList.toggle("expanded");
+
+            updatePanel(panel);
+
+            if (!panel.classList.contains("expanded") && catalog) {
+
+                catalog.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+                await new Promise(r => setTimeout(r, 500));
+
+            }
+
+            toggle.disabled = false;
+
+            busy = false;
+
+        });
+
+    });
+
+    tabs.forEach((tab, index) => {
+
+        tab.addEventListener("click", () => {
+            activateTab(tab.dataset.catalogTab);
+        });
+
+        tab.addEventListener("keydown", e => {
+
+            if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") {
                 return;
             }
 
-            panel.dataset.expanded = "true";
-            updateCatalogPanel(panel);
+            e.preventDefault();
+
+            const next =
+                e.key === "ArrowRight"
+                    ? (index + 1) % tabs.length
+                    : (index - 1 + tabs.length) % tabs.length;
+
+            tabs[next].focus();
+
+            activateTab(tabs[next].dataset.catalogTab);
+
         });
+
     });
 
-    catalogTabs.forEach((tab) => {
-        tab.addEventListener("click", () => {
-            activateCatalogTab(tab.dataset.catalogTab);
-        });
+    activateTab(
+        document.querySelector("[data-catalog-tab].active")?.dataset.catalogTab ??
+        tabs[0].dataset.catalogTab
+    );
 
-        tab.addEventListener("keydown", (event) => {
-            const currentIndex = catalogTabs.indexOf(tab);
-
-            if (event.key === "ArrowRight") {
-                event.preventDefault();
-                const nextTab = catalogTabs[currentIndex + 1] || catalogTabs[0];
-                nextTab.focus();
-                activateCatalogTab(nextTab.dataset.catalogTab);
-            }
-
-            if (event.key === "ArrowLeft") {
-                event.preventDefault();
-                const prevTab = catalogTabs[currentIndex - 1] || catalogTabs[catalogTabs.length - 1];
-                prevTab.focus();
-                activateCatalogTab(prevTab.dataset.catalogTab);
-            }
-        });
-    });
-
-    const activeTab = document.querySelector("[data-catalog-tab].active") || catalogTabs[0];
-
-    if (activeTab) {
-        activateCatalogTab(activeTab.dataset.catalogTab);
-    }
-});
+}
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    const cards = Array.from(document.querySelectorAll("[data-showreel-card]"));
+function initShowreel() {
 
-    if (!cards.length) {
-        return;
-    }
+    const cards = [...document.querySelectorAll("[data-showreel-card]")];
 
-    const pauseCard = (card) => {
+    if (!cards.length) return;
+
+    function pauseCard(card) {
+
         const video = card.querySelector(".showreel-media");
 
-        if (!video) {
-            return;
-        }
+        if (!video) return;
 
         video.pause();
-        video.controls = false;
         video.currentTime = 0;
+        video.controls = false;
 
         card.classList.remove("is-playing");
-    };
 
-    cards.forEach((card) => {
-        const video = card.querySelector(".showreel-media");
-        const playButton = card.querySelector(".showreel-play-btn");
+    }
 
-        if (!video || !playButton) {
-            return;
-        }
+    function playCard(card) {
 
-        playButton.addEventListener("click", () => {
-            cards.forEach((otherCard) => {
-                if (otherCard !== card) {
-                    pauseCard(otherCard);
-                }
-            });
-
-            card.classList.add("is-playing");
-            video.controls = true;
-
-            const playPromise = video.play();
-
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    pauseCard(card);
-                });
+        cards.forEach(otherCard => {
+            if (otherCard !== card) {
+                pauseCard(otherCard);
             }
         });
+
+        const video = card.querySelector(".showreel-media");
+
+        if (!video) return;
+
+        card.classList.add("is-playing");
+        video.controls = true;
+
+        video.play().catch(() => {
+            pauseCard(card);
+        });
+
+    }
+
+    cards.forEach(card => {
+
+        const video = card.querySelector(".showreel-media");
+        const playBtn = card.querySelector(".showreel-play-btn");
+
+        if (!video || !playBtn) return;
+
+        playBtn.addEventListener("click", () => playCard(card));
 
         video.addEventListener("ended", () => {
             pauseCard(card);
         });
 
         video.addEventListener("pause", () => {
+
             if (video.currentTime === 0 || video.ended) {
                 card.classList.remove("is-playing");
             }
+
         });
+
     });
-});
+
+}

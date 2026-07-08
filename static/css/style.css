@@ -2221,3 +2221,14 @@ button {
 .showreel-card.is-playing .showreel-play-btn {
     display: none !important;
 }
+
+
+.catalog-toggle:disabled{
+    pointer-events:none;
+    opacity:.7;
+    cursor:wait;
+}
+
+.catalog-panel:not(.expanded) .product-card:nth-child(n + 11){
+    display:none;
+}
