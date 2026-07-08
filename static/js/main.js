@@ -6,7 +6,87 @@ document.addEventListener("DOMContentLoaded", () => {
     initLightbox();
     initCatalog();
     initShowreel();
+    initAppSchemeFallback();
 });
+
+function initAppSchemeFallback() {
+ 
+    // Мапа "схема -> {ios, android}" сторінок у сторах.
+    // За потреби легко додати нові схеми (tg, whatsapp тощо).
+    const STORE_LINKS = {
+        "viber:": {
+            ios: "https://apps.apple.com/app/viber-messenger/id382617920",
+            android: "https://play.google.com/store/apps/details?id=com.viber.voip"
+        }
+    };
+ 
+    const FALLBACK_DELAY = 1500;
+ 
+    const ua = navigator.userAgent;
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+    const isAndroid = /Android/i.test(ua);
+    const isMobile = isIOS || isAndroid;
+ 
+    const links = [...document.querySelectorAll("a[href]")].filter(link => {
+        try {
+            return Object.prototype.hasOwnProperty.call(
+                STORE_LINKS,
+                new URL(link.href).protocol
+            );
+        } catch {
+            return false;
+        }
+    });
+ 
+    if (!links.length) return;
+ 
+    links.forEach(link => {
+ 
+        link.addEventListener("click", e => {
+ 
+            let scheme;
+ 
+            try {
+                scheme = new URL(link.href).protocol;
+            } catch {
+                return;
+            }
+ 
+            const stores = STORE_LINKS[scheme];
+ 
+            if (!stores) return;
+ 
+            // На десктопі просто даємо браузеру спробувати відкрити
+            // клієнт/веб-версію штатним чином — нічого не ламаємо.
+            if (!isMobile) return;
+ 
+            e.preventDefault();
+ 
+            let didHide = false;
+ 
+            const onVisibilityChange = () => {
+                if (document.hidden) didHide = true;
+            };
+ 
+            document.addEventListener("visibilitychange", onVisibilityChange);
+ 
+            window.location.href = link.href;
+ 
+            setTimeout(() => {
+ 
+                document.removeEventListener("visibilitychange", onVisibilityChange);
+ 
+                if (didHide) return;
+ 
+                window.location.href = isIOS ? stores.ios : stores.android;
+ 
+            }, FALLBACK_DELAY);
+ 
+        });
+ 
+    });
+ 
+}
 
 function initMenu() {
 
