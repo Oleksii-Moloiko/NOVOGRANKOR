@@ -2173,3 +2173,51 @@ button {
         animation-iteration-count: 1 !important;
     }
 }
+
+/* Video poster overlay fix */
+
+.showreel-media-wrap {
+    position: relative !important;
+}
+
+.showreel-media {
+    position: relative !important;
+    z-index: 0 !important;
+}
+
+.showreel-poster {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    border-radius: inherit !important;
+    pointer-events: none !important;
+}
+
+.showreel-media-wrap::after {
+    z-index: 2 !important;
+    pointer-events: none !important;
+}
+
+.showreel-play-btn {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    z-index: 50 !important;
+    display: inline-flex !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.showreel-card.is-playing .showreel-poster {
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.showreel-card.is-playing .showreel-play-btn {
+    display: none !important;
+}
