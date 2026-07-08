@@ -261,6 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+
 document.addEventListener("DOMContentLoaded", () => {
     const cards = Array.from(document.querySelectorAll("[data-showreel-card]"));
 
@@ -278,6 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
         video.pause();
         video.controls = false;
         video.currentTime = 0;
+
         card.classList.remove("is-playing");
     };
 
@@ -303,14 +305,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (playPromise !== undefined) {
                 playPromise.catch(() => {
-                    card.classList.remove("is-playing");
-                    video.controls = false;
+                    pauseCard(card);
                 });
             }
         });
 
         video.addEventListener("ended", () => {
             pauseCard(card);
+        });
+
+        video.addEventListener("pause", () => {
+            if (video.currentTime === 0 || video.ended) {
+                card.classList.remove("is-playing");
+            }
         });
     });
 });

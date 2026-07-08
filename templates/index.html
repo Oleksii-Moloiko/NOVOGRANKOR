@@ -536,6 +536,15 @@
                         {% if item.video %}
                             <article class="showreel-card" data-showreel-card>
                                 <div class="showreel-media-wrap">
+                                    {% if item.poster %}
+                                        <img
+                                            src="{{ item.poster.url }}"
+                                            alt="{{ item.title|default:'Відео' }}"
+                                            class="showreel-poster"
+                                            loading="lazy"
+                                        >
+                                    {% endif %}
+
                                     <video
                                         class="showreel-media"
                                         preload="metadata"
@@ -591,15 +600,21 @@
                         {% if item.video %}
                             <article class="showreel-card" data-showreel-card>
                                 <div class="showreel-media-wrap">
+                                    {% if item.poster %}
+                                        <img
+                                            src="{{ item.poster.url }}"
+                                            alt="{{ item.title|default:'Робота' }}"
+                                            class="showreel-poster"
+                                            loading="lazy"
+                                        >
+                                    {% endif %}
+
                                     <video
                                         class="showreel-media"
                                         preload="metadata"
                                         playsinline
                                         {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
                                     >
-                                        <source src="{{ item.video.url }}" type="video/mp4">
-                                        Ваш браузер не підтримує відео.
-                                    </video>
 
                                     <button
                                         type="button"
