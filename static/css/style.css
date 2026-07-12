@@ -100,7 +100,7 @@ button {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: var(--cream);
+    background: linear-gradient(to right, #fbc34c, #ED9754);
     padding: 28px 0 18px;
 }
 
