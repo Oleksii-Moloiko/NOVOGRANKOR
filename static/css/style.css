@@ -32,14 +32,8 @@ body {
     min-height: 100vh;
     font-family: "Manrope", sans-serif;
     color: var(--brown);
-    background: linear-gradient(
-    135deg,
-    #fff9e6 0%,
-    #ffedb0 25%,
-    #ffd97a 50%,
-    #f0b94a 75%,
-    #d99b26 100%
-);
+    background: #FCE181; /* Резервний колір для старих браузерів */
+    background: linear-gradient(to right, #fbc34c, #ED9754);
     overflow-x: hidden;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
