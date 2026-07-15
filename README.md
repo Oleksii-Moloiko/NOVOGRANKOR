@@ -1,35 +1,81 @@
 # NOVOGRANKOR
 
-Django-сайт для компанії NOVOGRANKOR з виготовлення та встановлення памʼятників із натурального граніту.
+Комерційний вебсайт компанії NOVOGRANKOR, що спеціалізується на виготовленні та встановленні пам'ятників із натурального граніту.
 
-Проєкт реалізований як невелика CMS: основний контент головної сторінки, каталог, галереї, контакти, SEO та глобальні тексти керуються через Django Admin.
+🌐 **Live:** https://novogrankor.com
 
-## Основний функціонал
+Проєкт розроблений на Django як CMS-рішення, де весь контент сайту керується через адміністративну панель.
 
-* Головна сторінка з Hero-блоком
-* CMS-блок переваг
-* CMS-блок “Про компанію”
-* CMS-блок каталогу
-* Категорії памʼятників
-* Памʼятники з фото
-* Відеогалерея процесу
-* Відеогалерея готових робіт
-* Глобальні налаштування сайту
-* Контакти та месенджери
-* SEO-налаштування
-* Зручна адмінпанель на базі Django Unfold
-* Тести для моделей, views та admin-конфігурації
 
-## Технології
+## Preview
 
-* Python
-* Django
-* SQLite для локальної розробки
-* HTML / CSS / JavaScript
-* Django Admin
-* Django Unfold
-* Pillow
-* python-decouple
+### Головна сторінка
+
+![Home](docs/images/home.png)
+
+### Каталог
+
+![Catalog](docs/images/catalog.png)
+
+### Адмінпанель
+
+![Admin](docs/images/admin.png)
+
+
+## Live Demo
+
+🌐 https://novogrankor.com
+
+
+## Production
+
+Production environment:
+
+- PythonAnywhere
+- Custom domain
+- HTTPS (Let's Encrypt)
+- WhiteNoise
+- Environment variables (.env)
+
+## Функції
+
+- Адаптивний макет
+- Керування контентом на основі CMS
+- Каталог продукції
+- Відеогалереї
+- SEO-налаштування
+- Керування контактною інформацією
+- Адміністрування Django Unfold
+- Завантаження зображень
+- Розгортання HTTPS
+
+## Tech Stack
+
+- Python 3.11
+- Django 5
+- Django Unfold
+- SQLite
+- WhiteNoise
+- Pillow
+- python-decouple
+- dj-database-url
+- HTML5
+- CSS3
+- JavaScript
+
+
+```
+NOVOGRANKOR/
+│
+├── config/
+├── core/
+├── media/
+├── static/
+├── templates/
+├── requirements.txt
+├── manage.py
+└── README.md
+```
 
 ## CMS-структура
 
@@ -64,78 +110,6 @@ Django-сайт для компанії NOVOGRANKOR з виготовлення 
   * соцмережі
   * SEO
   * footer-тексти
-
-## Локальний запуск
-
-### 1. Клонувати репозиторій
-
-```bash
-git clone <repository-url>
-cd novogrankor
-```
-
-### 2. Створити віртуальне середовище
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-Для Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-### 3. Встановити залежності
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Створити `.env`
-
-У корені проєкту створи файл `.env`.
-
-Приклад:
-
-```env
-SECRET_KEY=your-secret-key
-DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-```
-
-Для production потрібно використовувати сильний `SECRET_KEY`, вимкнути `DEBUG` і вказати реальні домени в `ALLOWED_HOSTS`.
-
-### 5. Застосувати міграції
-
-```bash
-python manage.py migrate
-```
-
-### 6. Створити адміністратора
-
-```bash
-python manage.py createsuperuser
-```
-
-### 7. Запустити сервер
-
-```bash
-python manage.py runserver
-```
-
-Сайт буде доступний за адресою:
-
-```text
-http://127.0.0.1:8000/
-```
-
-Адмінпанель:
-
-```text
-http://127.0.0.1:8000/admin/
-```
 
 ## Наповнення адмінки
 
@@ -285,109 +259,17 @@ python manage.py test
 media/
 ```
 
-Для production потрібно переконатися, що `MEDIA_URL` і `MEDIA_ROOT` налаштовані правильно.
+## Моя роль
 
-## Деплой на PythonAnywhere
+Цей проєкт було розроблено самостійно.
 
-Базовий порядок деплою:
+Обов'язки:
 
-1. Завантажити код на PythonAnywhere
-2. Створити virtualenv
-3. Встановити залежності:
-
-```bash
-pip install -r requirements.txt
-```
-
-4. Створити `.env` з production-налаштуваннями
-5. Виконати міграції:
-
-```bash
-python manage.py migrate
-```
-
-6. Зібрати static-файли, якщо це передбачено конфігурацією:
-
-```bash
-python manage.py collectstatic
-```
-
-7. Налаштувати WSGI-файл
-8. Перевірити `ALLOWED_HOSTS`
-9. Перезапустити web app на PythonAnywhere
-
-## Production checklist
-
-Перед запуском у production потрібно перевірити:
-
-* `DEBUG=False`
-* сильний `SECRET_KEY`
-* коректний `ALLOWED_HOSTS`
-* налаштовані `STATIC_ROOT` і `MEDIA_ROOT`
-* виконані всі міграції
-* створений superuser
-* заповнені CMS-блоки
-* завантажені медіафайли
-* сайт відкривається без помилок
-* адмінка відкривається
-* тести проходять
-
-## Поточний стан проєкту
-
-Виконано:
-
-* винесено переваги в CMS
-* винесено блок “Про компанію” в CMS
-* винесено статистику в CMS
-* винесено заголовки відеогалерей в CMS
-* винесено тексти каталогу в CMS
-* глобальні тексти перенесено в `SiteSettings`
-* покращено Django Admin
-* встановлено та налаштовано Django Unfold
-* налаштовано логічну навігацію адмінки
-* додано й оновлено тести
-
-## Можливі майбутні покращення
-
-* додати модель для FAQ
-* додати модель для заявок із сайту
-* додати контактну форму
-* додати email-сповіщення про заявки
-* додати drag-and-drop сортування
-* додати форматування цін із пробілами
-* додати sitemap.xml
-* додати robots.txt
-* додати Open Graph image
-* додати production security settings
-* підключити PostgreSQL для production
-* додати логування помилок
-* додати backup media-файлів
-
-## Команди для розробки
-
-```bash
-python manage.py makemigrations
-python manage.py migrate
-python manage.py test
-python manage.py runserver
-```
-
-## Коміти
-
-Рекомендований формат комітів:
-
-```text
-feat: add new feature
-fix: fix bug
-refactor: improve code without changing behavior
-chore: maintenance task
-docs: update documentation
-```
-
-Приклади:
-
-```bash
-git commit -m "feat: add catalog section CMS"
-git commit -m "refactor: improve admin UX configuration"
-git commit -m "docs: update project README"
-```
+- Розробка бекенду (Django)
+- Проектування баз даних
+- Архітектура CMS
+- Налаштування адміністратора Django
+- Розгортання
+- Підтримка продакшену
+- Покращення інтерфейсу користувача
+- SEO-конфігурація
