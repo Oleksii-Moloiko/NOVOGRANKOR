@@ -1,5 +1,10 @@
 # NOVOGRANKOR
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Django](https://img.shields.io/badge/Django-5.x-green)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
+![Status](https://img.shields.io/badge/Status-Production-success)
+
 Комерційний вебсайт компанії NOVOGRANKOR, що спеціалізується на виготовленні та встановленні пам'ятників із натурального граніту.
 
 🌐 **Live:** https://novogrankor.com
