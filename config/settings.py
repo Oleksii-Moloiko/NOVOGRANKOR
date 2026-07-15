@@ -129,7 +129,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = False
+    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 
