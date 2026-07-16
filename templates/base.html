@@ -8,43 +8,76 @@
     <meta name="theme-color" content="#fff4d9">
 
     <title>
-        {% if site_settings and site_settings.seo_title %}
-            {{ site_settings.seo_title }}
-        {% else %}
-            NOVOGRANKOR — Памʼятники з натурального граніту
-        {% endif %}
+    {% if site_settings and site_settings.seo_title %}
+    {{ site_settings.seo_title }}
+    {% else %}
+    NOVOGRANKOR — Памʼятники з натурального граніту
+    {% endif %}
     </title>
 
     <meta
         name="description"
-        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення та встановлення памʼятників з натурального граніту по всій Україні. Каталог, відео, фото робіт, консультація телефоном або у Viber.{% endif %}"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.{% endif %}"
     >
 
     <meta property="og:type" content="website">
+
     <meta
         property="og:title"
         content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR — Памʼятники з натурального граніту{% endif %}"
     >
+
     <meta
         property="og:description"
-        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Гранітні памʼятники, власне виробництво, доставка та встановлення по Україні.{% endif %}"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.{% endif %}"
+    >
+
+    <meta
+        property="og:url"
+        content="{{ request.build_absolute_uri }}"
+    >
+
+    <meta
+        property="og:site_name"
+        content="NOVOGRANKOR"
+    >
+
+    <meta
+        property="og:locale"
+        content="uk_UA"
     >
 
     {% if site_settings and site_settings.logo %}
-        <link rel="icon" href="{{ site_settings.logo.url }}">
-        <meta property="og:image" content="{{ site_settings.logo.url }}">
-    {% else %}
-        <link rel="icon" href="{% static 'img/logo.png' %}">
+    <meta
+        property="og:image"
+        content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"
+    >
     {% endif %}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta
+        name="twitter:title"
+        content="{% if site_settings and site_settings.seo_title %}{{ site_settings.seo_title }}{% else %}NOVOGRANKOR — Памʼятники з натурального граніту{% endif %}"
     >
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=73">
+    <meta
+        name="twitter:description"
+        content="{% if site_settings and site_settings.seo_description %}{{ site_settings.seo_description }}{% else %}Виготовлення та встановлення памʼятників з натурального граніту по всій Україні.{% endif %}"
+    >
+    <meta name="robots" content="index, follow">
+
+    {% if site_settings and site_settings.logo %}
+    <meta
+        name="twitter:image"
+        content="{{ request.scheme }}://{{ request.get_host }}{{ site_settings.logo.url }}"
+    >
+    {% endif %}
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
 </head>
 <body>
     <a class="skip-link" href="#main-content">Перейти до контенту</a>
