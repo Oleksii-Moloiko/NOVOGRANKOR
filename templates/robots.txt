@@ -1,0 +1,8 @@
+User-agent: *
+
+Disallow: /admin/
+Disallow: /accounts/
+
+Allow: /
+
+Sitemap: https://novogrankor.com/sitemap.xml
