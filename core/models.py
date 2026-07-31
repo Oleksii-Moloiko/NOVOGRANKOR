@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from core.fields import WebPImageField
 
 
 class TimeStampedModel(models.Model):
@@ -96,7 +97,7 @@ class AboutSection(TimeStampedModel):
         verbose_name="Опис картки",
     )
 
-    image = models.ImageField(
+    image = WebPImageField(
         upload_to="about/",
         blank=True,
         verbose_name="Зображення",
@@ -307,7 +308,7 @@ class Monument(TimeStampedModel):
         verbose_name="Назва",
     )
 
-    image = models.ImageField(
+    image = WebPImageField(
         upload_to="monuments/",
         verbose_name="Фото",
     )
@@ -368,7 +369,7 @@ class Gallery(TimeStampedModel):
         help_text="Рекомендований формат: MP4.",
     )
 
-    poster = models.ImageField(
+    poster = WebPImageField(
         upload_to="gallery/posters/",
         blank=True,
         null=True,
