@@ -1,3 +1,4 @@
+import os
 from io import BytesIO
 from pathlib import Path
 
@@ -18,10 +19,19 @@ class WebPImageField(ImageField):
         file = super().pre_save(model_instance, add)
 
         if not file:
+
             return file
 
-        # Якщо файл вже WebP — нічого не робимо
+        # Якщо файл вже WebP
+
         if file.name.lower().endswith(".webp"):
+
+            return file
+
+        # Якщо файла фізично не існує (наприклад у тестах)
+
+        if not file.storage.exists(file.name):
+
             return file
 
         file.seek(0)
@@ -45,6 +55,8 @@ class WebPImageField(ImageField):
 
         buffer.seek(0)
 
+        old_path = file.path if hasattr(file, "path") else None
+
         new_name = Path(file.name).with_suffix(".webp").name
 
         file.save(
@@ -52,5 +64,16 @@ class WebPImageField(ImageField):
             ContentFile(buffer.read()),
             save=False,
         )
+
+        # Видаляємо оригінальний JPG/PNG
+        if (
+            old_path
+            and os.path.exists(old_path)
+            and old_path != file.path
+        ):
+            try:
+                os.remove(old_path)
+            except OSError:
+                pass
 
         return file
