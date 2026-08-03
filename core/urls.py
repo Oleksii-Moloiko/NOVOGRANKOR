@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import home, healthcheck
+from .views import catalog_partial, healthcheck, home
 from django.http import HttpResponse
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
@@ -15,6 +15,11 @@ sitemaps = {
 
 urlpatterns = [
     path("", home, name="home"),
+    path(
+        "catalog/items/",
+        catalog_partial,
+        name="catalog_partial",
+    ),
     path("healthcheck/", healthcheck, name="healthcheck"),
     path(
         "robots.txt",

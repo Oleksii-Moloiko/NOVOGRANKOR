@@ -10,14 +10,20 @@
                 {% if site_settings and site_settings.logo %}
                     <img
                         src="{{ site_settings.logo.url }}"
-                        alt="NOVOGRANKOR logo"
+                        alt="NOVOGRANKOR"
                         class="brand-logo"
+                        width="{{ site_settings.logo.width }}"
+                        height="{{ site_settings.logo.height }}"
+                        decoding="async"
                     >
                 {% else %}
                     <img
                         src="{% static 'img/logo.png' %}"
-                        alt="NOVOGRANKOR logo"
+                        alt="NOVOGRANKOR"
                         class="brand-logo"
+                        width="1024"
+                        height="1024"
+                        decoding="async"
                     >
                 {% endif %}
             </div>
@@ -70,7 +76,13 @@
     <section class="hero">
         <div class="hero-watermark" aria-hidden="true">
             {% if site_settings and site_settings.logo %}
-                <img src="{{ site_settings.logo.url }}" alt="">
+                <img
+                    src="{{ site_settings.logo.url }}"
+                    alt=""
+                    width="{{ site_settings.logo.width }}"
+                    height="{{ site_settings.logo.height }}"
+                    decoding="async"
+                >
             {% else %}
                 N
             {% endif %}
@@ -249,6 +261,10 @@
                                 <img
                                     src="{{ about_section.image.url }}"
                                     alt=""
+                                    width="{{ about_section.image.width }}"
+                                    height="{{ about_section.image.height }}"
+                                    loading="lazy"
+                                    decoding="async"
                                 >
                             </div>
                         {% endif %}
@@ -288,21 +304,33 @@
         {% endif %}
 
 
-    <section class="catalog" id="catalog">
+    <section
+        class="catalog"
+        id="catalog"
+        data-catalog-url="{% url 'catalog_partial' %}"
+    >
         <div class="wrap">
             {% if catalog_section %}
                 <div class="catalog-head">
-                    <span class="section-tag">{{ catalog_section.tag }}</span>
+                    <span class="section-tag">
+                        {{ catalog_section.tag }}
+                    </span>
+
                     <h2>{{ catalog_section.title }}</h2>
                 </div>
             {% endif %}
 
             {% if categories %}
-                <div class="tabs" role="tablist" aria-label="Категорії памʼятників">
+                <div
+                    class="tabs"
+                    role="tablist"
+                    aria-label="Категорії памʼятників"
+                >
                     <button
                         type="button"
                         class="tab active"
                         data-catalog-tab="all"
+                        data-price="{{ catalog_section.default_price_from }}"
                         role="tab"
                         aria-selected="true"
                     >
@@ -314,6 +342,7 @@
                             type="button"
                             class="tab"
                             data-catalog-tab="{{ category.id }}"
+                            data-price="{% if category.price_from %}{{ category.get_price_display|cut:'від '|cut:' грн' }}{% else %}За запитом{% endif %}"
                             role="tab"
                             aria-selected="false"
                             tabindex="-1"
@@ -323,185 +352,118 @@
                     {% endfor %}
                 </div>
 
-                <div class="catalog-panels">
+                <div class="catalog-panel">
                     <div
-                        class="catalog-panel"
-                        data-catalog-panel="all"
-                        role="tabpanel"
-                        data-expanded="false"
+                        class="price-block"
+                        id="catalogPriceBlock"
                     >
+                        <div class="price-badge">
+                            <span class="price-from">від</span>
 
-                        {% if catalog_section %}
-                            <div class="price-block">
-                                <div class="price-badge">
-                                    <span class="price-from">від</span>
-                                    <span class="price-amount">{{ catalog_section.default_price_from }}</span>
-                                    <span class="price-cur">грн</span>
-                                </div>
-                                <div class="price-hint">{{ catalog_section.price_hint }}</div>
-                            </div>
-                        {% endif %}
+                            <span class="price-amount">
+                                {{ catalog_section.default_price_from }}
+                            </span>
 
-                        <div class="grid-products" data-catalog-grid>
-                            {% for category in categories %}
-                                {% for monument in category.active_monuments %}
-                                    <article class="product-card" data-catalog-item>
-                                        <div
-                                            class="product-media"
-                                            data-lightbox-src="{{ monument.image.url }}"
-                                            data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
-                                        >
-                                            {% if monument.image %}
-                                                <img src="{{ monument.image.url }}" alt="{{ monument.alt_text|default:monument.title }}" loading="lazy">
-
-                                                <button
-                                                    type="button"
-                                                    class="product-expand-btn"
-                                                    tabindex="-1"
-                                                    aria-hidden="true"
-                                                >
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 16 16"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        aria-hidden="true"
-                                                    >
-                                                        <path
-                                                            d="M10 2h4v4M14 2l-5 5M6 14H2v-4M2 14l5-5"
-                                                            stroke="currentColor"
-                                                            stroke-width="1.6"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            {% else %}
-                                                <div class="product-placeholder">NOVOGRANKOR</div>
-                                            {% endif %}
-                                        </div>
-
-                                        <div class="product-info">
-                                            <small>{{ category.name }} · {{ monument.title }}</small>
-
-                                            {% if site_settings and site_settings.phone %}
-                                                <div class="product-actions">
-                                                    <a class="product-order-btn" href="tel:{{ site_settings.phone }}">Замовити</a>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                    </article>
-                                {% endfor %}
-                            {% endfor %}
+                            <span class="price-cur">грн</span>
                         </div>
 
-                        <button type="button" class="catalog-toggle" data-catalog-toggle hidden>
-                            Дивитись більше
-                        </button>
+                        <div class="price-hint">
+                            {{ catalog_section.price_hint }}
+                        </div>
                     </div>
 
-                    {% for category in categories %}
-                        <div
-                            class="catalog-panel"
-                            data-catalog-panel="{{ category.id }}"
-                            role="tabpanel"
-                            data-expanded="false"
-                            hidden
-                        >
-                            <div class="price-block">
-                                <div class="price-badge">
-                                    {% if category.price_from %}
-                                        <span class="price-from">від</span>
-                                        <span class="price-amount">{{ category.get_price_display|cut:"від "|cut:" грн" }}</span>
-                                        <span class="price-cur">грн</span>
-                                    {% else %}
-                                        <span class="price-amount price-amount-text">
-                                            {% if catalog_section %}
-                                                {{ catalog_section.price_on_request_text }}
-                                            {% else %}
-                                                Ціна уточнюється
-                                            {% endif %}
-                                        </span>
-                                    {% endif %}
-                                </div>
-                                <div class="price-hint">
-                                    {% if catalog_section %}
-                                        {{ catalog_section.price_hint }}
-                                    {% else %}
-                                        Натисніть «Замовити» для уточнення всіх деталей
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            <div class="grid-products" data-catalog-grid>
-                                {% for monument in category.active_monuments %}
-                                    <article class="product-card" data-catalog-item>
-                                        <div
-                                            class="product-media"
-                                            data-lightbox-src="{{ monument.image.url }}"
-                                            data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
+                    <div
+                        class="grid-products"
+                        id="catalogGrid"
+                        data-catalog-grid
+                    >
+                        {% for monument in initial_monuments %}
+                            <article
+                                class="product-card"
+                                data-catalog-item
+                            >
+                                <div
+                                    class="product-media"
+                                    data-lightbox-src="{{ monument.image.url }}"
+                                    data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
+                                    role="button"
+                                    tabindex="0"
+                                    aria-label="Відкрити фото {{ monument.title }}"
+                                >
+                                    {% if monument.image %}
+                                        <img
+                                            src="{{ monument.image.url }}"
+                                            alt="{{ monument.alt_text|default:monument.title }}"
+                                            width="{{ monument.image.width }}"
+                                            height="{{ monument.image.height }}"
+                                            loading="lazy"
+                                            decoding="async"
                                         >
-                                            {% if monument.image %}
-                                                <img src="{{ monument.image.url }}" alt="{{ monument.alt_text|default:monument.title }}" loading="lazy">
 
-                                                <button
-                                                    type="button"
-                                                    class="product-expand-btn"
-                                                    tabindex="-1"
-                                                    aria-hidden="true"
-                                                >
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 16 16"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        aria-hidden="true"
-                                                    >
-                                                        <path
-                                                            d="M10 2h4v4M14 2l-5 5M6 14H2v-4M2 14l5-5"
-                                                            stroke="currentColor"
-                                                            stroke-width="1.6"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            {% else %}
-                                                <div class="product-placeholder">NOVOGRANKOR</div>
-                                            {% endif %}
+                                        <button
+                                            type="button"
+                                            class="product-expand-btn"
+                                            tabindex="-1"
+                                            aria-hidden="true"
+                                        >
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 16 16"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                aria-hidden="true"
+                                            >
+                                                <path
+                                                    d="M10 2h4v4M14 2l-5 5M6 14H2v-4M2 14l5-5"
+                                                    stroke="currentColor"
+                                                    stroke-width="1.6"
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                />
+                                            </svg>
+                                        </button>
+                                    {% else %}
+                                        <div class="product-placeholder">
+                                            NOVOGRANKOR
                                         </div>
+                                    {% endif %}
+                                </div>
 
-                                        <div class="product-info">
-                                            <small>{{ category.name }} · {{ monument.title }}</small>
+                                <div class="product-info">
+                                    <small>
+                                        {{ monument.category.name }} ·
+                                        {{ monument.title }}
+                                    </small>
 
-                                            {% if site_settings and site_settings.phone %}
-                                                <div class="product-actions">
-                                                    <a class="product-order-btn" href="tel:{{ site_settings.phone }}">Замовити</a>
-                                                </div>
-                                            {% endif %}
+                                    {% if site_settings and site_settings.phone %}
+                                        <div class="product-actions">
+                                            <a
+                                                class="product-order-btn"
+                                                href="tel:{{ site_settings.phone }}"
+                                            >
+                                                Замовити
+                                            </a>
                                         </div>
-                                    </article>
-                                {% empty %}
-                                    <div class="empty-state catalog-empty-state">
-                                        <span class="empty-state-icon">!</span>
-                                        <span>
-                                            {% if catalog_section %}
-                                                {{ catalog_section.empty_category_text }}
-                                            {% else %}
-                                                Товар відсутній
-                                            {% endif %}
-                                        </span>
-                                    </div>
-                                {% endfor %}
-                            </div>
+                                    {% endif %}
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
 
-                            <button type="button" class="catalog-toggle" data-catalog-toggle hidden>
-                                Дивитись більше
-                            </button>
-                        </div>
-                    {% endfor %}
+                    {% if total_monuments > 10 %}
+                        <button
+                            type="button"
+                            class="catalog-toggle"
+                            id="catalogLoadMore"
+                        >
+                            <span>Дивитись більше</span>
+
+                            <span class="catalog-toggle-count">
+                                +{{ total_monuments|add:"-10" }}
+                            </span>
+                        </button>
+                    {% endif %}
                 </div>
             {% else %}
                 <div class="empty-state">
@@ -541,17 +503,24 @@
                                             src="{{ item.poster.url }}"
                                             alt="{{ item.title|default:'Відео' }}"
                                             class="showreel-poster"
+                                            width="{{ item.poster.width }}"
+                                            height="{{ item.poster.height }}"
                                             loading="lazy"
+                                            decoding="async"
                                         >
                                     {% endif %}
 
                                     <video
                                         class="showreel-media"
-                                        preload="metadata"
+                                        preload="none"
                                         playsinline
                                         {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
                                     >
-                                        <source src="{{ item.video.url }}" type="video/mp4">
+                                        <source
+                                            data-src="{{ item.video.url }}"
+                                            type="video/mp4"
+                                        >
+
                                         Ваш браузер не підтримує відео.
                                     </video>
 
@@ -605,17 +574,24 @@
                                             src="{{ item.poster.url }}"
                                             alt="{{ item.title|default:'Відео' }}"
                                             class="showreel-poster"
+                                            width="{{ item.poster.width }}"
+                                            height="{{ item.poster.height }}"
                                             loading="lazy"
+                                            decoding="async"
                                         >
                                     {% endif %}
 
                                     <video
                                         class="showreel-media"
-                                        preload="metadata"
+                                        preload="none"
                                         playsinline
                                         {% if item.poster %}poster="{{ item.poster.url }}"{% endif %}
                                     >
-                                        <source src="{{ item.video.url }}" type="video/mp4">
+                                        <source
+                                            data-src="{{ item.video.url }}"
+                                            type="video/mp4"
+                                        >
+
                                         Ваш браузер не підтримує відео.
                                     </video>
 

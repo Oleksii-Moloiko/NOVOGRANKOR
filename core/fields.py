@@ -36,6 +36,30 @@ class WebPImageField(ImageField):
         if not file:
             return file
 
+        if (
+            not add
+            and model_instance.pk
+        ):
+            old_instance = (
+                model_instance.__class__.objects
+                .filter(pk=model_instance.pk)
+                .only(self.attname)
+                .first()
+            )
+
+            if old_instance:
+                old_file = getattr(
+                    old_instance,
+                    self.attname,
+                    None,
+                )
+
+                if (
+                    old_file
+                    and old_file.name == file.name
+                ):
+                    return file
+
         # якщо файл ще не записаний
         if not file.storage.exists(file.name):
             return file

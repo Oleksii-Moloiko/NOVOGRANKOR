@@ -2229,3 +2229,87 @@ button {
     opacity:.7;
     cursor:wait;
 }
+
+
+.catalog {
+    position: relative;
+}
+
+.catalog .grid-products {
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+}
+
+.catalog.is-loading .grid-products {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.catalog.is-loading .catalog-toggle {
+    cursor: wait;
+}
+
+.catalog-toggle:disabled,
+.tab:disabled {
+    cursor: wait;
+}
+
+.catalog-toggle:disabled {
+    opacity: 0.65;
+}
+
+.product-media[role="button"] {
+    cursor: zoom-in;
+}
+
+.product-media[role="button"]:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+}
+
+.product-media img,
+.coverage-visual img,
+.brand-logo,
+.hero-watermark img {
+    display: block;
+    max-width: 100%;
+}
+
+.product-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.coverage-visual img {
+    width: 100%;
+    height: auto;
+}
+
+.brand-logo {
+    height: auto;
+}
+
+
+.showreel-card.is-loading .showreel-play-btn {
+    pointer-events: none;
+    opacity: 0.65;
+}
+
+.showreel-card.is-loading .showreel-play-icon {
+    animation: showreel-pulse 900ms ease-in-out infinite;
+}
+
+@keyframes showreel-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(0.88);
+        opacity: 0.55;
+    }
+}

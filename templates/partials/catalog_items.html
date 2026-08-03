@@ -1,0 +1,76 @@
+{% for monument in page_obj %}
+    <article
+        class="product-card"
+        data-catalog-item
+    >
+        <div
+            class="product-media"
+            data-lightbox-src="{{ monument.image.url }}"
+            data-lightbox-alt="{{ monument.alt_text|default:monument.title }}"
+            role="button"
+            tabindex="0"
+            aria-label="Відкрити фото {{ monument.title }}"
+        >
+            {% if monument.image %}
+                <img
+                    src="{{ monument.image.url }}"
+                    alt="{{ monument.alt_text|default:monument.title }}"
+                    width="{{ monument.image.width }}"
+                    height="{{ monument.image.height }}"
+                    loading="lazy"
+                    decoding="async"
+                >
+
+                <button
+                    type="button"
+                    class="product-expand-btn"
+                    tabindex="-1"
+                    aria-hidden="true"
+                >
+                    <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        aria-hidden="true"
+                    >
+                        <path
+                            d="M10 2h4v4M14 2l-5 5M6 14H2v-4M2 14l5-5"
+                            stroke="currentColor"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
+                </button>
+            {% else %}
+                <div class="product-placeholder">
+                    NOVOGRANKOR
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="product-info">
+            <small>
+                {{ monument.category.name }} · {{ monument.title }}
+            </small>
+
+            {% if site_settings and site_settings.phone %}
+                <div class="product-actions">
+                    <a
+                        class="product-order-btn"
+                        href="tel:{{ site_settings.phone }}"
+                    >
+                        Замовити
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </article>
+{% empty %}
+    <div class="empty-state catalog-empty-state">
+        <span class="empty-state-icon">!</span>
+        <span>Товар відсутній</span>
+    </div>
+{% endfor %}
