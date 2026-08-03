@@ -9,29 +9,35 @@ from PIL import Image, ImageOps
 
 class WebPImageField(ImageField):
     """
-    Автоматично:
-    - виправляє орієнтацію (EXIF)
-    - зменшує фото
-    - конвертує у WebP
+    Продакшен ImageField.
+
+    Можливості:
+    - автоматичний поворот (EXIF);
+    - підтримка прозорості PNG;
+    - зменшення великих фото;
+    - конвертація у WebP;
+    - автоматичне видалення оригінального JPG/PNG.
     """
+
+    def __init__(
+        self,
+        *args,
+        quality=85,
+        max_size=(1920, 1920),
+        **kwargs,
+    ):
+        self.quality = quality
+        self.max_size = max_size
+        super().__init__(*args, **kwargs)
 
     def pre_save(self, model_instance, add):
         file = super().pre_save(model_instance, add)
 
         if not file:
-
             return file
 
-        # Якщо файл вже WebP
-
-        if file.name.lower().endswith(".webp"):
-
-            return file
-
-        # Якщо файла фізично не існує (наприклад у тестах)
-
+        # якщо файл ще не записаний
         if not file.storage.exists(file.name):
-
             return file
 
         file.seek(0)
@@ -39,25 +45,35 @@ class WebPImageField(ImageField):
         image = Image.open(file)
         image = ImageOps.exif_transpose(image)
 
-        if image.mode != "RGB":
-            image = image.convert("RGB")
+        # RGB або RGBA (щоб PNG не втрачав прозорість)
+        if image.mode not in ("RGB", "RGBA"):
+            if "A" in image.getbands():
+                image = image.convert("RGBA")
+            else:
+                image = image.convert("RGB")
 
-        image.thumbnail((1920, 1920), Image.Resampling.LANCZOS)
+        image.thumbnail(
+            self.max_size,
+            Image.Resampling.LANCZOS,
+        )
 
         buffer = BytesIO()
 
         image.save(
             buffer,
             format="WEBP",
-            quality=85,
+            quality=self.quality,
             optimize=True,
+            method=6,
         )
 
         buffer.seek(0)
 
         old_path = file.path if hasattr(file, "path") else None
 
-        new_name = Path(file.name).with_suffix(".webp").name
+        directory = Path(file.name).parent
+        filename = Path(file.name).stem + ".webp"
+        new_name = str(directory / filename)
 
         file.save(
             new_name,
@@ -65,7 +81,7 @@ class WebPImageField(ImageField):
             save=False,
         )
 
-        # Видаляємо оригінальний JPG/PNG
+        # Видаляємо старий jpg/png
         if (
             old_path
             and os.path.exists(old_path)
